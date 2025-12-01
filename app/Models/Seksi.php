@@ -32,4 +32,9 @@ class Seksi extends Model
     {
         return $this->hasMany(Tim::class, 'seksi_id');
     }
+
+    public function kinerjas()
+    {
+        return $this->hasMany(Kinerja::class, 'seksi_id');
+    }
 }

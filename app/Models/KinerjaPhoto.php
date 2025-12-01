@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class UnitKerja extends Model
+class KinerjaPhoto extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'unit_kerja';
+    protected $table = 'kinerja_photo';
 
     protected $guarded = [];
 
@@ -23,13 +23,8 @@ class UnitKerja extends Model
         });
     }
 
-    public function seksis()
+    public function kinerja()
     {
-        return $this->hasMany(Seksi::class, 'unit_kerja_id');
-    }
-
-    public function kinerjas()
-    {
-        return $this->hasMany(Kinerja::class, 'unit_kerja_id');
+        return $this->belongsTo(Kinerja::class);
     }
 }

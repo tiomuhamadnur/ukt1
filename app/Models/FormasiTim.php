@@ -42,4 +42,9 @@ class FormasiTim extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function kinerjas()
+    {
+        return $this->hasMany(Kinerja::class, 'formasi_tim_id');
+    }
 }

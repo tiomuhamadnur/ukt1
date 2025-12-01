@@ -27,4 +27,9 @@ class Pulau extends Model
     {
         return $this->belongsTo(Kelurahan::class);
     }
+
+    public function kinerjas()
+    {
+        return $this->hasMany(Kinerja::class, 'kegiatan_id');
+    }
 }

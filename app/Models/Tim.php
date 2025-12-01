@@ -32,4 +32,9 @@ class Tim extends Model
     {
         return $this->hasMany(FormasiTim::class, 'tim_id');
     }
+
+    public function kinerjas()
+    {
+        return $this->hasMany(Kinerja::class, 'tim_id');
+    }
 }
