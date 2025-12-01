@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('pulau', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('uuid')->unique();
+            $table->string('name')->nullable();
+            $table->string('code')->unique()->nullable();
+            $table->bigInteger('kelurahan_id')->unsigned()->nullable();
+            $table->timestamps();
+
+            $table->foreign('kelurahan_id')->on('kelurahan')->references('id');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('pulau');
+    }
+};
