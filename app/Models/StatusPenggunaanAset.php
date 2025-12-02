@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class StatusAbsensi extends Model
+class StatusPenggunaanAset extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'status_absensi';
+    protected $table = 'status_penggunaan_aset';
 
     protected $guarded = [];
 
@@ -23,8 +23,8 @@ class StatusAbsensi extends Model
         });
     }
 
-    public function absensis()
-    {
-        return $this->hasMany(Absensi::class, 'status_absensi_id');
-    }
+    // public function penggunaan_asets()
+    // {
+    //     return $this->hasMany(PenggunaanAset::class, 'status_penggunaan_aset_id');
+    // }
 }

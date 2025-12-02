@@ -59,4 +59,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cuti::class, 'disetujui_oleh_id');
     }
+
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class, 'user_id');
+    }
+
+    public function kinerjas()
+    {
+        return $this->hasMany(Kinerja::class, 'user_id');
+    }
 }
