@@ -2,53 +2,48 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\DataTables\UnitKerjaDataTable;
 use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class UnitKerjaController extends Controller
 {
-    public function index()
+    public function index(UnitKerjaDataTable $dataTable)
     {
-        $unit_kerja = UnitKerja::orderBy('name')->get();
-        return view('page.admin.dataEssentials.unit_kerja.index', compact('unit_kerja'));
+        return $dataTable->render('page.admin.dataEssentials.unit_kerja.index');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:unit_kerja,code',
         ]);
 
-        UnitKerja::create($request->only('name', 'code'));
+        $unit_kerja = UnitKerja::updateOrCreate($rawData, $rawData);
 
         return redirect()->route('unit-kerja.index')
-            ->withNotify('Data Unit Kerja berhasil ditambahkan.');
+            ->withNotify("Data {$unit_kerja->name} berhasil ditambahkan.");
     }
 
     public function update(Request $request, UnitKerja $unit_kerja)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:unit_kerja,code,' . $unit_kerja->uuid . ',uuid',
         ]);
 
-        $unit_kerja->update($request->only('name', 'code'));
+        $unit_kerja->update($rawData);
 
         return redirect()->route('unit-kerja.index')
-            ->withNotify('Data Unit Kerja berhasil diperbarui.');
+            ->withNotify("Data {$unit_kerja->name} berhasil diperbarui.");
     }
 
     public function destroy(UnitKerja $unit_kerja)
     {
-        try {
-            $unit_kerja->delete();
-            return redirect()->route('unit-kerja.index')
-                ->withNotify('Unit Kerja berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()->route('unit-kerja.index')
-                ->withError($e->getMessage());
-        }
+        $unit_kerja->delete();
+
+        return back()->withNotify("Data {$unit_kerja->name} berhasil dihapus.");
     }
 }

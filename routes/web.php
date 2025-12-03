@@ -25,6 +25,8 @@ use App\Http\Controllers\admin\UnitKerjaController;
 use App\Http\Controllers\admin\FormasiTimController;
 use App\Http\Controllers\admin\StatusCutiController;
 use App\Http\Controllers\admin\JenisAbsensiController;
+use App\Http\Controllers\admin\KonfigurasiAbsensiController;
+use App\Http\Controllers\admin\KonfigurasiCutiController;
 use App\Http\Controllers\admin\StatusAbsensiController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -63,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('/user', UserController::class);
         Route::resource('/provinsi', ProvinsiController::class);
-        Route::resource('/kota', KotaController::class);
+        Route::resource('/kota', KotaController::class)->parameters(['kota' => 'kota']);
         Route::resource('/kecamatan', KecamatanController::class);
         Route::resource('/kelurahan', KelurahanController::class);
         Route::resource('/pulau', PulauController::class);
@@ -82,6 +84,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/kegiatan', KegiatanController::class);
         Route::resource('/kinerja', KinerjaController::class);
         Route::resource('/absensi', AbsensiController::class);
+        Route::resource('/konfigurasi-cuti', KonfigurasiCutiController::class);
+        Route::resource('/konfigurasi-absensi', KonfigurasiAbsensiController::class);
 
         // CUTI
         Route::controller(CutiController::class)->group(function () {

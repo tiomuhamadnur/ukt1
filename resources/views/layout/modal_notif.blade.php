@@ -46,41 +46,40 @@
     </script>
 @endif
 
-<!-- BEGIN: Success Modal -->
-<div id="success-modal" class="modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Modal Hapus Data Provinsi -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body p-2">
-                <div class="p-2 text-center">
-                    <h4 class="mt-2 fw-bolder">Success</h4>
-                    <div class="text-slate-500 mt-2">{{ session('notify') ?? '-' }}</div>
-                </div>
-                <div class="px-5 pb-8 text-center mt-3">
-                    <button type="button" data-dismiss="modal" class="btn btn-dark w-24 mr-1 me-2">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- END:  Success Modal -->
 
-<!-- BEGIN: Error Modal -->
-<div id="error-modal" class="modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body p-2">
-                <div class="p-2 text-center">
-                    <h4 class="text-3xl mt-2 fw-bolder">Ooopps!</h4>
-                    <h1 class="text-center align-middle text-danger mt-2" style="font-size: 100px">
-                        <i class="mdi mdi-alert-circle-outline mx-auto"></i>
-                    </h1>
-                    <div class="text-slate-500 mt-2">{{ session('error') ?? '-' }}</div>
-                </div>
-                <div class="px-5 pb-8 text-center mt-3">
-                    <button type="button" data-dismiss="modal" class="btn btn-dark w-24 mr-1 me-2">Tutup</button>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+
+            <form id="deleteForm" action="#" method="POST">
+                @csrf
+                @method('DELETE')
+
+                <div class="modal-body text-center">
+                    <p>Apakah Anda yakin ingin menghapus data provinsi ini?</p>
+                </div>
+
+                <div class="modal-footer custom">
+                    <div class="left-side">
+                        <button type="button" class="btn btn-link danger" data-dismiss="modal">Tidak</button>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="right-side">
+                        <button type="submit" class="btn btn-link success">Ya, Hapus</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
-<!-- END:  Error Modal -->
+<!-- End Modal Hapus Data Provinsi -->

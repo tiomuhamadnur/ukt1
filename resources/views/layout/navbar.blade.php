@@ -32,6 +32,9 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="dashboardsDropdown">
         <li>
+            <a class="dropdown-item" href="{{ route('user.index') }}">Data User</a>
+        </li>
+        <li>
             <a class="dropdown-item" href="{{ route('kegiatan.index') }}">Data Kegiatan</a>
         </li>
         <li>
@@ -47,9 +50,6 @@
         Arsip Data
     </a>
     <ul class="dropdown-menu" aria-labelledby="dashboardsDropdown">
-        <li>
-            <a class="dropdown-item" href="{{ route('user.index') }}">Data User</a>
-        </li>
         <li>
             <a class="dropdown-item" href="{{ route('kinerja.index') }}">Data Kinerja</a>
         </li>

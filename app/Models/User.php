@@ -19,6 +19,22 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'uuid',
+        'nik',
+        'nip',
+        'no_hp',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'alamat',
+        'photo',
+        'ttd',
+        'bio',
+        'is_plt',
+        'user_type_id',
+        'gender_id',
+        'pulau_id',
+        'kelurahan_id',
+        'jabatan_id',
     ];
 
     protected $hidden = [

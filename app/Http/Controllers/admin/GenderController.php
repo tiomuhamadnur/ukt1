@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\DataTables\GenderDataTable;
 use App\Models\Gender;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class GenderController extends Controller
 {
-    public function index()
+    public function index(GenderDataTable $dataTable)
     {
-        $genders = Gender::orderBy('name')->get();
-
-        return view('page.admin.dataEssentials.gender.index', compact('genders'));
+        return $dataTable->render('page.admin.dataEssentials.gender.index');
     }
 
     public function create()
@@ -22,38 +21,34 @@ class GenderController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:gender,code',
         ]);
 
-        Gender::create($request->only('name', 'code'));
+        $gender = Gender::updateOrCreate($rawData, $rawData);
 
         return redirect()->route('gender.index')
-            ->withNotify('Data Gender berhasil ditambahkan.');
+            ->withNotify("Data Gender {$gender->name} berhasil ditambahkan.");
     }
 
     public function update(Request $request, Gender $gender)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:gender,code,' . $gender->uuid . ',uuid',
         ]);
 
-        $gender->update([
-            'name' => $request->name,
-            'code' => $request->code,
-        ]);
+        $gender->update($rawData);
 
         return redirect()->route('gender.index')
-            ->withNotify('Data Gender berhasil diperbarui.');
+            ->withNotify("Data Gender {$gender->name} berhasil diperbarui.");
     }
 
     public function destroy(Gender $gender)
     {
         $gender->delete();
 
-        return redirect()->route('gender.index')
-            ->withNotify('Data Gender berhasil dihapus.');
+        return back()->withNotify("Data Gender {$gender->name} berhasil dihapus.");
     }
 }

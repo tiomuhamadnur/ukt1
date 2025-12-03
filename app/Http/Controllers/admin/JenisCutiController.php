@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\DataTables\JenisCutiDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\JenisCuti;
 use Illuminate\Http\Request;
 
 class JenisCutiController extends Controller
 {
-    public function index()
+    public function index(JenisCutiDataTable $dataTable)
     {
-        $jenis_cuti = JenisCuti::orderBy('name')->get();
-        return view('page.admin.dataEssentials.jenis_cuti.index', compact('jenis_cuti'));
+        return $dataTable->render('page.admin.dataEssentials.jenis_cuti.index');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:jenis_cuti,code',
         ]);
 
-        JenisCuti::create($request->only('name', 'code'));
+        $jenis_cuti = JenisCuti::updateOrCreate($rawData, $rawData);
 
         return redirect()->route('jenis-cuti.index')
-            ->withNotify('Data Jenis Cuti berhasil ditambahkan.');
+            ->withNotify("Data Jenis Cuti {$jenis_cuti->name} berhasil ditambahkan.");
     }
 
     public function update(Request $request, JenisCuti $jenis_cuti)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:jenis_cuti,code,' . $jenis_cuti->uuid . ',uuid',
         ]);
@@ -37,15 +37,14 @@ class JenisCutiController extends Controller
         $jenis_cuti->update($request->only('name', 'code'));
 
         return redirect()->route('jenis-cuti.index')
-            ->withNotify('Data Jenis Cuti berhasil diperbarui.');
+            ->withNotify("Data Jenis Cuti {$jenis_cuti->name} berhasil diperbarui.");
     }
 
     public function destroy(JenisCuti $jenis_cuti)
     {
         $jenis_cuti->delete();
 
-        return redirect()->route('jenis-cuti.index')
-            ->withNotify('Data Jenis Cuti berhasil dihapus.');
+        return back()->withNotify("Data Jenis Cuti {$jenis_cuti->name} berhasil dihapus.");
     }
 }
 

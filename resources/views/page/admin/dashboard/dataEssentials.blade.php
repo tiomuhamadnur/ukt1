@@ -260,5 +260,31 @@
                 </div>
             </a>
         </div>
+        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
+            <a href="{{ route('konfigurasi-cuti.index') }}">
+                <div class="info-tiles">
+                    <div class="info-icon">
+                        <i class="fa fa-database"></i>
+                    </div>
+                    <div class="stats-detail">
+                        <h3>{{ $konfigurasi_cuti }}</h3>
+                        <p>Konfigurasi Cuti</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
+            <a href="{{ route('konfigurasi-absensi.index') }}">
+                <div class="info-tiles">
+                    <div class="info-icon">
+                        <i class="fa fa-database"></i>
+                    </div>
+                    <div class="stats-detail">
+                        <h3>{{ $konfigurasi_absensi }}</h3>
+                        <p>Konfigurasi Absensi</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 @endsection

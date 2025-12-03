@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\DataTables\TimDataTable;
 use App\Models\Tim;
 use App\Models\Seksi;
 use Illuminate\Http\Request;
@@ -9,47 +10,46 @@ use App\Http\Controllers\Controller;
 
 class TimController extends Controller
 {
-    public function index()
+    public function index(TimDataTable $dataTable)
     {
-        $tim = Tim::with('seksi')->orderBy('name')->get();
         $seksi = Seksi::orderBy('name')->get();
-
-        return view('page.admin.dataEssentials.tim.index', compact('tim', 'seksi'));
+        return $dataTable->render('page.admin.dataEssentials.tim.index', compact([
+            'seksi'
+        ]));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:tim,code',
             'seksi_id' => 'required|exists:seksi,id',
         ]);
 
-        Tim::create($request->only('name', 'code', 'seksi_id'));
+        $tim = Tim::updateOrCreate($rawData, $rawData);
 
         return redirect()->route('tim.index')
-            ->withNotify('Data Tim berhasil ditambahkan.');
+            ->withNotify("Data Tim {$tim->name} berhasil ditambahkan.");
     }
 
     public function update(Request $request, Tim $tim)
     {
-        $request->validate([
+        $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:tim,code,' . $tim->uuid . ',uuid',
             'seksi_id' => 'required|exists:seksi,id',
         ]);
 
-        $tim->update($request->only('name', 'code', 'seksi_id'));
+        $tim->update($rawData);
 
         return redirect()->route('tim.index')
-            ->withNotify('Data Tim berhasil diperbarui.');
+            ->withNotify("Data Tim {$tim->name} berhasil diperbarui.");
     }
 
     public function destroy(Tim $tim)
     {
         $tim->delete();
 
-        return redirect()->route('tim.index')
-            ->withNotify('Data Tim berhasil dihapus.');
+        return back()->withNotify("Data Tim {$tim->name} berhasil dihapus.");
     }
 }

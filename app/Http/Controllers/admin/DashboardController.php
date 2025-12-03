@@ -21,6 +21,8 @@ use App\Models\JenisAbsensi;
 use Illuminate\Http\Request;
 use App\Models\StatusAbsensi;
 use App\Http\Controllers\Controller;
+use App\Models\KonfigurasiAbsensi;
+use App\Models\KonfigurasiCuti;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -50,8 +52,10 @@ class DashboardController extends Controller
         $jenis_absensi = JenisAbsensi::count();
         $status_absensi = StatusAbsensi::count();
         $kegiatan = Kegiatan::count();
+        $konfigurasi_cuti = KonfigurasiCuti::count();
+        $konfigurasi_absensi = KonfigurasiAbsensi::count();
 
-        return view('page.admin.dashboard.dataEssentials', compact(
+        return view('page.admin.dashboard.dataEssentials', compact([
             'user',
             'provinsi',
             'kota',
@@ -69,7 +73,10 @@ class DashboardController extends Controller
             'status_cuti',
             'status_absensi',
             'jenis_absensi',
-            'kegiatan'));
+            'kegiatan',
+            'konfigurasi_cuti',
+            'konfigurasi_absensi',
+        ]));
     }
 
     public function kanit()
