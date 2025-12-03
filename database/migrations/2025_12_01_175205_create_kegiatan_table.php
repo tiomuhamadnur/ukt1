@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('code')->unique()->nullable();
             $table->bigInteger('seksi_id')->unsigned()->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('seksi_id')->on('seksi')->references('id');

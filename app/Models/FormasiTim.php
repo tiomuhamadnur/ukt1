@@ -23,6 +23,11 @@ class FormasiTim extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function tim()
     {
         return $this->belongsTo(Tim::class);

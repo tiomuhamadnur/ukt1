@@ -25,6 +25,7 @@ return new class extends Migration
             $table->bigInteger('tim_id')->unsigned()->nullable();
             $table->bigInteger('formasi_tim_id')->unsigned()->nullable();
             $table->bigInteger('pulau_id')->unsigned()->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->on('users')->references('id');

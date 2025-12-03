@@ -23,6 +23,11 @@ class Tim extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function seksi()
     {
         return $this->belongsTo(Seksi::class);

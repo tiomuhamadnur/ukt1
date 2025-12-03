@@ -23,6 +23,11 @@ class StatusAbsensi extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function absensis()
     {
         return $this->hasMany(Absensi::class, 'status_absensi_id');

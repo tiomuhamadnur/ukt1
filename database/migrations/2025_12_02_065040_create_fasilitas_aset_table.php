@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->text('deskripsi')->nullable();
             $table->text('photo')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('aset_id')->on('aset')->references('id');

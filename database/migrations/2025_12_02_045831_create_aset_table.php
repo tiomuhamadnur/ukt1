@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('nilai_kontrak')->nullable();
             $table->date('mulai_kontrak')->nullable();
             $table->date('akhir_kontrak')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('tipe_aset_id')->on('tipe_aset')->references('id');

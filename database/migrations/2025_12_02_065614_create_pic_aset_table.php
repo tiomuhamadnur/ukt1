@@ -14,6 +14,7 @@ return new class extends Migration
             $table->bigInteger('aset_id')->unsigned()->nullable();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->year('periode')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('aset_id')->on('aset')->references('id');

@@ -23,6 +23,11 @@ class JenisCuti extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function cutis()
     {
         return $this->hasMany(Cuti::class, 'jenis_id');

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->bigInteger('kinerja_id')->unsigned()->nullable();
             $table->text('photo')->nullable();
             $table->text('deskripsi')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('kinerja_id')->on('kinerja')->references('id');

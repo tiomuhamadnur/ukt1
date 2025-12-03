@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('code')->unique()->nullable();
             $table->bigInteger('provinsi_id')->unsigned()->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('provinsi_id')->on('provinsi')->references('id');

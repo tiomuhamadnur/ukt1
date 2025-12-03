@@ -14,6 +14,22 @@ class UnitKerja extends Model
 
     protected $guarded = [];
 
+    protected $relationChecks = [
+        'seksis',
+        'kinerjas'
+    ];
+
+    protected static function booted()
+    {
+        static::deleting(function ($model) {
+            foreach ($model->relationChecks as $relation) {
+                if ($model->$relation()->exists()) {
+                    throw new \Exception("Gagal. Masih digunakan di relasi yang lain! <br> Silakan hubungi Administrator");
+                }
+            }
+        });
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -21,6 +37,11 @@ class UnitKerja extends Model
         self::creating(function ($model) {
             $model->uuid = Str::uuid();
         });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 
     public function seksis()

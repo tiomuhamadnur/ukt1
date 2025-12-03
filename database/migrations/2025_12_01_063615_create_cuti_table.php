@@ -24,6 +24,7 @@ return new class extends Migration
             $table->dateTime('disetujui_at')->nullable();
             $table->bigInteger('status_cuti_id')->unsigned()->nullable();
             $table->string('nomor_surat')->unique()->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->on('users')->references('id');

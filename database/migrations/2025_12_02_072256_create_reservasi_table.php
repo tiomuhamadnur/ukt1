@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('jumlah_penghuni')->nullable();
             $table->dateTime('reservasi_at')->nullable();
             $table->dateTime('expired_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('aset_id')->on('aset')->references('id');

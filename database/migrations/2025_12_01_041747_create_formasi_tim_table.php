@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->bigInteger('koordinator_id')->unsigned()->nullable();
             $table->year('periode')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('tim_id')->on('tim')->references('id');

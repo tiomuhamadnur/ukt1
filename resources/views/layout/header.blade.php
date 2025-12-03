@@ -1,7 +1,7 @@
 <header class="header">
     <div class="logo-wrapper">
         <a href="{{ route('dashboard.index') }}" class="logo">
-            <img src="{{ asset('assets/img/simojalogo.png') }}" alt="" style="max-height: 200px" />
+            <img src="{{ asset('assets/img/sigmalogo.png') }}" alt="" style="max-height: 200px" />
         </a>
     </div>
     <div class="header-items">
@@ -36,7 +36,7 @@
                 <a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
                     <span class="text-white fw-bolder p-1">{{ auth()->user()->name }}</span>
                     <span class="avatar header-user">
-                        <img src="{{ auth()->user()->photo != null ? asset('storage/' . auth()->user()->photo) : 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg' }}"
+                        <img src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : asset('assets/img/avadefault.jpg') }}"
                             alt="Photo">
                         <span class="status not-busy"></span>
                     </span>
@@ -45,13 +45,13 @@
                     <div class="header-profile-actions">
                         <div class="header-user-profile">
                             <div class="header-user">
-                                <img src="{{ auth()->user()->photo != null ? asset('storage/' . auth()->user()->photo) : 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg' }}"
+                                <img src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : asset('assets/img/avadefault.jpg') }}"
                                     alt="Photo">
                             </div>
                             <h5 class="text-center">{{ auth()->user()->name }}</h5>
                             <p>{{ auth()->user()->email }}</p>
                         </div>
-                        <a href="#"><i class="icon-user1"></i> Profile Saya</a>
+                        <a href="{{ route('profile.index') }}"><i class="icon-user1"></i> Profile Saya</a>
                         <a href="#"><i class="icon-lock"></i> Ubah Password</a>
                         <a href="javascript;"
                             onclick="event.preventDefault();

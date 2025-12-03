@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('photo_ktp')->nullable();
             $table->string('name_emergency')->nullable();
             $table->string('no_hp_emergency')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('gender_id')->on('gender')->references('id');

@@ -23,6 +23,11 @@ class UserType extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function users()
     {
         return $this->hasMany(User::class, 'user_type_id');

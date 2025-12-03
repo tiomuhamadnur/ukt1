@@ -17,6 +17,16 @@ class UserController extends Controller
         ])->render('page.admin.user.index');
     }
 
+    public function profile()
+    {
+        return view('page.users.profile.index');
+    }
+
+    public function update_password()
+    {
+        return view('page.users.profile.update_password');
+    }
+
     public function create()
     {
         //

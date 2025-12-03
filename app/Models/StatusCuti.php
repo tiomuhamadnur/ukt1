@@ -23,6 +23,11 @@ class StatusCuti extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function cutis()
     {
         return $this->hasMany(Cuti::class, 'status_cuti_id');

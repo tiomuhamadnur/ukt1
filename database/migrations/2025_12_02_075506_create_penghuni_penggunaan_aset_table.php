@@ -13,6 +13,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->bigInteger('penggunaan_aset_id')->unsigned()->nullable();
             $table->bigInteger('pengguna_id')->unsigned()->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('penggunaan_aset_id')->on('penggunaan_aset')->references('id');

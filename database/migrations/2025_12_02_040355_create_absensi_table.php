@@ -32,6 +32,7 @@ return new class extends Migration
             $table->bigInteger('diketahui_oleh_id')->unsigned()->nullable();
             $table->bigInteger('disetujui_oleh_id')->unsigned()->nullable();
             $table->bigInteger('status_absensi_id')->unsigned()->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->on('users')->references('id');

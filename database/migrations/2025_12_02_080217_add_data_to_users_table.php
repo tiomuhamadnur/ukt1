@@ -25,6 +25,7 @@ return new class extends Migration
             $table->bigInteger('jabatan_id')->unsigned()->nullable();
             $table->bigInteger('pulau_id')->unsigned()->nullable();
             $table->bigInteger('kelurahan_id')->unsigned()->nullable();
+            $table->softDeletes();
 
             $table->foreign('user_type_id')->on('user_type')->references('id');
             $table->foreign('gender_id')->on('gender')->references('id');

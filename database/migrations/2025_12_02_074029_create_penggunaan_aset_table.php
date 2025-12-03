@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('tanggal_checkin')->nullable();
             $table->dateTime('tanggal_checkout')->nullable();
             $table->integer('jumlah_penghuni')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('reservasi_id')->on('reservasi')->references('id');

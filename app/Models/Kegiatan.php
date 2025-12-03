@@ -23,8 +23,18 @@ class Kegiatan extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function kinerjas()
     {
         return $this->hasMany(Kinerja::class, 'kegiatan_id');
+    }
+
+    public function seksi()
+    {
+        return $this->belongsTo(Seksi::class, 'seksi_id');
     }
 }

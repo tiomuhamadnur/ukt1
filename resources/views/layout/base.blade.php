@@ -7,7 +7,7 @@
     <meta name="author" content="TideUp">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="shortcut icon" href="{{ asset('assets/img/ukt2logo.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
     @yield('title-head')
     {{-- CSS --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

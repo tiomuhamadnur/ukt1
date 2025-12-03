@@ -23,6 +23,11 @@ class Jabatan extends Model
         });
     }
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function users()
     {
         return $this->hasMany(User::class, 'jabatan_id');

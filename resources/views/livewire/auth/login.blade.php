@@ -1,59 +1,43 @@
-<x-layouts.auth>
-    <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+<!DOCTYPE html>
+<html lang="en">
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="{{ asset('frontend/img/logoexodia.png') }}" />
+    <title>Sigma | Login Page</title>
+    <link rel="stylesheet" href="{{ asset('assets/asset-login/style.css') }}" />
+</head>
 
-        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-6">
-            @csrf
+<body>
+    <form class="login" method="POST" action="{{ route('login.store') }}">
+        @csrf
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                :label="__('Email address')"
-                :value="old('email')"
-                type="email"
-                required
-                autofocus
-                autocomplete="email"
-                placeholder="email@example.com"
-            />
+        <div class="logo-container">
+            <img src="{{ asset('assets/img/ukt1logo.png') }}" alt="Sigma Logo" class="logo" />
+        </div>
 
-            <!-- Password -->
-            <div class="relative">
-                <flux:input
-                    name="password"
-                    :label="__('Password')"
-                    type="password"
-                    required
-                    autocomplete="current-password"
-                    :placeholder="__('Password')"
-                    viewable
-                />
+        <h2 class="text-center">SIGMA APP - UKT 1</h2>
+        <p class="text-center">Sistem Integrasi Manajemen Kinerja</p>
 
-                @if (Route::has('password.request'))
-                    <flux:link class="absolute top-0 text-sm end-0" :href="route('password.request')" wire:navigate>
-                        {{ __('Forgot your password?') }}
-                    </flux:link>
-                @endif
-            </div>
+        <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}" />
+        <input type="password" name="password" placeholder="Password" required />
 
-            <!-- Remember Me -->
-            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" />
+        <button type="submit" class="login-btn">Login</button>
 
-            <div class="flex items-center justify-end">
-                <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
-                    {{ __('Log in') }}
-                </flux:button>
-            </div>
-        </form>
-
-        @if (Route::has('register'))
-            <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
-                <span>{{ __('Don\'t have an account?') }}</span>
-                <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+        @if ($errors->any())
+            <div class="error-message">
+                {{ $errors->first() }}
             </div>
         @endif
-    </div>
-</x-layouts.auth>
+
+        @if (session('status'))
+            <div class="success-message">
+                {{ session('status') }}
+            </div>
+        @endif
+    </form>
+</body>
+
+</html>

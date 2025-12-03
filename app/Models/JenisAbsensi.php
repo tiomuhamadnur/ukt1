@@ -22,4 +22,9 @@ class JenisAbsensi extends Model
             $model->uuid = Str::uuid();
         });
     }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }
