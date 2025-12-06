@@ -76,6 +76,7 @@ class KecamatanDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama Kecamatan'),
             Column::make('code')->title('Kode Kecamatan'),
             Column::make('kota.name')->title('Kota'),

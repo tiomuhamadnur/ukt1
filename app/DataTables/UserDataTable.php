@@ -132,7 +132,7 @@ class UserDataTable extends DataTable
             Column::computed('aksi')
                 ->exportable(false)
                 ->printable(false)
-                ->addClass('text-center')
+                ->addClass('text-center text-nowrap')
                 ->title('Aksi'),
         ];
     }

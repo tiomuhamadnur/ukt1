@@ -71,6 +71,7 @@ class ProvinsiDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama Provinsi'),
             Column::make('code')->title('Kode Provinsi'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

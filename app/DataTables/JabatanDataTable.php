@@ -71,6 +71,7 @@ class JabatanDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama Jabatan'),
             Column::make('code')->title('Kode Jabatan'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

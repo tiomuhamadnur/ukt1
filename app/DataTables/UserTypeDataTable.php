@@ -71,6 +71,7 @@ class UserTypeDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama User Type'),
             Column::make('code')->title('Kode User Type'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

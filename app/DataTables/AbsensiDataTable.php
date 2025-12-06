@@ -176,7 +176,7 @@ class AbsensiDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
-                ->addClass('text-center'),
+                ->addClass('text-center text-nowrap'),
         ];
     }
 

@@ -71,6 +71,7 @@ class GenderDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama Gender'),
             Column::make('code')->title('Kode Gender'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

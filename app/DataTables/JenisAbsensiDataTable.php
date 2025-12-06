@@ -71,6 +71,7 @@ class JenisAbsensiDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama Jenis Absensi'),
             Column::make('code')->title('Kode Jenis Absensi'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

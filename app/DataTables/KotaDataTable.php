@@ -77,6 +77,7 @@ class KotaDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID'),
             Column::make('name')->title('Nama Kota'),
             Column::make('code')->title('Kode Kode'),
             Column::make('provinsi.name')->title('Provinsi'),
