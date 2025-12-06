@@ -13,8 +13,8 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->bigInteger('jenis_cuti_id')->unsigned()->nullable();
-            $table->dateTime('tanggal_awal')->nullable();
-            $table->dateTime('tanggal_akhir')->nullable();
+            $table->date('tanggal_awal')->nullable();
+            $table->date('tanggal_akhir')->nullable();
             $table->integer('jumlah')->nullable();
             $table->text('catatan')->nullable();
             $table->text('lampiran')->nullable();

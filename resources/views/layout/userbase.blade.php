@@ -10,6 +10,24 @@
     <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
     @yield('title-head')
     {{-- CSS --}}
+        <style>
+            label.required::after {
+                content: ' *';
+                color: red;
+            }
+
+            label.optional::after {
+                content: ' (optional)';
+                color: blue;
+                font-size: 0.75em;
+            }
+
+            label.auto::after {
+                content: ' (autocomplete)';
+                color: rgb(0, 116, 17);
+                font-size: 0.75em;
+            }
+        </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/fonts/style.css') }}">
@@ -73,7 +91,7 @@
 
     {{-- SCRIPT --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/jquery.min.js') }}"></script> --}}
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.js') }}"></script>
     <script src="{{ asset('assets/vendor/slimscroll/slimscroll.min.js') }}"></script>
@@ -81,7 +99,6 @@
     <script src="{{ asset('assets/vendor/daterange/daterange.js') }}"></script>
     <script src="{{ asset('assets/vendor/daterange/custom-daterange.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
-    <script src="{{ asset('Helper/search.js') }}"></script>
     <script src="{{ asset('js/plugins/sweetalert2/sweetalert2.all.js') }}"></script>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -109,9 +126,8 @@
         integrity="sha384-S+YLtJdiuYs9GTw5EU4xndykmNtRWKrQFph/dyd2+uvPffIvlk9hcvREeHEKLIBx" crossorigin="anonymous">
     </script>
 
-
-
     @include('layout.modal_notif')
+    @include('layout.scripts')
     @yield('javascript')
     @stack('scripts')
 </body>

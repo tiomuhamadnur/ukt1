@@ -26,9 +26,9 @@ return new class extends Migration
             $table->text('catatan_masuk')->nullable();
             $table->text('catatan_pulang')->nullable();
             $table->string('latitude_masuk')->nullable();
+            $table->string('longitude_masuk')->nullable();
             $table->string('latitude_pulang')->nullable();
-            $table->string('longtitude_masuk')->nullable();
-            $table->string('longtitude_pulang')->nullable();
+            $table->string('longitude_pulang')->nullable();
             $table->bigInteger('diketahui_oleh_id')->unsigned()->nullable();
             $table->bigInteger('disetujui_oleh_id')->unsigned()->nullable();
             $table->bigInteger('status_absensi_id')->unsigned()->nullable();

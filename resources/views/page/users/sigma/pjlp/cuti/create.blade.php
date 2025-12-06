@@ -27,18 +27,18 @@
                             Cuti Saya</a>
                     </div>
                     <h4 class="text-center mb-3"><u>Form Pengajuan Cuti</u></h4>
-                    <form action="#" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('pjlp-cuti.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('post')
                         <div class="row">
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label for="jenis_pengajuan">Jenis Pengajuan</label>
+                                    <label for="jenis_pengajuan" class="required">Jenis Pengajuan</label>
                                     <select class="form-control" id="jenis_cuti_id" name="jenis_cuti_id" required>
                                         <option value="" selected disabled>- pilih jenis cuti -</option>
-                                        {{-- @foreach ($jenis_cuti as $item)
+                                        @foreach ($jenis_cuti as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                     <p id="alert" class="text-danger" style="display: none">*Izin Sakit wajib
                                         menyertakan Surat Keterangan Dokter</p>
@@ -46,15 +46,13 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                            <label for="jenis_pengajuan">Tanggal Mulai:</label>
-                                            <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')"
-                                                class="form-control" id="tanggal_awal" name="tanggal_awal"
+                                            <label for="jenis_pengajuan" class="required">Tanggal Mulai:</label>
+                                            <input type="date" class="form-control" id="tanggal_awal" name="tanggal_awal"
                                                 placeholder="Tanggal Awal" required>
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                            <label for="jenis_pengajuan">Tanggal Akhir:</label>
-                                            <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')"
-                                                class="form-control" id="tanggal_akhir" name="tanggal_akhir"
+                                            <label for="jenis_pengajuan" class="required">Tanggal Akhir:</label>
+                                            <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir"
                                                 placeholder="Tanggal Akhir" required>
                                         </div>
                                         @error('tanggal_akhir')
@@ -80,19 +78,19 @@
                                 <div class="form-group">
                                     <label for="nama">Cuti Tahunan Tersedia</label>
                                     <input type="text" class="form-control"
-                                        value="{{ $konfigurasi_cuti->jumlah ?? '#' }} hari" disabled>
+                                        value="{{ $jumlah ?? '#' }} hari" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                <label for="catatan">Catatan:</label>
+                                <label for="catatan" class="optional">Catatan:</label>
                                 <textarea id="catatan" class="form-control" name="catatan" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                <label for="catatan">Lampiran:</label>
+                                <label for="catatan" id="label_lampiran" class="">Lampiran:</label>
                                 <div class="">
                                     <input type="file" id="lampiran" name="lampiran" accept="image/*">
                                 </div>
@@ -160,16 +158,19 @@
             var totalCutiTahunan = document.getElementById('total_cuti_tahunan');
             var alert = document.getElementById('alert');
             var lampiran = document.getElementById('lampiran');
+            var label_lampiran = document.getElementById('label_lampiran');
 
             jenisCuti.addEventListener('change', function() {
                 if (jenisCuti.value === '2') {
                     alert.style.display = 'block';
                     totalCutiTahunan.style.display = 'none';
                     lampiran.required = true;
+                    label_lampiran.classList.add('required');
                 } else if (jenisCuti.value === '1') {
                     totalCutiTahunan.style.display = 'block';
                     alert.style.display = 'none';
                     lampiran.required = false;
+                    label_lampiran.classList.remove('required');
                 } else {
                     alert.style.display = 'none';
                     totalCutiTahunan.style.display = 'none';

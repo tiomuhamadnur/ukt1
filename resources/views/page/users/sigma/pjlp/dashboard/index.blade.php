@@ -25,7 +25,7 @@
                                 <div class="launch-box h-180">
                                     <h3>Absensi Saya</h3>
                                     <i class="fa fa-id-card"></i>
-                                    <p>#</p>
+                                    <p>{{ $tanggal }}</p>
                                     <h5 class="jam"></h5>
                                 </div>
                             </a>
@@ -33,24 +33,20 @@
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
                             <a href="{{ route('pjlp-kinerja.create') }}">
                                 <div class="launch-box h-180">
-                                    <h3>Kinerja</h3>
+                                    <h3>Kinerja Saya</h3>
                                     <i class="fa fa-suitcase"></i>
-                                    <p>#</p>
+                                    <p>{{ $tanggal }}</p>
                                     <h5>Lihat Data Kinerja</h5>
                                 </div>
                             </a>
                         </div>
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
-                            <a href="{{route('pjlp-cuti.index')}}">
+                            <a href="{{route('pjlp-cuti.create')}}">
                                 <div class="launch-box h-180">
                                     <h3>Cuti Saya</h3>
                                     <i class="fa fa-calendar-times"></i>
-                                    <p>#</p>
-                                    {{-- @if ($sisa_cuti > 0)
-                                    @else
-                                    <h5>Kuota Cuti Habis</h5>
-                                    @endif --}}
-                                    <h5>Sisa Cuti: x</h5>
+                                    <p>{{ $tanggal }}</p>
+                                    <h5>Sisa Cuti: {{ $sisa_cuti }} hari</h5>
                                 </div>
                             </a>
                         </div>

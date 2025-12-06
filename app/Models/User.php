@@ -61,6 +61,57 @@ class User extends Authenticatable
             ->implode('');
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->uuid = Str::uuid();
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
+    public function formasi_tim()
+    {
+        return $this->hasOne(FormasiTim::class, 'user_id')
+                    ->where('periode', now()->year);
+    }
+
+    public function konfigurasi_cuti()
+    {
+        return $this->hasOne(KonfigurasiCuti::class, 'user_id')
+                    ->where('periode', now()->year);
+    }
+
+    public function user_type()
+    {
+        return $this->belongsTo(UserType::class);
+    }
+
+    public function gender()
+    {
+        return $this->belongsTo(Gender::class);
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class);
+    }
+
+    public function pulau()
+    {
+        return $this->belongsTo(Pulau::class);
+    }
+
+    public function kelurahan()
+    {
+        return $this->belongsTo(Kelurahan::class);
+    }
+
     public function cutis()
     {
         return $this->hasMany(Cuti::class, 'user_id');

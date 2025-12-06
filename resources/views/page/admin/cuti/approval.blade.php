@@ -25,13 +25,16 @@
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3 text-left">
                             <a href="{{ route('dashboard.index') }}" class="btn btn-outline-primary"><i
                                     class="fa fa-arrow-left"></i> Kembali</a>
+                            <a href="{{ route('approval-cuti.index') }}" class="btn btn-primary" title="Refresh">
+                                <i class="fa fa-refresh"></i>
+                            </a>
                         </div>
                     </div>
-                    {{-- <div class="table-responsive">
+                    <div class="table-responsive">
                         {{ $dataTable->table([
                             'class' => 'table table-bordered table-striped',
                         ]) }}
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,34 +108,6 @@
     </div>
     <!-- END:  Detail Modal -->
 
-    <!-- BEGIN: konfirmasi hapus modal -->
-    <div id="deleteModal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-2">
-                    <div class="p-2 text-center">
-                        <div class="mt-2 fw-bolder">Apakah anda yakin?</div>
-                        <div class="text-slate-500 mt-2">
-                            <p>
-                                Data pengajuan ini akan dihapus secara <b>Permanen</b>!
-                            </p>
-                        </div>
-                        {{-- <form id="deleteForm" action="{{ route('admin-cuti.destroy') }}" method="POST" hidden>
-                            @csrf
-                            @method('delete')
-                            <input type="text" name="id" id="id">
-                        </form> --}}
-                    </div>
-                    <div class="px-5 pb-8 text-center mt-3">
-                        <button type="submit" form="deleteForm" class="btn btn-primary w-24 mr-1 me-2">Hapus</button>
-                        <button type="button" data-dismiss="modal" class="btn btn-dark w-24 mr-1 me-2">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END:  konfirmasi hapus Modal -->
-
     <!-- BEGIN: konfirmasi approve modal -->
     <div id="approveModal" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -147,13 +122,13 @@
                         </div>
                         <p class="my-3 text-center">Nomor Surat dapat diakses&nbsp;<a href="https://s.id/cutipjlp"
                                 target="_blank" style="text-decoration: underline; color:#a28a03">Di sini</a></p>
-                        <form id="approveForm" class="form mt-2" action="#"
+                        <form id="approveForm" class="form mt-2" action="{{ route('approval-cuti.approve') }}"
                             method="POST">
                             @csrf
                             @method('put')
-                            <input type="text" name="id" id="approve_id" hidden>
+                            <input type="hidden" name="id" id="approve_id">
                             <div class="form-group text-left">
-                                <label for="jenis_pengajuan">Masukan Nomor Surat</label>
+                                <label class="required">Masukkan Nomor Surat</label>
                                 <input type="text" class="form-control" name="no_surat"
                                     placeholder="input nomor surat" required>
                             </div>
@@ -181,10 +156,10 @@
                                 Status pengajuan izin ini akan diubah jadi <b>"Ditolak"</b>!
                             </p>
                         </div>
-                        <form id="rejectForm" action="#" method="POST" hidden>
+                        <form id="rejectForm" action="{{ route('approval-cuti.reject') }}" method="POST" hidden>
                             @csrf
                             @method('put')
-                            <input type="text" name="id" id="reject_id">
+                            <input type="hidden" name="id" id="reject_id">
                         </form>
                     </div>
                     <div class="px-5 pb-8 text-center mt-3">
@@ -198,9 +173,9 @@
     <!-- END:  konfirmasi reject Modal -->
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     {{ $dataTable->scripts() }}
-@endpush --}}
+@endpush
 
 @section('javascript')
     <script>

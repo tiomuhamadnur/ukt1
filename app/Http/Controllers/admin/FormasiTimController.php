@@ -35,7 +35,7 @@ class FormasiTimController extends Controller
             'pulau_id' => 'nullable|exists:pulau,id',
             'user_id' => 'nullable|exists:users,id',
             'koordinator_id' => 'nullable|exists:users,id',
-            'periode' => 'nullable|digits:4|integer',
+            'periode' => 'required|digits:4|integer',
         ]);
 
         FormasiTim::updateOrCreate($rawData, $rawData);
@@ -51,7 +51,7 @@ class FormasiTimController extends Controller
             'pulau_id' => 'nullable|exists:pulau,id',
             'user_id' => 'nullable|exists:users,id',
             'koordinator_id' => 'nullable|exists:users,id',
-            'periode' => 'nullable|digits:4|integer',
+            'periode' => 'required|digits:4|integer',
         ]);
 
         $formasi_tim->update($rawData);

@@ -46,7 +46,7 @@
     </script>
 @endif
 
-<!-- Modal Hapus Data Provinsi -->
+<!-- Modal Hapus Data -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -63,7 +63,7 @@
                 @method('DELETE')
 
                 <div class="modal-body text-center">
-                    <p>Apakah Anda yakin ingin menghapus data provinsi ini?</p>
+                    <p>Apakah Anda yakin ingin menghapus data ini?</p>
                 </div>
 
                 <div class="modal-footer custom">
@@ -82,4 +82,4 @@
         </div>
     </div>
 </div>
-<!-- End Modal Hapus Data Provinsi -->
+<!-- End Modal Hapus Data -->

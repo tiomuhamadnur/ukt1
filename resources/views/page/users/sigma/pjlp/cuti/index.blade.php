@@ -41,17 +41,18 @@
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12 mb-2 ml-2">
-                            <span class="btn btn-outline-primary">Sisa Cuti Tahunan:
-                                {{-- <strong>{{ $jumlah ?? '0' }} hari</strong></span> --}}
+                            <span class="btn btn-outline-primary">Sisa Cuti:
+                                <strong>{{ $jumlah ?? '0' }} hari</strong>
+                            </span>
                         </div>
                     </div>
                     <div class="projectLog">
                         <div class="logs-container">
-                            {{-- <div class="table-responsive mt-2">
+                            <div class="table-responsive mt-2">
                                 {{ $dataTable->table([
                                     'class' => 'table table-bordered table-striped',
                                 ]) }}
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,35 +182,6 @@
     </div>
     {{-- END: Modal Detail Pengajuan --}}
 
-    <!-- BEGIN: konfirmasi hapus modal -->
-    <div id="deleteModal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-2">
-                    <div class="p-2 text-center">
-                        <div class="mt-2 fw-bolder">Apakah anda yakin?</div>
-                        <div class="text-slate-500 mt-2">
-                            <p>
-                                Data pengajuan cuti akan dibatalkan & dihapus secara
-                                <b>Permanen</b>!
-                            </p>
-                        </div>
-                        {{-- <form id="deleteForm" action="{{ route('simoja.cuti.pjlp.destroy') }}" method="POST" hidden>
-                            @csrf
-                            @method('delete')
-                            <input type="text" name="id" id="id">
-                        </form> --}}
-                    </div>
-                    <div class="px-5 pb-8 text-center mt-3">
-                        <button type="submit" form="deleteForm" class="btn btn-primary w-24 mr-1 me-2">Hapus</button>
-                        <button type="button" data-dismiss="modal" class="btn btn-dark w-24 mr-1 me-2">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END:  konfirmasi hapus Modal -->
-
     {{-- BEGIN: Konfirmasi PDF --}}
     <div id="modalDownloadPDF" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -235,18 +207,13 @@
     {{-- END: Konfirmasi PDF --}}
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     {{ $dataTable->scripts() }}
-@endpush --}}
+@endpush
 
 @section('javascript')
     <script>
         $(document).ready(function() {
-            $('#deleteModal').on('show.bs.modal', function(e) {
-                var id = $(e.relatedTarget).data('id');
-                document.getElementById("id").value = id;
-            });
-
             $('#modalDetailPengajuan').on('show.bs.modal', function(e) {
                 var lampiran = $(e.relatedTarget).data('lampiran');
                 var nama = $(e.relatedTarget).data('nama');

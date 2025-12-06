@@ -41,11 +41,11 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="table-responsive">
+                    <div class="table-responsive">
                         {{ $dataTable->table([
                             'class' => 'table table-bordered table-striped',
                         ]) }}
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,9 +127,9 @@
     {{-- END: MODAL DOKUMENTASI --}}
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     {{ $dataTable->scripts() }}
-@endpush --}}
+@endpush
 
 @section('javascript')
     <script type="text/javascript">
@@ -141,7 +141,7 @@
                 photoArray.forEach(function(item) {
                     var photoPath = "{{ asset('storage/') }}" + '/' + item;
                     photoHTML +=
-                        '<div class""><img class="img-thumbnail img-fluid" style="width: 400px;" src="' +
+                        '<div class"mt-2"><img class="img-thumbnail img-fluid mt-2" style="width: 300px;" src="' +
                         photoPath + '" alt="photo"></div>';
                 });
 

@@ -19,7 +19,7 @@
 @section('content')
     <div class="row gutters justify-content-center">
         <div class="col-xl-4 col-lg-4 col-md-5 col-sm-6 col-12">
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('pjlp-absensi.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('post')
                 <div class="card m-0">
@@ -27,63 +27,60 @@
                         <div class="mb-3">
                             <a href="{{ route('pjlp-absensi.index') }}"
                                 class="btn btn-primary col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
-                                style="border-radius: 6px">Lihat Daftar
-                                Absensi Saya</a>
+                                style="border-radius: 6px">Lihat Daftar Absensi Saya</a>
                         </div>
                         <h4 class="text-center"><u>Form Absensi</u></h4>
                         <div class="form-group">
-                            <label>Data Lengkap</label>
+                            <label class="required">Data Lengkap:</label>
                             <table>
                                 <tr>
                                     <td style="width: 90px">Nama</td>
                                     <td style="width: 15px">:</td>
-                                    <td class="font-weight-bolder">{{ auth()->user()->name }}</td>
+                                    <td class="font-weight-bolder">{{ $user->name }}</td>
                                 </tr>
                                 <tr>
                                     <td>NIP/ID</td>
                                     <td>:</td>
-                                    <td>#</td>
+                                    <td>{{ $user->nip }}</td>
                                 </tr>
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>#</td>
+                                    <td>{{ $user->jabatan->name ?? '-' }}</td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <td>Koordinator</td>
                                     <td>:</td>
                                     <td>#</td>
-                                </tr>
+                                </tr> --}}
                                 <tr>
                                     <td>Seksi</td>
                                     <td>:</td>
-                                    <td>#</td>
+                                    <td>{{ $user->formasi_tim->tim->seksi->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Pulau</td>
                                     <td>:</td>
-                                    <td>#</td>
+                                    <td>{{ $user->formasi_tim->pulau->name ?? '-' }}</td>
                                 </tr>
                             </table>
                         </div>
                         <div class="form-group">
-                            <label for="">Jenis Absensi</label>
-                            {{-- <input type="text" class="form-control" value="{{ $mode ?? '-' }}" disabled>
-                            <input type="text" class="form-control" value="{{ $jenis_absensi->id }}"
-                                name="jenis_absensi_id" hidden> --}}
+                            <label for="" class="required">Jenis Absensi:</label>
+                            <input type="text" class="form-control" value="{{ $jenis_absensi->name ?? '-' }}" disabled>
                         </div>
                         <div class="form-group">
-                            <label for="">Tanggal</label>
-                            {{-- <input type="text" class="form-control" value="{{ $tanggal }}" autocomplete="off"
-                                disabled> --}}
+                            <label for="" class="required">Tanggal:</label>
+                            <input type="text" class="form-control" value="{{ $tanggal }}" autocomplete="off"
+                                disabled>
                         </div>
                         <div class="form-group">
-                            <label for="">Jam</label>
+                            <label for="" class="required">Jam:</label>
                             <input type="text" id="jam" class="form-control" value="__:__ WIB" autocomplete="off"
                                 disabled>
                         </div>
                         <div class="form-group">
-                            <label for="">Photo</label>
+                            <label for="" class="required">Photo:</label>
                             <input type="hidden" class="form-control input-photo" name="photo" id="photo"
                                 accept="image/*" required hidden>
                             <div class="container">
@@ -106,7 +103,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="catatan">Catatan <span class="text-primary">(Opsional)</span></label>
+                            <label for="catatan" class="optional">Catatan:</label>
                             <textarea id="catatan" class="form-control" name="catatan" rows="3"></textarea>
                         </div>
                         <div class="btn group-button mt-2">

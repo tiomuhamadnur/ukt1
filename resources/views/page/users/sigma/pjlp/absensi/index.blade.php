@@ -41,11 +41,11 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="table-responsive">
+                    <div class="table-responsive">
                         {{ $dataTable->table([
                             'class' => 'table table-bordered table-striped',
                         ]) }}
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formFilter" action="#" method="GET">
+                    <form id="formFilter" action="{{ route('pjlp-absensi.index') }}" method="GET">
                         @csrf
                         @method('GET')
                         <div class="form-row gutters">
@@ -77,13 +77,13 @@
                         <div class="form-row gutters">
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" value="#"
+                                    <input type="date" class="form-control" value="{{ $start_date }}"
                                         name="start_date">
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" value="#" name="end_date">
+                                    <input type="date" class="form-control" value="{{ $end_date }}" name="end_date">
                                 </div>
                             </div>
                         </div>
@@ -134,9 +134,9 @@
     {{-- END: MODAL DOKUMENTASI --}}
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     {{ $dataTable->scripts() }}
-@endpush --}}
+@endpush
 
 @section('javascript')
     <script type="text/javascript">

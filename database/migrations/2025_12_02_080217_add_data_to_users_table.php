@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->uuid('uuid')->unique()->nullable();
-            $table->integer('nik')->unique()->nullable();
+            $table->string('nik')->unique()->nullable();
             $table->string('nip')->unique()->nullable();
             $table->string('no_hp')->unique()->nullable();
             $table->string('tempat_lahir')->nullable();

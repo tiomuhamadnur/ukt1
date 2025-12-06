@@ -21,9 +21,12 @@ use App\Models\JenisAbsensi;
 use Illuminate\Http\Request;
 use App\Models\StatusAbsensi;
 use App\Http\Controllers\Controller;
+use App\Models\Cuti;
 use App\Models\KonfigurasiAbsensi;
 use App\Models\KonfigurasiCuti;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -91,7 +94,27 @@ class DashboardController extends Controller
 
     public function pjlp()
     {
-        return view('page.users.sigma.pjlp.dashboard.index');
+        $today = Carbon::now();
+        $tanggal = Carbon::parse($today)->isoFormat('dddd, D MMMM Y');
+        $tahun = Carbon::parse($today)->format('Y');
+        $user = Auth::user();
+        $jumlah_cuti = Cuti::whereYear('tanggal_awal', $tahun)
+                        ->where('jenis_cuti_id', $user->id) //Khusus cuti tahunan
+                        ->where('user_id', $user->id)
+                        ->where('status_cuti_id', 2) //Status diterima
+                        ->sum('jumlah');
+
+        $jatah_cuti = KonfigurasiCuti::where('periode', $tahun)
+                        ->where('user_id', $user->id)
+                        ->first()
+                        ->jumlah_awal;
+
+        $sisa_cuti = $jatah_cuti - $jumlah_cuti;
+
+        return view('page.users.sigma.pjlp.dashboard.index', compact([
+            'tanggal',
+            'sisa_cuti',
+        ]));
     }
 
 }

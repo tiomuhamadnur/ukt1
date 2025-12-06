@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->text('alamat')->nullable();
             $table->string('latitude')->nullable();
-            $table->string('longtitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->integer('kapasitas')->nullable();
             $table->integer('luas_tanah')->nullable();
             $table->integer('luas_bangunan')->nullable();

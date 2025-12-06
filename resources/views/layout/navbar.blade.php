@@ -86,10 +86,10 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="dashboardsDropdown">
         <li>
-            <a class="dropdown-item" href="{{ route("kanit.index") }}">Kanit</a>
+            <a class="dropdown-item" href="{{ route("kanit.index") }}">Kanit (belum)</a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route("kasi.index") }}">Kasi</a>
+            <a class="dropdown-item" href="{{ route("kasi.index") }}">Kasi (belum)</a>
         </li>
         <li>
             <a class="dropdown-item" href="{{ route("pjlp.index") }}">PJLP</a>
