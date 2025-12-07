@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3 text-left">
-                            <a href="{{ route('dataEssentials.index') }}" class="btn btn-outline-primary"><i
+                            <a href="{{ url()->previous() }}" class="btn btn-outline-primary"><i
                                     class="fa fa-arrow-left"></i> Kembali</a>
                             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambahData">Tambah
                                 Data</a>
@@ -77,6 +77,24 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="optional">Unit Kerja:</label>
+                            <select name="unit_kerja_id" class="form-control">
+                                <option value="" disabled selected>-- Pilih Unit Kerja --</option>
+                                @foreach ($unit_kerja as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="optional">Seksi:</label>
+                            <select name="seksi_id" class="form-control">
+                                <option value="" disabled selected>-- Pilih Seksi --</option>
+                                @foreach ($seksi as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="required">User Type:</label>
                             <select name="user_type_id" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih User Type --</option>
@@ -86,8 +104,17 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="required">Pulau:</label>
-                            <select name="pulau_id" class="form-control" required>
+                            <label class="required">Role:</label>
+                            <select name="role_name" class="form-control" required>
+                                <option value="" disabled selected>-- Pilih Role --</option>
+                                @foreach ($roles as $item)
+                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="optional">Pulau:</label>
+                            <select name="pulau_id" class="form-control">
                                 <option value="" disabled selected>-- Pilih Pulau --</option>
                                 @foreach ($pulau as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -181,6 +208,24 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="optional">Unit Kerja:</label>
+                            <select name="unit_kerja_id" id="unit_kerja_id_edit" class="form-control">
+                                <option value="" disabled selected>-- Pilih Unit Kerja --</option>
+                                @foreach ($unit_kerja as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="optional">Seksi:</label>
+                            <select name="seksi_id" id="seksi_id_edit" class="form-control">
+                                <option value="" disabled selected>-- Pilih Seksi --</option>
+                                @foreach ($seksi as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="required">User Type:</label>
                             <select name="user_type_id" id="user_type_id_edit" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih User Type --</option>
@@ -190,9 +235,19 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="required">Pulau:</label>
-                            <select name="pulau_id" id="pulau_id_edit" class="form-control" required>
+                            <label class="required">Role:</label>
+                            <select name="role_name" id="role_name_edit" class="form-control" required>
+                                <option value="" disabled selected>-- Pilih Role --</option>
+                                @foreach ($roles as $item)
+                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="optional">Pulau:</label>
+                            <select name="pulau_id" id="pulau_id_edit" class="form-control">
                                 <option value="" disabled selected>-- Pilih Pulau --</option>
+                                <option value="">-- Tidak Ada Pulau --</option>
                                 @foreach ($pulau as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -352,10 +407,13 @@
                 var alamat = $(e.relatedTarget).data('alamat');
                 var bio = $(e.relatedTarget).data('bio');
                 var is_plt = $(e.relatedTarget).data('is_plt');
+                var unit_kerja_id = $(e.relatedTarget).data('unit_kerja_id');
+                var seksi_id = $(e.relatedTarget).data('seksi_id');
                 var user_type_id = $(e.relatedTarget).data('user_type_id');
                 var gender_id = $(e.relatedTarget).data('gender_id');
                 var pulau_id = $(e.relatedTarget).data('pulau_id');
                 var jabatan_id = $(e.relatedTarget).data('jabatan_id');
+                var role_name = $(e.relatedTarget).data('role_name');
 
                 document.getElementById("editForm").action = url;
                 $('#name_edit').val(name);
@@ -368,10 +426,13 @@
                 $('#alamat_edit').val(alamat);
                 $('#bio_edit').val(bio);
                 $('#is_plt_edit').val(is_plt);
+                $('#unit_kerja_id_edit').val(unit_kerja_id);
+                $('#seksi_id_edit').val(seksi_id);
                 $('#user_type_id_edit').val(user_type_id);
                 $('#gender_id_edit').val(gender_id);
                 $('#pulau_id_edit').val(pulau_id);
                 $('#jabatan_id_edit').val(jabatan_id);
+                $('#role_name_edit').val(role_name);
             });
         })
     </script>

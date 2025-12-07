@@ -22,7 +22,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-12 text-left">
-                            <a href="{{ route('dataEssentials.index') }}" class="btn btn-outline-primary"><i
+                            <a href="{{ url()->previous() }}" class="btn btn-outline-primary"><i
                                     class="fa fa-arrow-left"></i> Kembali</a>
                             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambahData">Tambah
                                 Data</a>

@@ -8,10 +8,13 @@ use App\Models\Gender;
 use App\Models\Jabatan;
 use App\Models\Kelurahan;
 use App\Models\Pulau;
+use App\Models\Seksi;
+use App\Models\UnitKerja;
 use App\Models\User;
 use App\Models\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -28,6 +31,9 @@ class UserController extends Controller
         $jabatan = Jabatan::all();
         $kelurahan = Kelurahan::all();
         $pulau = Pulau::all();
+        $roles = Role::all();
+        $unit_kerja = UnitKerja::all();
+        $seksi = Seksi::all();
 
         return $dataTable->with([
             'user_type_id' => $user_type_id,
@@ -37,6 +43,9 @@ class UserController extends Controller
             'jabatan',
             'kelurahan',
             'pulau',
+            'roles',
+            'unit_kerja',
+            'seksi',
         ]));
     }
 
@@ -70,8 +79,14 @@ class UserController extends Controller
             'is_plt' => 'nullable|boolean',
             'user_type_id' => 'required|exists:user_type,id',
             'gender_id' => 'required|exists:gender,id',
-            'pulau_id' => 'required|exists:pulau,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
             'jabatan_id' => 'required|exists:jabatan,id',
+            'unit_kerja_id' => 'nullable|exists:unit_kerja,id',
+            'seksi_id' => 'nullable|exists:seksi,id',
+        ]);
+
+        $validated = $request->validate([
+            'role_name' => 'required|string|exists:roles,name',
         ]);
 
         $defaultPassword = env('DEFAULT_PASSWORD', 'user123');
@@ -79,6 +94,8 @@ class UserController extends Controller
         $rawData['password'] = Hash::make($defaultPassword);
 
         $user = User::updateOrCreate($rawData, $rawData);
+
+        $user->syncRoles([$validated['role_name']]);
 
         return back()->withNotify("Data user <b>{$user->name}</b> berhasil ditambahkan, dengan default password: <br> <b>{$defaultPassword}</b>");
     }
@@ -115,11 +132,16 @@ class UserController extends Controller
             'is_plt' => 'nullable|boolean',
             'user_type_id' => 'required|exists:user_type,id',
             'gender_id' => 'required|exists:gender,id',
-            'pulau_id' => 'required|exists:pulau,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
             'jabatan_id' => 'required|exists:jabatan,id',
+            'role_name' => 'required|string|exists:roles,name',
+            'unit_kerja_id' => 'nullable|exists:unit_kerja,id',
+            'seksi_id' => 'nullable|exists:seksi,id',
         ]);
 
         $user->update($rawData);
+
+        $user->syncRoles([$rawData['role_name']]);
 
         return back()->withNotify("Data user <b>{$user->name}</b> berhasil diperbarui.");
     }

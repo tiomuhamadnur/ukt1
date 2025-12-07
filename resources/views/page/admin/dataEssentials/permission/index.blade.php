@@ -1,7 +1,7 @@
 @extends('layout.base')
 
 @section('title-head')
-    <title>Masterdata | Daftar Jabatan</title>
+    <title>Masterdata | Daftar Permission</title>
 @endsection
 
 @section('path')
@@ -9,23 +9,24 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">Masterdata</li>
             <li class="breadcrumb-item">Data Essentials</li>
-            <li class="breadcrumb-item">Jabatan</li>
-            <li class="breadcrumb-item active">Daftar Jabatan</li>
+            <li class="breadcrumb-item active">Daftar Permission</li>
         </ol>
     </div>
 @endsection
 
 @section('content')
     <div class="row gutters">
-        <div class="col-12">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 mb-3 text-left">
-                            <a href="{{ route('dataEssentials.index') }}" class="btn btn-outline-primary"><i
-                                    class="fa fa-arrow-left"></i> Kembali</a>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambahData">Tambah
-                                Data</a>
+                            <a href="{{ route('dataEssentials.index') }}" class="btn btn-outline-primary">
+                                <i class="fa fa-arrow-left"></i> Kembali
+                            </a>
+                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambahData">
+                                Tambah Data
+                            </a>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -40,28 +41,22 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Jabatan -->
-    <div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Modal Tambah Permission -->
+    <div class="modal fade" id="tambahData" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Jabatan</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h5 class="modal-title">Tambah Data Permission</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-
-                <form action="{{ route('jabatan.store') }}" method="POST">
+                <form action="{{ route('permission.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Nama Jabatan:</label>
+                            <label class="required">Nama Permission:</label>
                             <input type="text" class="form-control" name="name" required>
                         </div>
-                        <div class="form-group">
-                            <label class="required">Kode Jabatan:</label>
-                            <input type="text" class="form-control" name="code" required>
-                        </div>
                     </div>
-
                     <div class="modal-footer custom">
                         <div class="left-side">
                             <button type="button" class="btn btn-link danger" data-dismiss="modal">Batal</button>
@@ -72,34 +67,29 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
-    <!-- End Modal Tambah Jabatan -->
+    <!-- End Modal Tambah Permission -->
 
-    <!-- Modal Edit Jabatan -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Modal Edit Permission -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Data Jabatan</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h5 class="modal-title">Edit Data Permission</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-
                 <form id="editForm" action="#" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Nama Jabatan:</label>
+                            <label class="required">Nama Permission:</label>
                             <input type="text" class="form-control" name="name" id="name_edit" required>
                         </div>
-                        <div class="form-group">
-                            <label class="required">Kode Jabatan:</label>
-                            <input type="text" class="form-control" name="code" id="code_edit" required>
-                        </div>
                     </div>
-
                     <div class="modal-footer custom">
                         <div class="left-side">
                             <button type="button" class="btn btn-link danger" data-dismiss="modal">Batal</button>
@@ -110,10 +100,11 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
-    <!-- End Modal Edit Jabatan -->
+    <!-- End Modal Edit Permission -->
 @endsection
 
 @push('scripts')
@@ -126,11 +117,9 @@
             $('#editModal').on('show.bs.modal', function(e) {
                 var url = $(e.relatedTarget).data('url');
                 var name = $(e.relatedTarget).data('name');
-                var code = $(e.relatedTarget).data('code');
 
                 document.getElementById("editForm").action = url;
                 $('#name_edit').val(name);
-                $('#code_edit').val(code);
             });
         });
     </script>

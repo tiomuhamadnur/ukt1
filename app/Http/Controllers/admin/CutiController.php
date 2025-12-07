@@ -195,25 +195,171 @@ class CutiController extends Controller
 
 
     // KANIT
-    public function kanit_index()
+    public function kanit_index(CutiDataTable $dataTable, Request $request)
     {
-        return view('page.users.sigma.kanit.cuti.index');
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'jenis_cuti_id' => 'nullable|exists:jenis_cuti,id',
+            'status_cuti_id' => 'nullable|exists:status_cuti,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+        $jenis_cuti_id = $request->jenis_cuti_id ?? null;
+        $status_cuti_id = $request->status_cuti_id ?? null;
+
+        $periode = null;
+
+        if (($request->start_date != null) && ($request->end_date != null)) {
+            $start = Carbon::parse($request->start_date);
+            $end = Carbon::parse($request->end_date);
+
+            // Pastikan tahun sama
+            if ($start->year !== $end->year) {
+                return back()->withError('Tanggal awal dan akhir harus dalam tahun yang sama.');
+            }
+
+            $periode = $start->year;
+            $start_date = $start->toDateString();
+            $end_date = $end->toDateString();
+        } else {
+            // Default: tahun berjalan
+            $periode = Carbon::now()->year;
+            $start_date = Carbon::createFromDate($periode, 1, 1)->toDateString();
+            $end_date = Carbon::createFromDate($periode, 12, 31)->toDateString();
+        }
+
+
+        $user = User::where('user_type_id', 4) //Hanya PJLP
+                ->orderBy('name', 'ASC')
+                ->whereNot('jabatan_id', 1) //Bukan admin
+                ->get();
+
+        $pulau = Pulau::orderBy('name', 'ASC')->get();
+        $seksi  = Seksi::orderBy('name', 'ASC')->get();
+        $jenis_cuti = JenisCuti::all();
+        $status_cuti = StatusCuti::all();
+
+        return $dataTable->with([
+            'user_id' => $user_id,
+            'pulau_id' => $pulau_id,
+            'jenis_cuti_id' => $jenis_cuti_id,
+            'status_cuti_id' => $status_cuti_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'periode' => $periode,
+        ])->render('page.users.sigma.kanit.cuti.index', compact([
+            'seksi',
+            'user',
+            'pulau',
+            'jenis_cuti',
+            'status_cuti',
+            'user_id',
+            'pulau_id',
+            'jenis_cuti_id',
+            'status_cuti_id',
+            'start_date',
+            'end_date',
+        ]));
     }
 
-    public function kanit_approval()
+    public function kanit_approval(CutiPersetujuanDataTable $dataTable, Request $request)
     {
-        return view('page.users.sigma.kanit.cuti.approval');
+        return $dataTable->render('page.users.sigma.kanit.cuti.approval');
     }
+
+
+
+
+
+
 
     // KASI
-    public function kasi_index()
+    public function kasi_index(CutiDataTable $dataTable, Request $request)
     {
-        return view('page.users.sigma.kanit.cuti.approval');
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'jenis_cuti_id' => 'nullable|exists:jenis_cuti,id',
+            'status_cuti_id' => 'nullable|exists:status_cuti,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+        $jenis_cuti_id = $request->jenis_cuti_id ?? null;
+        $status_cuti_id = $request->status_cuti_id ?? null;
+
+        $seksi_id = Auth::user()->seksi_id;
+
+        $periode = null;
+
+        if (($request->start_date != null) && ($request->end_date != null)) {
+            $start = Carbon::parse($request->start_date);
+            $end = Carbon::parse($request->end_date);
+
+            // Pastikan tahun sama
+            if ($start->year !== $end->year) {
+                return back()->withError('Tanggal awal dan akhir harus dalam tahun yang sama.');
+            }
+
+            $periode = $start->year;
+            $start_date = $start->toDateString();
+            $end_date = $end->toDateString();
+        } else {
+            // Default: tahun berjalan
+            $periode = Carbon::now()->year;
+            $start_date = Carbon::createFromDate($periode, 1, 1)->toDateString();
+            $end_date = Carbon::createFromDate($periode, 12, 31)->toDateString();
+        }
+
+
+        $user = User::where('user_type_id', 4) //Hanya PJLP
+                ->whereRelation('formasi_tim.tim', 'seksi_id', '=', $seksi_id)
+                ->orderBy('name', 'ASC')
+                ->whereNot('jabatan_id', 1) //Bukan admin
+                ->get();
+
+        $pulau = Pulau::orderBy('name', 'ASC')->get();
+        $seksi  = Seksi::orderBy('name', 'ASC')->get();
+        $jenis_cuti = JenisCuti::all();
+        $status_cuti = StatusCuti::all();
+
+        return $dataTable->with([
+            'seksi_id' => $seksi_id,
+            'user_id' => $user_id,
+            'pulau_id' => $pulau_id,
+            'jenis_cuti_id' => $jenis_cuti_id,
+            'status_cuti_id' => $status_cuti_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'periode' => $periode,
+        ])->render('page.users.sigma.kasi.cuti.index', compact([
+            'seksi',
+            'user',
+            'pulau',
+            'jenis_cuti',
+            'status_cuti',
+            'seksi_id',
+            'user_id',
+            'pulau_id',
+            'jenis_cuti_id',
+            'status_cuti_id',
+            'start_date',
+            'end_date',
+        ]));
     }
 
-    public function kasi_approval()
+    public function kasi_approval(CutiPersetujuanDataTable $dataTable, Request $request)
     {
-        return view('page.users.sigma.kanit.cuti.approval');
+        $seksi_id = Auth::user()->seksi_id;
+        return $dataTable->with([
+            'seksi_id' => $seksi_id,
+        ])->render('page.users.sigma.kasi.cuti.approval');
     }
 
 

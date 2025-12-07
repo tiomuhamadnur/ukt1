@@ -35,6 +35,8 @@ class User extends Authenticatable
         'pulau_id',
         'kelurahan_id',
         'jabatan_id',
+        'unit_kerja_id',
+        'seksi_id',
     ];
 
     protected $hidden = [
@@ -85,6 +87,16 @@ class User extends Authenticatable
     {
         return $this->hasOne(KonfigurasiCuti::class, 'user_id')
                     ->where('periode', now()->year);
+    }
+
+    public function unit_kerja()
+    {
+        return $this->belongsTo(UnitKerja::class);
+    }
+
+    public function seksi()
+    {
+        return $this->belongsTo(Seksi::class);
     }
 
     public function user_type()

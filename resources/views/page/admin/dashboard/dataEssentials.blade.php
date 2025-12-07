@@ -286,5 +286,31 @@
                 </div>
             </a>
         </div>
+        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
+            <a href="{{ route('permission.index') }}">
+                <div class="info-tiles">
+                    <div class="info-icon">
+                        <i class="fa fa-database"></i>
+                    </div>
+                    <div class="stats-detail">
+                        <h3>{{ $permission }}</h3>
+                        <p>Permissions</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
+            <a href="{{ route('role.index') }}">
+                <div class="info-tiles">
+                    <div class="info-icon">
+                        <i class="fa fa-database"></i>
+                    </div>
+                    <div class="stats-detail">
+                        <h3>{{ $role }}</h3>
+                        <p>Roles</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 @endsection

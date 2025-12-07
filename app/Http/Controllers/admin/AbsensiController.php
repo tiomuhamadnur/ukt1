@@ -89,14 +89,124 @@ class AbsensiController extends Controller
 
 
 
-    public function kanit_index()
+    public function kanit_index(AbsensiDataTable $dataTable, Request $request)
     {
-        return view('page.admin.arsip.absensi.index');
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'bulan' => 'nullable|numeric',
+            'tahun' => 'nullable|numeric',
+        ]);
+
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+
+        $tahun = $request->tahun ?? date('Y');
+        $bulan = $request->bulan ?? date('m');
+
+        // Buat string periode Y-m
+        $periode = $tahun . '-' . $bulan;
+
+        // Parse periode dengan format Y-m
+        $periodeCarbon = Carbon::createFromFormat('Y-m', $periode);
+
+        // Ambil tanggal awal & akhir bulan
+        $start_date = $periodeCarbon->startOfMonth()->toDateString();
+        $end_date   = $periodeCarbon->endOfMonth()->toDateString();
+
+        $user = User::where('user_type_id', 4) //Hanya PJLP
+                ->orderBy('name', 'ASC')
+                ->get();
+
+        $seksi = Seksi::orderBy('name', 'ASC')->get();
+        $pulau = Pulau::orderBy('name', 'ASC')->get();
+        $tahuns = Absensi::selectRaw('YEAR(tanggal) as tahun')
+                ->distinct()
+                ->orderBy('tahun', 'asc')
+                ->pluck('tahun');
+
+
+        return $dataTable->with([
+            'user_id' => $user_id,
+            'pulau_id' => $pulau_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ])->render('page.users.sigma.kanit.absensi.index', compact([
+            'user',
+            'pulau',
+            'seksi',
+            'user_id',
+            'pulau_id',
+            'start_date',
+            'end_date',
+            'periode',
+            'tahuns',
+            'tahun',
+            'bulan',
+        ]));
+        // return view('page.users.sigma.kanit.absensi.index');
     }
 
-    public function kasi_index()
+    public function kasi_index(AbsensiDataTable $dataTable, Request $request)
     {
-        return view('page.admin.arsip.absensi.index');
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'bulan' => 'nullable|numeric',
+            'tahun' => 'nullable|numeric',
+        ]);
+
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+
+        $tahun = $request->tahun ?? date('Y');
+        $bulan = $request->bulan ?? date('m');
+
+        $seksi_id = Auth::user()->seksi_id;
+
+        // Buat string periode Y-m
+        $periode = $tahun . '-' . $bulan;
+
+        // Parse periode dengan format Y-m
+        $periodeCarbon = Carbon::createFromFormat('Y-m', $periode);
+
+        // Ambil tanggal awal & akhir bulan
+        $start_date = $periodeCarbon->startOfMonth()->toDateString();
+        $end_date   = $periodeCarbon->endOfMonth()->toDateString();
+
+        $user = User::where('user_type_id', 4) //Hanya PJLP
+                ->whereRelation('formasi_tim.tim', 'seksi_id', '=', $seksi_id)
+                ->orderBy('name', 'ASC')
+                ->get();
+
+        $seksi = Seksi::orderBy('name', 'ASC')->get();
+        $pulau = Pulau::orderBy('name', 'ASC')->get();
+        $tahuns = Absensi::selectRaw('YEAR(tanggal) as tahun')
+                ->distinct()
+                ->orderBy('tahun', 'asc')
+                ->pluck('tahun');
+
+
+        return $dataTable->with([
+            'seksi_id' => $seksi_id,
+            'user_id' => $user_id,
+            'pulau_id' => $pulau_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ])->render('page.users.sigma.kasi.absensi.index', compact([
+            'user',
+            'pulau',
+            'seksi',
+            'seksi_id',
+            'user_id',
+            'pulau_id',
+            'start_date',
+            'end_date',
+            'periode',
+            'tahuns',
+            'tahun',
+            'bulan',
+        ]));
     }
 
 

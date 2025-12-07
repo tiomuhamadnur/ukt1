@@ -9,7 +9,7 @@
 @section('path')
     <div class="page-header">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active">Dashboard Sigma Kepala Unit</li>
+            <li class="breadcrumb-item active">Dashboard Sigma Kepala Unit ({{ auth()->user()->unit_kerja->name ?? 'N/A' }})</li>
     </div>
 @endsection
 
@@ -25,7 +25,7 @@
                                 <div class="launch-box h-180">
                                     <h3>Rekap Data Absensi</h3>
                                     <i class="fa fa-id-card"></i>
-                                    <p>#</p>
+                                    <p>Periode tahun {{ $tahun }}</p>
                                     <h5 class="jam"></h5>
                                 </div>
                             </a>
@@ -35,12 +35,12 @@
                                 <div class="launch-box h-180">
                                     <h3>Rekap Data Kinerja</h3>
                                     <i class="fa fa-suitcase"></i>
-                                    <p>Periode tahun #</p>
-                                    {{-- @if ($jumlah_kinerja > 0)
+                                    <p>Periode tahun {{ $tahun }}</p>
+                                    @if ($jumlah_kinerja > 0)
                                         <h5>{{ number_format($jumlah_kinerja, 0, ',', '.') }} Data Kinerja</h5>
                                     @else
                                         <h5>Tidak ada Data Kinerja</h5>
-                                    @endif --}}
+                                    @endif
                                 </div>
                             </a>
                         </div>
@@ -49,29 +49,29 @@
                                 <div class="launch-box h-180">
                                     <h3>Rekap Data Cuti</h3>
                                     <i class="fa fa-calendar-times"></i>
-                                    <p>Periode tahun #</p>
-                                    {{-- @if ($data_cuti > 0)
+                                    <p>Periode tahun {{ $tahun }}</p>
+                                    @if ($data_cuti > 0)
                                         <h5>{{ number_format($data_cuti, 0, ',', '.') }} Data Cuti</h5>
                                     @else
                                         <h5>Tidak ada Data Cuti</h5>
-                                    @endif --}}
+                                    @endif
                                 </div>
                             </a>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <a href="{{ route('kanit-cuti-approval.index') }}">
                                 <div class="launch-box h-180">
-                                    {{-- @if ($jumlah_pengajuan_cuti > 0)
+                                    @if ($jumlah_pengajuan_cuti > 0)
                                         <span class="circle pulse badge-notif"></span>
-                                    @endif --}}
+                                    @endif
                                     <h3>Daftar Persetujuan Cuti</h3>
                                     <i class="fa fa-calendar-days"></i>
-                                    <p>Periode tahun#</p>
-                                    {{-- @if ($jumlah_pengajuan_cuti > 0)
+                                    <p>Periode tahun {{ $tahun }}</p>
+                                    @if ($jumlah_pengajuan_cuti > 0)
                                         <h5>{{ number_format($jumlah_pengajuan_cuti, 0, ',', '.') }} Pengajuan</h5>
                                     @else
                                         <h5>Tidak ada Pengajuan Cuti</h5>
-                                    @endif --}}
+                                    @endif
                                 </div>
                             </a>
                         </div>

@@ -15,6 +15,7 @@ use Yajra\DataTables\Services\DataTable;
 
 class CutiPersetujuanDataTable extends DataTable
 {
+    protected $seksi_id;
     protected $disetujui_oleh_id;
 
     public function with(array|string $key, mixed $value = null): static
@@ -109,6 +110,11 @@ class CutiPersetujuanDataTable extends DataTable
         if($this->disetujui_oleh_id != null)
         {
             $query->where('disetujui_oleh_id', $this->disetujui_oleh_id);
+        }
+
+        if($this->seksi_id != null)
+        {
+            $query->whereRelation('user.formasi_tim.tim', 'seksi_id', '=', $this->seksi_id);
         }
 
         return $query;

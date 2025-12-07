@@ -10,7 +10,7 @@
     <div class="page-header">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Absensi</a></li>
-            <li class="breadcrumb-item active">Daftar Absensi Seksi #</li>
+            <li class="breadcrumb-item active">Daftar Absensi {{ auth()->user()->unit_kerja->name ?? 'N/A' }}</li>
         </ol>
     </div>
 @endsection
@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="d-flex justify-content-center mb-3 text-center" style="text-decoration: underline">Rekap
-                        Absensi - Seksi #</h4>
+                        Absensi - {{ auth()->user()->unit_kerja->name ?? 'N/A' }}</h4>
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3 text-left">
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
@@ -31,13 +31,9 @@
                                     Kembali</a>
                                 <a href="javascript:;" class="btn btn-primary mr-2 mb-2 mb-sm-0" data-toggle="modal"
                                     data-target="#modalFilter" title="Filter"><i class="fa fa-filter"></i></a>
-                                <a href="#" class="btn btn-primary mr-2 mb-2 mb-sm-0"><i
+                                <a href="{{ route('kanit-absensi.index') }}" title="Reset Filter" class="btn btn-primary mr-2 mb-2 mb-sm-0"><i
                                         class="fa fa-refresh"></i>
                                 </a>
-                                {{-- <a href="{{ route('simoja.kasi.absensi.ringkasan') }}"
-                                    class="btn btn-primary mr-2 mb-2 mb-sm-0" title="Ringkasan">
-                                    <i class="fa fa-file"></i> Ringkasan
-                                </a> --}}
                                 <div class="dropdown">
                                     <button class="btn btn-primary mr-2 mb-2 mb-sm-0 text-white" id="exportDropdown"
                                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -62,11 +58,11 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="table-responsive">
+                    <div class="table-responsive">
                         {{ $dataTable->table([
                             'class' => 'table table-bordered table-striped',
                         ]) }}
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,7 +71,7 @@
     {{-- START: FILTER ABSENSI --}}
     <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Filter Data Absensi</h5>
@@ -84,7 +80,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formFilter" action="#" method="GET">
+                    <form id="formFilter" action="{{ route('kanit-absensi.index') }}" method="GET">
                         @csrf
                         @method('GET')
                         <div class="form-row gutters">
@@ -93,28 +89,50 @@
                                     <label for="">Personel</label>
                                     <select name="user_id" class="form-control">
                                         <option value="" selected disabled>- Pilih Personel -</option>
-                                        {{-- @foreach ($user as $item)
+                                        @foreach ($user as $item)
                                             <option value="{{ $item->id }}"
                                                 @if ($item->id == $user_id) selected @endif>{{ $item->name }} -
                                                 {{ $item->nip ?? '-' }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Pulau</label>
                                     <select name="pulau_id" class="form-control">
                                         <option value="" selected disabled>- Pilih Pulau -</option>
-                                        {{-- @foreach ($pulau as $item)
+                                        @foreach ($pulau as $item)
                                             <option value="{{ $item->id }}"
                                                 @if ($item->id == $pulau_id) selected @endif>Pulau {{ $item->name }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="">Periode</label>
-                                    <input type="month" class="form-control" name="periode" value="{{ $periode }}">
+                                <label for="periode">Bulan & Tahun</label>
+                                <div class="form-row gutters">
+                                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <select class="form-control" name="bulan" id="bulan" required>
+                                                @for ($m = 1; $m <= 12; $m++)
+                                                    @php
+                                                        $val = str_pad($m, 2, '0', STR_PAD_LEFT);
+                                                    @endphp
+                                                    <option value="{{ $val }}" @selected($val == $bulan)>
+                                                        {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                                    </option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <select class="form-control" name="tahun" id="tahun" required>
+                                                @foreach ($tahuns as $y)
+                                                    <option value="{{ $y }}" @selected($y == $tahun)>{{ $y }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +183,7 @@
     {{-- END: MODAL DOKUMENTASI --}}
 
     {{-- BEGIN: Konfirmasi Excel --}}
-    <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
+    {{-- <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -181,7 +199,7 @@
                                 Data ini akan di-generate dalam format Excel!
                             </p>
                         </div>
-                        {{-- <form id="exportExcel" action="{{ route('simoja.kasi.absensi.export.excel') }}" method="GET"
+                        <form id="exportExcel" action="{{ route('simoja.kasi.absensi.export.excel') }}" method="GET"
                             hidden>
                             @csrf
                             @method('GET')
@@ -191,7 +209,7 @@
                             <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
                             <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
                             <input type="text" name="sort" value="{{ $sort ?? 'ASC' }}">
-                        </form> --}}
+                        </form>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -200,11 +218,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- END: Konfirmasi Excel --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}
-    <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
+    {{-- <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
@@ -217,12 +235,12 @@
                                     <label for="">Personel</label>
                                     <select name="user_id" class="form-control" required>
                                         <option value="" selected disabled>- Pilih Personel -</option>
-                                        {{-- @foreach ($user as $item)
+                                        @foreach ($user as $item)
                                             <option value="{{ $item->id }}"
                                                 @if ($item->id == $user_id) selected @endif>{{ $item->name }} -
                                                 {{ $item->nip ?? '-' }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -239,14 +257,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- END: Konfirmasi PDF --}}
 @endsection
 
 
-{{-- @push('scripts')
+@push('scripts')
     {{ $dataTable->scripts() }}
-@endpush --}}
+@endpush
 
 
 @section('javascript')

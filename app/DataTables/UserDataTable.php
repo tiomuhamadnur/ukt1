@@ -34,6 +34,7 @@ class UserDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addColumn('aksi', function ($item) {
                 $editRoute = route('user.update', $item->uuid);
+                $roleName = $item->getRoleNames()->first() ?? '';
                 $editButton = "
                     <button class='btn btn-outline-primary' title='Edit User' data-toggle='modal'
                             data-target='#editModal'
@@ -51,7 +52,10 @@ class UserDataTable extends DataTable
                             data-user_type_id='{$item->user_type_id}'
                             data-gender_id='{$item->gender_id}'
                             data-jabatan_id='{$item->jabatan_id}'
+                            data-unit_kerja_id='{$item->unit_kerja_id}'
+                            data-seksi_id='{$item->seksi_id}'
                             data-pulau_id='{$item->pulau_id}'
+                            data-role_name='{$roleName}'
                             >
                         <i class='fa fa-edit'></i>
                     </button>";
@@ -91,6 +95,8 @@ class UserDataTable extends DataTable
             'gender',
             'jabatan',
             'pulau',
+            'unit_kerja',
+            'seksi',
         ])->newQuery();
 
         return $query;
@@ -121,10 +127,13 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('ID')->sortable(true),
             Column::make('name')->title('Nama')->addClass('font-weight-bold')->sortable(true),
             Column::make('email')->title('Email')->sortable(false),
-            Column::make('jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('gender.name')->title('Gender')->sortable(false),
+            Column::make('jabatan.name')->title('Jabatan')->sortable(false),
+            Column::make('seksi.name')->title('Seksi')->sortable(false),
+            Column::make('unit_kerja.name')->title('Unit Kerja')->sortable(false),
             Column::make('pulau.name')->title('Pulau')->sortable(false),
             Column::computed('status')->title('Status')
                 ->addClass('text-center')

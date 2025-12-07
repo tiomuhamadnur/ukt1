@@ -67,19 +67,19 @@ class CutiDataTable extends DataTable
             ->addColumn('jumlah_hari', function ($item) {
                 return $item->jumlah . ' hari';
             })
-            ->addColumn('sisa_cuti', function ($item) {
-                $user = Auth::user();
-                $jatah = $user->konfigurasi_cuti->jumlah_awal;
+            // ->addColumn('sisa_cuti', function ($item) {
+            //     $user = Auth::user();
+            //     $jatah = optional($user->konfigurasi_cuti)->jumlah_awal;
 
-                // Hitung total cuti yang sudah diambil di this->periode itu, SEBELUM cuti ini
-                $totalDiambil = Cuti::where('user_id', $item->user_id)
-                    ->whereYear('tanggal_awal', $this->periode)
-                    ->where('tanggal_awal', '<', $item->tanggal_awal)
-                    ->where('status_cuti_id', 2) //hanya yang diterima
-                    ->sum('jumlah');
+            //     // Hitung total cuti yang sudah diambil di this->periode itu, SEBELUM cuti ini
+            //     $totalDiambil = Cuti::where('user_id', $item->user_id)
+            //         ->whereYear('tanggal_awal', $this->periode)
+            //         ->where('tanggal_awal', '<', $item->tanggal_awal)
+            //         ->where('status_cuti_id', 2) //hanya yang diterima
+            //         ->sum('jumlah');
 
-                return $jatah - $totalDiambil - $item->jumlah . ' hari';
-            })
+            //     return $jatah - $totalDiambil - $item->jumlah . ' hari';
+            // })
             ->addColumn('disetujui', function ($item) {
                 return $item->status_cuti_id == 2 //diterima
                     ? ($item->disetujui_oleh->name ?? '-')

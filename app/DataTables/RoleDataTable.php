@@ -2,8 +2,9 @@
 
 namespace App\DataTables;
 
-use App\Models\FormasiTim;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Spatie\Permission\Models\Role as ModelsRole;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -12,27 +13,27 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class FormasiTimDataTable extends DataTable
+class RoleDataTable extends DataTable
 {
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('aksi', function ($item) {
-                $editRoute = route('formasi-tim.update', $item->uuid);
-                $editButton = "
-                    <button class='btn btn-outline-primary' data-toggle='modal'
-                            data-target='#editModal'
-                            data-url='{$editRoute}'
-                            data-periode='{$item->periode}'
-                            data-tim_id='{$item->tim_id}'
-                            data-pulau_id='{$item->pulau_id}'
-                            data-koordinator_id='{$item->koordinator_id}'
-                            data-user_id='{$item->user_id}'
-                            >
-                        <i class='fa fa-edit'></i>
-                    </button>";
+                $editRoute = route('role.update', $item->id);
+                $permissionNames = $item->permissions->pluck('name')->toArray();
+                $permissionsJson = htmlspecialchars(json_encode($permissionNames), ENT_QUOTES, 'UTF-8');
 
-                $deleteRoute = route('formasi-tim.destroy', $item->uuid);
+                $editButton = "
+                <button class='btn btn-outline-primary'
+                        data-toggle='modal'
+                        data-target='#editModal'
+                        data-url='{$editRoute}'
+                        data-name='{$item->name}'
+                        data-permissions='{$permissionsJson}'>
+                    <i class='fa fa-edit'></i>
+                </button>";
+
+                $deleteRoute = route('role.destroy', $item->id);
                 $deleteButton = "
                     <a href='javascript:void(0);' class='btn btn-outline-danger' data-toggle='modal'
                     data-target='#deleteModal' data-url='{$deleteRoute}'>
@@ -41,25 +42,33 @@ class FormasiTimDataTable extends DataTable
 
                 return $editButton . ' ' . $deleteButton;
             })
-            ->rawColumns(['aksi']);
+            ->addColumn('permission', function ($item) {
+                if ($item->permissions->isEmpty()) {
+                    return "<em class='text-muted'>Tidak ada</em>";
+                }
+
+                $html = "<ul style='padding-left:18px; margin:0; list-style-type: disc !important;'>";
+
+                foreach ($item->permissions as $perm) {
+                    $html .= "<li>{$perm->name}</li>";
+                }
+
+                $html .= "</ul>";
+
+                return $html;
+            })
+            ->rawColumns(['permission', 'aksi']);
     }
 
-    public function query(FormasiTim $model): QueryBuilder
+    public function query(ModelsRole $model): QueryBuilder
     {
-        $query = $model->select('formasi_tim.*')->with([
-            'tim',
-            'pulau',
-            'user',
-            'koordinator',
-        ])->newQuery();
-
-        return $query;
+        return $model->newQuery();
     }
 
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('formasitim-table')
+                    ->setTableId('role-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->pageLength(50)
@@ -81,17 +90,16 @@ class FormasiTimDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('periode')->title('Periode'),
-            Column::make('user.name')->title('Personel'),
-            Column::make('koordinator.name')->title('Koordinator'),
-            Column::make('tim.name')->title('Tim'),
-            Column::make('pulau.name')->title('Pulau'),
+            Column::make('id')->title('ID'),
+            Column::make('name')->title('Role Name'),
+            // Column::make('guard_name')->title('Guard Name'),
+            Column::computed('permission')->title('Permissions'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),
         ];
     }
 
     protected function filename(): string
     {
-        return 'FormasiTim_' . date('YmdHis');
+        return 'Role_' . date('YmdHis');
     }
 }

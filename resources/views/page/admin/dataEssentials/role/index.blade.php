@@ -1,7 +1,7 @@
 @extends('layout.base')
 
 @section('title-head')
-    <title>Masterdata | Daftar Gender</title>
+    <title>Masterdata | Daftar Role</title>
 @endsection
 
 @section('path')
@@ -9,7 +9,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">Masterdata</li>
             <li class="breadcrumb-item">Data Essentials</li>
-            <li class="breadcrumb-item active">Daftar Gender</li>
+            <li class="breadcrumb-item active">Daftar Role</li>
         </ol>
     </div>
 @endsection
@@ -41,24 +41,42 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Gender -->
+    <!-- Modal Tambah Role -->
     <div class="modal fade" id="tambahData" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Gender</h5>
+                    <h5 class="modal-title">Tambah Data Role</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <form action="{{ route('gender.store') }}" method="POST">
+                <form action="{{ route('role.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Nama Gender:</label>
+                            <label class="required">Nama Role:</label>
                             <input type="text" class="form-control" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label class="required">Kode Gender:</label>
-                            <input type="text" class="form-control" name="code" required>
+                            <label class="required mb-2">Permissions</label>
+                            <div class="card shadow-sm border">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($permissions as $perm)
+                                            <div class="col-md-4 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input edit-permission" type="checkbox"
+                                                        name="permission_names[]" value="{{ $perm->name }}"
+                                                        id="perm_{{ $perm->id }}">
+
+                                                    <label class="form-check-label" for="perm_{{ $perm->id }}">
+                                                        {{ $perm->name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer custom">
@@ -75,14 +93,14 @@
             </div>
         </div>
     </div>
-    <!-- End Modal Tambah Gender -->
+    <!-- End Modal Tambah Role -->
 
-    <!-- Modal Edit Gender -->
+    <!-- Modal Edit Role -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Data Gender</h5>
+                    <h5 class="modal-title">Edit Data Role</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <form id="editForm" action="#" method="POST">
@@ -90,12 +108,30 @@
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Nama Gender:</label>
+                            <label class="required">Nama Role:</label>
                             <input type="text" class="form-control" name="name" id="name_edit" required>
                         </div>
                         <div class="form-group">
-                            <label class="required">Kode Gender:</label>
-                            <input type="text" class="form-control" name="code" id="code_edit" required>
+                            <label class="required mb-2">Permissions</label>
+                            <div class="card shadow-sm border">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($permissions as $perm)
+                                            <div class="col-md-4 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input edit-permission" type="checkbox"
+                                                        name="permission_names[]" value="{{ $perm->name }}"
+                                                        id="perm_edit_{{ $perm->id }}">
+
+                                                    <label class="form-check-label" for="perm_{{ $perm->id }}">
+                                                        {{ $perm->name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer custom">
@@ -112,7 +148,7 @@
             </div>
         </div>
     </div>
-    <!-- End Modal Edit Gender -->
+    <!-- End Modal Edit Role -->
 @endsection
 
 @push('scripts')
@@ -123,14 +159,24 @@
     <script>
         $(document).ready(function() {
             $('#editModal').on('show.bs.modal', function(e) {
-                var url = $(e.relatedTarget).data('url');
-                var name = $(e.relatedTarget).data('name');
-                var code = $(e.relatedTarget).data('code');
+                var button = $(e.relatedTarget);
+                var url = button.data('url');
+                var name = button.data('name');
+                var permissionsArray = button.data('permissions'); // sudah array
 
-                document.getElementById("editForm").action = url;
+                // set form action & name
+                $('#editForm').attr('action', url);
                 $('#name_edit').val(name);
-                $('#code_edit').val(code);
+
+                // reset semua checkbox
+                $('.edit-permission').prop('checked', false);
+
+                // centang sesuai permissions
+                permissionsArray.forEach(function(p) {
+                    $('.edit-permission[value="' + p + '"]').prop('checked', true);
+                });
             });
+
         });
     </script>
 @endsection

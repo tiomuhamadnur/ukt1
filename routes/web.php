@@ -27,6 +27,8 @@ use App\Http\Controllers\admin\StatusCutiController;
 use App\Http\Controllers\admin\JenisAbsensiController;
 use App\Http\Controllers\admin\KonfigurasiAbsensiController;
 use App\Http\Controllers\admin\KonfigurasiCutiController;
+use App\Http\Controllers\admin\PermissionController;
+use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StatusAbsensiController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -56,50 +58,60 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware('permission:admin')->group(function () {
+        Route::controller(DashboardController::class)->group(function () {
+            // Mainmenu
+            Route::get('/data-essentials', 'dataEssentials')->name('dataEssentials.index')->middleware('permission:superadmin');
+        });
+
+        Route::middleware(['permission:superadmin'])->group(function() {
+            Route::resource('/provinsi', ProvinsiController::class);
+            Route::resource('/kota', KotaController::class)->parameters(['kota' => 'kota']);
+            Route::resource('/kecamatan', KecamatanController::class);
+            Route::resource('/kelurahan', KelurahanController::class);
+            Route::resource('/pulau', PulauController::class);
+            Route::resource('/unit-kerja', UnitKerjaController::class);
+            Route::resource('/seksi', SeksiController::class);
+            Route::resource('/tim', TimController::class);
+            Route::resource('/gender', GenderController::class);
+            Route::resource('/user-type', UserTypeController::class);
+            Route::resource('/jabatan', JabatanController::class);
+            Route::resource('/jenis-cuti', JenisCutiController::class);
+            Route::resource('/status-cuti', StatusCutiController::class);
+            Route::resource('/jenis-absensi', JenisAbsensiController::class);
+            Route::resource('/status-absensi', StatusAbsensiController::class);
+            Route::resource('/konfigurasi-absensi', KonfigurasiAbsensiController::class);
+            Route::resource('/permission', PermissionController::class);
+            Route::resource('/role', RoleController::class);
+        });
+
+        Route::resource('/formasi-tim', FormasiTimController::class);
+        Route::resource('/user', UserController::class);
+        Route::resource('/konfigurasi-cuti', KonfigurasiCutiController::class);
+        Route::resource('/kegiatan', KegiatanController::class);
+    });
+
+    Route::prefix('user')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             // Mainmenu
             Route::get('/dashboard', 'index')->name('dashboard.index');
-            Route::get('/data-essentials', 'dataEssentials')->name('dataEssentials.index');
         });
 
-        Route::resource('/user', UserController::class);
-        Route::resource('/provinsi', ProvinsiController::class);
-        Route::resource('/kota', KotaController::class)->parameters(['kota' => 'kota']);
-        Route::resource('/kecamatan', KecamatanController::class);
-        Route::resource('/kelurahan', KelurahanController::class);
-        Route::resource('/pulau', PulauController::class);
-        Route::resource('/unit-kerja', UnitKerjaController::class);
-        Route::resource('/seksi', SeksiController::class);
-        Route::resource('/tim', TimController::class);
-        Route::resource('/formasi-tim', FormasiTimController::class);
-        Route::resource('/gender', GenderController::class);
-        Route::resource('/user-type', UserTypeController::class);
-        Route::resource('/jabatan', JabatanController::class);
-        Route::resource('/jenis-cuti', JenisCutiController::class);
-        Route::resource('/status-cuti', StatusCutiController::class);
-        Route::resource('/jenis-absensi', JenisAbsensiController::class);
-        Route::resource('/status-absensi', StatusAbsensiController::class);
+        Route::controller(DashboardController::class)->group(function () {
+            // Mainmenu
+            Route::get('/kanit', 'kanit')->name('kanit.index')->middleware('permission:kanit');
+            Route::get('/kasi', 'kasi')->name('kasi.index')->middleware('permission:kasi');
+            Route::get('/pjlp', 'pjlp')->name('pjlp.index')->middleware('permission:pjlp');
+        });
+
+        Route::resource('/kinerja', KinerjaController::class);
+        Route::resource('/absensi', AbsensiController::class);
         Route::resource('/cuti', CutiController::class);
         Route::controller(CutiController::class)->group(function () {
             Route::get('/approval-cuti', 'approval_cuti')->name('approval-cuti.index');
             Route::put('/approval-cuti/approve', 'cuti_approve')->name('approval-cuti.approve');
             Route::put('/approval-cuti/reject', 'cuti_reject')->name('approval-cuti.reject');
             Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf');
-        });
-        Route::resource('/kegiatan', KegiatanController::class);
-        Route::resource('/kinerja', KinerjaController::class);
-        Route::resource('/absensi', AbsensiController::class);
-        Route::resource('/konfigurasi-cuti', KonfigurasiCutiController::class);
-        Route::resource('/konfigurasi-absensi', KonfigurasiAbsensiController::class);
-    });
-
-    Route::prefix('user')->group(function () {
-        Route::controller(DashboardController::class)->group(function () {
-            // Mainmenu
-            Route::get('/kanit', 'kanit')->name('kanit.index');
-            Route::get('/kasi', 'kasi')->name('kasi.index');
-            Route::get('/pjlp', 'pjlp')->name('pjlp.index');
         });
 
         Route::controller(AbsensiController::class)->group(function () {

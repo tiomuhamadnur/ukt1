@@ -22,17 +22,37 @@ use Illuminate\Http\Request;
 use App\Models\StatusAbsensi;
 use App\Http\Controllers\Controller;
 use App\Models\Cuti;
+use App\Models\Kinerja;
 use App\Models\KonfigurasiAbsensi;
 use App\Models\KonfigurasiCuti;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('page.admin.dashboard.index');
+        $user = Auth::user();
+        $role = $user->getRoleNames()->first();
+
+        switch ($role) {
+            case 'superadmin':
+            case 'admin':
+                return view('page.admin.dashboard.index');
+            case 'kanit':
+                return redirect()->route('kanit.index');
+            case 'kasi':
+                return redirect()->route('kasi.index');
+            case 'pjlp':
+                return redirect()->route('pjlp.index');
+            default:
+                return redirect()->route('logout')->with('error', 'Role tidak dikenal.');
+        }
+
+        // return view('page.admin.dashboard.index');
     }
 
     public function dataEssentials()
@@ -57,6 +77,8 @@ class DashboardController extends Controller
         $kegiatan = Kegiatan::count();
         $konfigurasi_cuti = KonfigurasiCuti::count();
         $konfigurasi_absensi = KonfigurasiAbsensi::count();
+        $permission = Permission::count();
+        $role = Role::count();
 
         return view('page.admin.dashboard.dataEssentials', compact([
             'user',
@@ -79,17 +101,65 @@ class DashboardController extends Controller
             'kegiatan',
             'konfigurasi_cuti',
             'konfigurasi_absensi',
+            'permission',
+            'role',
         ]));
     }
 
     public function kanit()
     {
-        return view('page.users.sigma.kanit.dashboard.index');
+        $today = Carbon::now();
+        $user = Auth::user();
+        $tanggal = Carbon::parse($today)->isoFormat('dddd, D MMMM Y');
+
+        $tahun = $today->format('Y');
+
+        $jumlah_kinerja = Kinerja::whereYear('tanggal', $tahun)->count();
+
+        $jumlah_pengajuan_cuti = Cuti::where('status_cuti_id', 1) //Diproses
+                                ->whereYear('tanggal_awal', $tahun)
+                                ->count();
+
+        $data_cuti = Cuti::whereYear('tanggal_awal', $tahun)->count();
+
+        return view('page.users.sigma.kanit.dashboard.index',  compact([
+            'tanggal',
+            'tahun',
+            'jumlah_kinerja',
+            'jumlah_pengajuan_cuti',
+            'data_cuti',
+        ]));
     }
 
     public function kasi()
     {
-        return view('page.users.sigma.kasi.dashboard.index');
+        $today = Carbon::now();
+        $user = Auth::user();
+        $seksi_id = $user->seksi_id;
+        $tanggal = Carbon::parse($today)->isoFormat('dddd, D MMMM Y');
+
+        $tahun = $today->format('Y');
+
+        $jumlah_kinerja = Kinerja::where('seksi_id', $seksi_id)
+                                ->whereYear('tanggal', $tahun)
+                                ->count();
+
+        $jumlah_pengajuan_cuti = Cuti::whereRelation('user.formasi_tim.tim', 'seksi_id', '=', $seksi_id)
+                                ->where('status_cuti_id', 1) //Diproses
+                                ->whereYear('tanggal_awal', $tahun)
+                                ->count();
+
+        $data_cuti = Cuti::whereRelation('user.formasi_tim.tim', 'seksi_id', '=', $seksi_id)
+                                ->whereYear('tanggal_awal', $tahun)
+                                ->count();
+
+        return view('page.users.sigma.kasi.dashboard.index', compact([
+            'tanggal',
+            'tahun',
+            'jumlah_kinerja',
+            'jumlah_pengajuan_cuti',
+            'data_cuti',
+        ]));
     }
 
     public function pjlp()

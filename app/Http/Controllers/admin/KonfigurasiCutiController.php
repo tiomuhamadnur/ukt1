@@ -48,6 +48,7 @@ class KonfigurasiCutiController extends Controller
             'jumlah_awal' => 'required|min:1|integer',
         ]);
 
+        $rawData['jumlah_akhir'] = $request->jumlah_awal;
         $data = KonfigurasiCuti::updateOrCreate($rawData, $rawData);
 
         return redirect()->route('konfigurasi-cuti.index')

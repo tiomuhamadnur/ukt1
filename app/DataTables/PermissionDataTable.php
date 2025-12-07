@@ -2,8 +2,9 @@
 
 namespace App\DataTables;
 
-use App\Models\FormasiTim;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Spatie\Permission\Models\Permission as ModelsPermission;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -12,27 +13,24 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class FormasiTimDataTable extends DataTable
+class PermissionDataTable extends DataTable
 {
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('aksi', function ($item) {
-                $editRoute = route('formasi-tim.update', $item->uuid);
+                $editRoute = route('permission.update', $item->id);
                 $editButton = "
                     <button class='btn btn-outline-primary' data-toggle='modal'
                             data-target='#editModal'
                             data-url='{$editRoute}'
-                            data-periode='{$item->periode}'
-                            data-tim_id='{$item->tim_id}'
-                            data-pulau_id='{$item->pulau_id}'
-                            data-koordinator_id='{$item->koordinator_id}'
-                            data-user_id='{$item->user_id}'
+                            data-name='{$item->name}'
+                            data-guard_name='{$item->guard_name}'
                             >
                         <i class='fa fa-edit'></i>
                     </button>";
 
-                $deleteRoute = route('formasi-tim.destroy', $item->uuid);
+                $deleteRoute = route('permission.destroy', $item->id);
                 $deleteButton = "
                     <a href='javascript:void(0);' class='btn btn-outline-danger' data-toggle='modal'
                     data-target='#deleteModal' data-url='{$deleteRoute}'>
@@ -44,22 +42,15 @@ class FormasiTimDataTable extends DataTable
             ->rawColumns(['aksi']);
     }
 
-    public function query(FormasiTim $model): QueryBuilder
+    public function query(ModelsPermission $model): QueryBuilder
     {
-        $query = $model->select('formasi_tim.*')->with([
-            'tim',
-            'pulau',
-            'user',
-            'koordinator',
-        ])->newQuery();
-
-        return $query;
+        return $model->newQuery();
     }
 
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('formasitim-table')
+                    ->setTableId('permission-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->pageLength(50)
@@ -81,17 +72,15 @@ class FormasiTimDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('periode')->title('Periode'),
-            Column::make('user.name')->title('Personel'),
-            Column::make('koordinator.name')->title('Koordinator'),
-            Column::make('tim.name')->title('Tim'),
-            Column::make('pulau.name')->title('Pulau'),
+            Column::make('id')->title('ID'),
+            Column::make('name')->title('Permission Name'),
+            Column::make('guard_name')->title('Guard Name'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),
         ];
     }
 
     protected function filename(): string
     {
-        return 'FormasiTim_' . date('YmdHis');
+        return 'Permission_' . date('YmdHis');
     }
 }

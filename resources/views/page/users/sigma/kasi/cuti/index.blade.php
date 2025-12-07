@@ -10,7 +10,7 @@
     <div class="page-header">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Cuti</a></li>
-            <li class="breadcrumb-item active">Daftar Pengajuan Cuti Seksi #</li>
+            <li class="breadcrumb-item active">Daftar Pengajuan Cuti Seksi {{ auth()->user()->seksi->name ?? 'N/A' }}</li>
         </ol>
     </div>
 @endsection
@@ -21,16 +21,16 @@
             <div class="card h-250">
                 <div class="card-body">
                     <h4 class="d-flex justify-content-center mb-3 text-center" style="text-decoration: underline">Rekap
-                        Pengajuan Cuti - Seksi #</h4>
+                        Pengajuan Cuti - Seksi {{ auth()->user()->seksi->name ?? 'N/A' }}</h4>
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3 text-left">
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <a href="{{ route('kanit.index') }}"
+                                <a href="{{ route('kasi.index') }}"
                                     class="btn btn-outline-primary mr-2 mb-2 mb-sm-0"><i class="fa fa-arrow-left"></i>
                                     Kembali</a>
                                 <a href="javascript:;" class="btn btn-primary mr-2 mb-2 mb-sm-0" data-toggle="modal"
                                     data-target="#modalFilter" title="Filter"><i class="fa fa-filter"></i></a>
-                                <a href="{{ route('kanit-cuti.index') }}" class="btn btn-primary mr-2 mb-2 mb-sm-0"><i
+                                <a href="{{ route('kasi-cuti.index') }}" title="Reset Filter" class="btn btn-primary mr-2 mb-2 mb-sm-0"><i
                                         class="fa fa-refresh"></i>
                                 </a>
                                 <button class="btn btn-primary mr-2 mb-2 mb-sm-0 text-white" href="#"
@@ -51,11 +51,11 @@
                     </div>
                     <div class="projectLog">
                         <div class="logs-container">
-                            {{-- <div class="table-responsive mt-2">
+                            <div class="table-responsive mt-2">
                                 {{ $dataTable->table([
                                     'class' => 'table table-bordered table-striped',
                                 ]) }}
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
 
     {{-- START: FILTER CUTI --}}
     <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Filter Data Cuti</h5>
@@ -83,38 +83,23 @@
                                     <label for="">Personel</label>
                                     <select name="user_id" class="form-control">
                                         <option value="" selected disabled>- Pilih Personel -</option>
-                                        {{-- @foreach ($user as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if ($item->id == $user_id) selected @endif>{{ $item->name }} -
-                                                {{ $item->nip ?? '-' }}
+                                        @foreach ($user as $item)
+                                            <option value="{{ $item->id }}" @selected($item->id == $user_id)>
+                                                {{ $item->name }} - {{ $item->nip ?? '-' }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Pulau</label>
                                     <select name="pulau_id" class="form-control">
                                         <option value="" selected disabled>- Pilih Pulau -</option>
-                                        {{-- @foreach ($pulau as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if ($item->id == $pulau_id) selected @endif>Pulau {{ $item->name }}
+                                        @foreach ($pulau as $item)
+                                            <option value="{{ $item->id }}" @selected($item->id == $pulau_id)>
+                                                Pulau {{ $item->name }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                        <label for="periode">Periode</label>
-                        <div class="form-row gutters">
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <input type="date" class="form-control" value="#"
-                                        name="start_date">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <input type="date" class="form-control" value="#" name="end_date">
                                 </div>
                             </div>
                         </div>
@@ -124,11 +109,11 @@
                                     <label for="">Jenis Cuti</label>
                                     <select name="jenis_cuti_id" class="form-control">
                                         <option value="" selected disabled>- Pilih Jenis Cuti -</option>
-                                        {{-- @foreach ($jenis_cuti as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if ($jenis_cuti_id == $item->id) selected @endif>{{ $item->name }}
+                                        @foreach ($jenis_cuti as $item)
+                                            <option value="{{ $item->id }}" @selected($item->id == $jenis_cuti_id)>
+                                                {{ $item->name }}
                                             </option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -137,16 +122,27 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label for="">Status</label>
-                                    <select name="status" class="form-control">
-                                        {{-- <option value="" selected disabled>- Pilih Status -</option>
-                                        <option value="Diproses" @if ($status == 'Diproses') selected @endif>Diproses
-                                        </option>
-                                        <option value="Diterima" @if ($status == 'Diterima') selected @endif>
-                                            Diterima
-                                        </option>
-                                        <option value="Ditolak" @if ($status == 'Ditolak') selected @endif>Ditolak
-                                        </option> --}}
+                                    <select name="status_cuti_id" class="form-control">
+                                        <option value="" selected disabled>- Pilih Status Cuti -</option>
+                                        @foreach ($status_cuti as $item)
+                                            <option value="{{ $item->id }}" @selected($item->id == $status_cuti_id)>{{ $item->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="periode" class="required">Periode</label>
+                        <div class="form-row gutters">
+                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" value="{{ $start_date }}"
+                                        name="start_date" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" value="{{ $end_date }}" name="end_date" required>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +186,7 @@
     {{-- END: Pengajuan Cuti --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}
-    <div id="modalDownloadPDF" class="modal" tabindex="-1" aria-hidden="true">
+    {{-- <div id="modalDownloadPDF" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -214,11 +210,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- END: Konfirmasi PDF --}}
 
     {{-- BEGIN: Konfirmasi Excel --}}
-    <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
+    {{-- <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -234,7 +230,7 @@
                                 Data ini akan di-generate dalam format Excel!
                             </p>
                         </div>
-                        {{-- <form id="exportExcel" action="{{ route('simoja.kasi.cuti.export.excel') }}" method="GET"
+                        <form id="exportExcel" action="{{ route('simoja.kasi.cuti.export.excel') }}" method="GET"
                             hidden>
                             @csrf
                             @method('GET')
@@ -246,7 +242,7 @@
                             <input type="text" name="status" value="{{ $status ?? '' }}">
                             <input type="text" name="jenis_cuti_id" value="{{ $jenis_cuti_id ?? '' }}">
                             <input type="text" name="sort" value="{{ $sort ?? 'ASC' }}">
-                        </form> --}}
+                        </form>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -255,13 +251,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- END: Konfirmasi Excel --}}
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     {{ $dataTable->scripts() }}
-@endpush --}}
+@endpush
 
 @section('javascript')
     <script>
