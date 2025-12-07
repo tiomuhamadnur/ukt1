@@ -59,14 +59,14 @@ class KonfigurasiCutiDataTable extends DataTable
             ->addColumn('jumlah_awal', function ($item) {
                 return $item->jumlah_awal . ' hari';
             })
-            // ->addColumn('jumlah_akhir', function ($item) {
-            //     $cuti_terpakai = Cuti::whereYear('tanggal_awal', $item->periode)
-            //                     ->where('user_id', $item->user_id)
-            //                     ->where('jenis_cuti_id', $item->user->id) //Khusus cuti tahunan
-            //                     ->sum('jumlah');
-            //     $jumlah_akhir = $item->jumlah_awal - $cuti_terpakai;
-            //     return $jumlah_akhir . ' hari';
-            // })
+            ->addColumn('jumlah_akhir', function ($item) {
+                // $cuti_terpakai = Cuti::whereYear('tanggal_awal', $item->periode)
+                //                 ->where('user_id', $item->user_id)
+                //                 ->where('jenis_cuti_id', $item->user->id) //Khusus cuti tahunan
+                //                 ->sum('jumlah');
+                // $jumlah_akhir = $item->jumlah_awal - $cuti_terpakai;
+                return $item->jumlah_akhir . ' hari';
+            })
             ->rawColumns(['aksi']);
     }
 
