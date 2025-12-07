@@ -260,8 +260,6 @@ class AbsensiController extends Controller
         $latitude = $request->latitude ?? null;
         $longitude = $request->longitude ?? null;
 
-        dd($latitude, $longitude);
-
         $now = Carbon::now();
         $tanggal = Carbon::parse($now)->format('Y-m-d');
         $waktu = Carbon::parse($now);
