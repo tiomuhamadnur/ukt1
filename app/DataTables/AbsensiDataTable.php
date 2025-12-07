@@ -98,19 +98,28 @@ class AbsensiDataTable extends DataTable
             })
             ->addColumn('maps', function ($item) {
                 // Ambil value dari kolom database
-                $latitude_masuk   = $item->latitude_masuk;
-                $longitude_masuk  = $item->longitude_masuk;
-                $latitude_pulang  = $item->latitude_pulang;
-                $longitude_pulang = $item->longitude_pulang;
+                $lat_masuk  = $item->latitude_masuk;
+                $lng_masuk  = $item->longitude_masuk;
+                $lat_pulang = $item->latitude_pulang;
+                $lng_pulang = $item->longitude_pulang;
 
+                // Cek apakah minimal salah satu pasangan lengkap
+                $masuk_ada  = $lat_masuk && $lng_masuk;
+                $pulang_ada = $lat_pulang && $lng_pulang;
+
+                if (!$masuk_ada && !$pulang_ada) {
+                    return '-'; // Kedua pasangan kosong → tidak tampil
+                }
+
+                // Jika minimal satu pasangan ada, generate button
                 $mapsButton = "
                     <a href='#'
                         data-toggle='modal'
                         data-target='#mapsModal'
-                        data-latitude_masuk='{$latitude_masuk}'
-                        data-longitude_masuk='{$longitude_masuk}'
-                        data-latitude_pulang='{$latitude_pulang}'
-                        data-longitude_pulang='{$longitude_pulang}'>
+                        data-latitude_masuk='{$lat_masuk}'
+                        data-longitude_masuk='{$lng_masuk}'
+                        data-latitude_pulang='{$lat_pulang}'
+                        data-longitude_pulang='{$lng_pulang}'>
                         <button class='btn btn-outline-info'>
                             <i class='fa fa-map'></i>
                         </button>
