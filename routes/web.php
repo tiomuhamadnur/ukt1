@@ -62,15 +62,13 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-        //->middleware('permission:admin')
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware('permission:admin')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             // Mainmenu
             Route::get('/data-essentials', 'dataEssentials')->name('dataEssentials.index')->middleware('permission:superadmin');
         });
 
-        //permission:superadmin
-        Route::middleware(['auth'])->group(function() {
+        Route::middleware(['permission:superadmin'])->group(function() {
             Route::resource('/provinsi', ProvinsiController::class);
             Route::resource('/kota', KotaController::class)->parameters(['kota' => 'kota']);
             Route::resource('/kecamatan', KecamatanController::class);
