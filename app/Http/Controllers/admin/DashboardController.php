@@ -57,7 +57,9 @@ class DashboardController extends Controller
 
     public function dataEssentials()
     {
-        $user = User::count();
+        $user = User::when(!Auth::user()->hasRole('superadmin'), function($query) {
+            $query->whereDoesntHave('roles', fn($q) => $q->where('name', 'superadmin'));
+        })->count();
         $provinsi = Provinsi::count();
         $kota = Kota::count();
         $kecamatan = Kecamatan::count();

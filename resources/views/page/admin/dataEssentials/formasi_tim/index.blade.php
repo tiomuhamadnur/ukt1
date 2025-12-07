@@ -69,7 +69,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="required">Koordinator:</label>
                             <select name="koordinator_id" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih Koordinator --</option>
@@ -77,7 +77,7 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="required">Personel:</label>
                             <select name="user_id" class="form-control" required>
@@ -142,7 +142,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="required">Koordinator:</label>
                             <select name="koordinator_id" id="koordinator_id_edit" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih Koordinator --</option>
@@ -150,7 +150,7 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="required">Personel:</label>
                             <select name="user_id" id="user_id_edit" class="form-control" required>
@@ -197,14 +197,14 @@
                 var url = $(e.relatedTarget).data('url');
                 var tim_id = $(e.relatedTarget).data('tim_id');
                 var pulau_id = $(e.relatedTarget).data('pulau_id');
-                var koordinator_id = $(e.relatedTarget).data('koordinator_id');
+                // var koordinator_id = $(e.relatedTarget).data('koordinator_id');
                 var user_id = $(e.relatedTarget).data('user_id');
                 var periode = $(e.relatedTarget).data('periode');
 
                 document.getElementById("editForm").action = url;
                 $('#tim_id_edit').val(tim_id);
                 $('#pulau_id_edit').val(pulau_id);
-                $('#koordinator_id_edit').val(koordinator_id);
+                // $('#koordinator_id_edit').val(koordinator_id);
                 $('#user_id_edit').val(user_id);
                 $('#periode_edit').val(periode);
             });

@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -99,6 +100,11 @@ class UserDataTable extends DataTable
             'seksi',
         ])->newQuery();
 
+        // Cek jika user login bukan superadmin
+        if (!Auth::user()->hasRole('superadmin')) {
+            $query->whereDoesntHave('roles', fn($q) => $q->where('name', 'superadmin'));
+        }
+
         return $query;
     }
 
@@ -127,7 +133,7 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title('ID')->sortable(true),
+            // Column::make('id')->title('ID')->sortable(true),
             Column::make('name')->title('Nama')->addClass('font-weight-bold')->sortable(true),
             Column::make('email')->title('Email')->sortable(false),
             Column::make('gender.name')->title('Gender')->sortable(false),

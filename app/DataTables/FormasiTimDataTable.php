@@ -83,7 +83,7 @@ class FormasiTimDataTable extends DataTable
         return [
             Column::make('periode')->title('Periode'),
             Column::make('user.name')->title('Personel'),
-            Column::make('koordinator.name')->title('Koordinator'),
+            // Column::make('koordinator.name')->title('Koordinator'),
             Column::make('tim.name')->title('Tim'),
             Column::make('pulau.name')->title('Pulau'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

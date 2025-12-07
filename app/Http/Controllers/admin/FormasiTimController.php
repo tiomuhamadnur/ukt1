@@ -31,17 +31,35 @@ class FormasiTimController extends Controller
     public function store(Request $request)
     {
         $rawData = $request->validate([
-            'tim_id' => 'nullable|exists:tim,id',
-            'pulau_id' => 'nullable|exists:pulau,id',
-            'user_id' => 'nullable|exists:users,id',
-            'koordinator_id' => 'nullable|exists:users,id',
+            'tim_id' => 'required|exists:tim,id',
+            'pulau_id' => 'required|exists:pulau,id',
+            'user_id' => 'required|exists:users,id',
+            // 'koordinator_id' => 'nullable|exists:users,id',
             'periode' => 'required|digits:4|integer',
         ]);
 
-        FormasiTim::updateOrCreate($rawData, $rawData);
+        $user = User::findOrFail($request->user_id);
+
+        $formasi_tim = FormasiTim::updateOrCreate($rawData, $rawData);
+
+        // ✅ cek apakah periode ini adalah yang terbaru untuk user
+        $latestPeriode = FormasiTim::where('anggota_id', $user->id)->max('periode');
+
+        if ($request->periode == $latestPeriode) {
+            $user->update([
+                'unit_kerja_id' => $formasi_tim->tim->seksi->unit_kerja_id,
+                'seksi_id' => $formasi_tim->tim->seksi_id,
+                'pulau_id' => $formasi_tim->pulau_id,
+                'kelurahan_id' => $formasi_tim->pulau->kelurahan_id,
+            ]);
+        }
+
+        $message = $formasi_tim->wasRecentlyCreated
+            ? "Data baru formasi tim berhasil ditambahkan!"
+            : "Data formasi tim untuk user <strong>{$user->name}</strong> di tahun {$request->periode} sudah ada dan berhasil diperbaharui!";
 
         return redirect()->route('formasi-tim.index')
-            ->withNotify('Data Formasi Tim berhasil ditambahkan.');
+            ->withNotify($message);
     }
 
     public function update(Request $request, FormasiTim $formasi_tim)
