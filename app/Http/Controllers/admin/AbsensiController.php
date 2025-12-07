@@ -250,13 +250,17 @@ class AbsensiController extends Controller
     {
         $request->validate([
             'photo' => 'required',
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
             'catatan' => 'nullable|string|max:255',
         ]);
 
         $img = $request->photo;
         $catatan = $request->catatan;
-        $latitude = $request->latitude ?? 'xxx';
-        $longitude = $request->longitude ?? 'xxx';
+        $latitude = $request->latitude ?? null;
+        $longitude = $request->longitude ?? null;
+
+        dd($latitude, $longitude);
 
         $now = Carbon::now();
         $tanggal = Carbon::parse($now)->format('Y-m-d');

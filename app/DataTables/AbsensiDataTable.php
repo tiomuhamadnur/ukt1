@@ -96,7 +96,30 @@ class AbsensiDataTable extends DataTable
                     <span class='font-weight-bold'>Pulang:</span> {$catatanPulang}
                 ";
             })
-            ->rawColumns(['status_masuk', 'status_pulang', 'status', 'catatan', 'aksi']);
+            ->addColumn('maps', function ($item) {
+                // Ambil value dari kolom database
+                $latitude_masuk   = $item->latitude_masuk;
+                $longitude_masuk  = $item->longitude_masuk;
+                $latitude_pulang  = $item->latitude_pulang;
+                $longitude_pulang = $item->longitude_pulang;
+
+                $mapsButton = "
+                    <a href='#'
+                        data-toggle='modal'
+                        data-target='#mapsModal'
+                        data-latitude_masuk='{$latitude_masuk}'
+                        data-longitude_masuk='{$longitude_masuk}'
+                        data-latitude_pulang='{$latitude_pulang}'
+                        data-longitude_pulang='{$longitude_pulang}'>
+                        <button class='btn btn-outline-info'>
+                            <i class='fa fa-map'></i>
+                        </button>
+                    </a>
+                ";
+
+                return $mapsButton;
+            })
+            ->rawColumns(['status_masuk', 'status_pulang', 'status', 'catatan', 'maps', 'aksi']);
     }
 
     public function query(Absensi $model): QueryBuilder
@@ -172,6 +195,7 @@ class AbsensiDataTable extends DataTable
             Column::computed('status_pulang')->title('Status Pulang')->sortable(false),
             Column::make('status')->title('Status')->sortable(false),
             Column::computed('catatan')->title('Catatan')->sortable(false),
+            Column::computed('maps')->title('Location')->addClass('text-center text-nowrap')->sortable(false),
             Column::computed('aksi')
                 ->exportable(false)
                 ->printable(false)

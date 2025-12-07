@@ -4,6 +4,8 @@
     <title>
         Absensi | Daftar Absensi
     </title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 @endsection
 
 @section('path')
@@ -26,8 +28,8 @@
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3 text-left">
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <a href="{{ route('kasi.index') }}"
-                                    class="btn btn-outline-primary mr-2 mb-2 mb-sm-0"><i class="fa fa-arrow-left"></i>
+                                <a href="{{ route('kasi.index') }}" class="btn btn-outline-primary mr-2 mb-2 mb-sm-0"><i
+                                        class="fa fa-arrow-left"></i>
                                     Kembali</a>
                                 <a href="javascript:;" class="btn btn-primary mr-2 mb-2 mb-sm-0" data-toggle="modal"
                                     data-target="#modalFilter" title="Filter"><i class="fa fa-filter"></i></a>
@@ -69,8 +71,7 @@
     </div>
 
     {{-- START: FILTER ABSENSI --}}
-    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter"
-        aria-hidden="true">
+    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -128,7 +129,8 @@
                                         <div class="form-group">
                                             <select class="form-control" name="tahun" id="tahun" required>
                                                 @foreach ($tahuns as $y)
-                                                    <option value="{{ $y }}" @selected($y == $tahun)>{{ $y }}</option>
+                                                    <option value="{{ $y }}" @selected($y == $tahun)>
+                                                        {{ $y }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -181,6 +183,39 @@
         </div>
     </div>
     {{-- END: MODAL DOKUMENTASI --}}
+
+    {{-- START: MODAL MAPS --}}
+    <div class="modal fade" id="mapsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalAdminTitle">Detail Lokasi Absensi</h4>
+                </div>
+                <form action="" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-4 text-center align-middle">
+                            <div class="border mx-auto" style="width: 90%">
+                                <h4 class="fw-bolder mb-0">Lokasi Absen Masuk</h4>
+                                <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                            </div>
+                        </div>
+                        <div class="mb-4 text-center align-middle">
+                            <div class="border mx-auto" style="width: 90%">
+                                <h4 class="fw-bolder mb-0">Lokasi Absen Pulang</h4>
+                                <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">
+                            Tutup
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- END: MODAL MAPS --}}
 
     {{-- BEGIN: Konfirmasi Excel --}}
     {{-- <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -268,12 +303,76 @@
 
 
 @section('javascript')
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script type="text/javascript">
         function toggleModal(id) {
             $('#id').val(id);
         }
 
         $(document).ready(function() {
+            // ======= Leaflet map global =======
+            var mapMasuk = L.map('maps_masuk_id').setView([0, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapMasuk);
+
+            var mapPulang = L.map('maps_pulang_id').setView([0, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapPulang);
+
+            // ======= Custom red icon =======
+            var redIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                iconSize: [35, 55], // ukuran lebih besar
+                iconAnchor: [17, 55], // anchor di bawah icon
+                popupAnchor: [0, -50], // posisi popup
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                shadowSize: [41, 41],
+                shadowAnchor: [14, 41]
+            });
+
+            // ======= Marker awal =======
+            var markerMasuk = L.marker([0, 0], {
+                icon: redIcon
+            }).addTo(mapMasuk);
+            var markerPulang = L.marker([0, 0], {
+                icon: redIcon
+            }).addTo(mapPulang);
+
+            // ======= Klik marker -> Google Maps =======
+            markerMasuk.on('click', function() {
+                var latLng = markerMasuk.getLatLng();
+                var url = `https://www.google.com/maps?q=${latLng.lat},${latLng.lng}`;
+                window.open(url, '_blank');
+            });
+
+            markerPulang.on('click', function() {
+                var latLng = markerPulang.getLatLng();
+                var url = `https://www.google.com/maps?q=${latLng.lat},${latLng.lng}`;
+                window.open(url, '_blank');
+            });
+
+            // ======= Update marker saat modal muncul =======
+            $('#mapsModal').on('shown.bs.modal', function(e) {
+                var button = $(e.relatedTarget);
+
+                var latMasuk = parseFloat(button.data('latitude_masuk'));
+                var longMasuk = parseFloat(button.data('longitude_masuk'));
+                var latPulang = parseFloat(button.data('latitude_pulang'));
+                var longPulang = parseFloat(button.data('longitude_pulang'));
+
+                // Update marker Masuk
+                markerMasuk.setLatLng([latMasuk, longMasuk]);
+                mapMasuk.setView([latMasuk, longMasuk], 16);
+                mapMasuk.invalidateSize(); // <- penting untuk modal
+
+                // Update marker Pulang
+                markerPulang.setLatLng([latPulang, longPulang]);
+                mapPulang.setView([latPulang, longPulang], 16);
+                mapPulang.invalidateSize(); // <- penting untuk modal
+
+                // Blur tombol
+                button.blur();
+            });
+
             $('#modalDokumentasi').on('show.bs.modal', function(e) {
                 var photoMasuk = $(e.relatedTarget).data('photo_masuk');
                 var photoPulang = $(e.relatedTarget).data('photo_pulang');
