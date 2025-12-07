@@ -36,6 +36,10 @@ Route::get('/', function () {
     return redirect()->route('dashboard.index');
 })->name('home');
 
+Route::get('/register', function () {
+    return redirect()->route('dashboard.index');
+});
+
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard');
@@ -58,13 +62,15 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    Route::prefix('admin')->middleware('permission:admin')->group(function () {
+        //->middleware('permission:admin')
+    Route::prefix('admin')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             // Mainmenu
             Route::get('/data-essentials', 'dataEssentials')->name('dataEssentials.index')->middleware('permission:superadmin');
         });
 
-        Route::middleware(['permission:superadmin'])->group(function() {
+        //permission:superadmin
+        Route::middleware(['auth'])->group(function() {
             Route::resource('/provinsi', ProvinsiController::class);
             Route::resource('/kota', KotaController::class)->parameters(['kota' => 'kota']);
             Route::resource('/kecamatan', KecamatanController::class);
