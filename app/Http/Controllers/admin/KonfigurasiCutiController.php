@@ -20,7 +20,7 @@ class KonfigurasiCutiController extends Controller
         $periode = $request->periode ?? date('Y');
 
         $jenis_cuti = JenisCuti::orderBy('name')->get();
-        $user = User::notBanned()->orderBy('name')->get();
+        $user = User::where('jabatan_id', 5)->notBanned()->orderBy('name')->get();
         $tahun_ini = date('Y');
         $tahun = [$tahun_ini, $tahun_ini + 1, $tahun_ini + 2];
 

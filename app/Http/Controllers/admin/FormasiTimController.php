@@ -16,7 +16,7 @@ class FormasiTimController extends Controller
     {
         $tim = Tim::orderBy('name')->get();
         $pulau = Pulau::orderBy('name')->get();
-        $user = User::where('jabatan_id', 5)->orderBy('name')->get();
+        $user = User::where('jabatan_id', 5)->notBanned()->orderBy('name')->get();
 
         $tahun_ini = date('Y');
         $tahun = [$tahun_ini, $tahun_ini + 1, $tahun_ini + 2];
