@@ -44,7 +44,7 @@ Route::get('/register', function () {
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], function () {
     Route::redirect('settings', 'settings/profile');
 
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
@@ -62,13 +62,13 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    Route::prefix('admin')->middleware('permission:admin')->group(function () {
-        Route::controller(DashboardController::class)->group(function () {
-            // Mainmenu
-            Route::get('/data-essentials', 'dataEssentials')->name('dataEssentials.index')->middleware('permission:superadmin');
-        });
 
+
+    Route::prefix('admin')->middleware('permission:admin')->group(function () {
         Route::middleware(['permission:superadmin'])->group(function() {
+            Route::controller(DashboardController::class)->group(function () {
+                Route::get('/data-essentials', 'dataEssentials')->name('dataEssentials.index');
+            });
             Route::resource('/provinsi', ProvinsiController::class);
             Route::resource('/kota', KotaController::class)->parameters(['kota' => 'kota']);
             Route::resource('/kecamatan', KecamatanController::class);
@@ -93,59 +93,69 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/user', UserController::class);
         Route::resource('/konfigurasi-cuti', KonfigurasiCutiController::class);
         Route::resource('/kegiatan', KegiatanController::class);
+        Route::resource('/kinerja', KinerjaController::class);
+        Route::resource('/absensi', AbsensiController::class);
+        Route::resource('/cuti', CutiController::class);
     });
 
     Route::prefix('user')->group(function () {
+        // MENU DASHBOARD
         Route::controller(DashboardController::class)->group(function () {
-            // Mainmenu
             Route::get('/dashboard', 'index')->name('dashboard.index');
         });
 
         Route::controller(DashboardController::class)->group(function () {
-            // Mainmenu
             Route::get('/kanit', 'kanit')->name('kanit.index')->middleware('permission:kanit');
             Route::get('/kasi', 'kasi')->name('kasi.index')->middleware('permission:kasi');
             Route::get('/pjlp', 'pjlp')->name('pjlp.index')->middleware('permission:pjlp');
         });
 
-        Route::resource('/kinerja', KinerjaController::class);
-        Route::resource('/absensi', AbsensiController::class);
-        Route::resource('/cuti', CutiController::class);
-        Route::controller(CutiController::class)->group(function () {
+
+
+
+        // MENU PROFILE
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/profile', 'profile')->name('profile.index');
+            Route::get('/update_password', 'update_password')->name('update_password.index');
+        });
+
+
+
+
+        //MENU ABSENSI
+        Route::controller(AbsensiController::class)->group(function () {
+            Route::get('/kanit-absensi', 'kanit_index')->name('kanit-absensi.index')->middleware('permission:kanit');
+            Route::get('/kasi-absensi', 'kasi_index')->name('kasi-absensi.index')->middleware('permission:kasi');
+        });
+
+        Route::controller(AbsensiController::class)->group(function () {
+            Route::get('/pjlp-absensi', 'pjlp_index')->name('pjlp-absensi.index');
+            Route::get('/pjlp-absensi-create', 'pjlp_create')->name('pjlp-absensi.create');
+            Route::post('/pjlp-absensi', 'pjlp_store')->name('pjlp-absensi.store');
+        })->middleware('permission:pjlp');
+
+
+
+
+        // MENU CUTI
+        Route::controller(CutiController::class)->middleware('permission:kasi|kanit')->group(function () {
             Route::get('/approval-cuti', 'approval_cuti')->name('approval-cuti.index');
             Route::put('/approval-cuti/approve', 'cuti_approve')->name('approval-cuti.approve');
             Route::put('/approval-cuti/reject', 'cuti_reject')->name('approval-cuti.reject');
             Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf');
         });
 
-        Route::controller(AbsensiController::class)->group(function () {
-            // Mainmenu
-            Route::get('/kanit-absensi', 'kanit_index')->name('kanit-absensi.index');
-            Route::get('/kasi-absensi', 'kasi_index')->name('kasi-absensi.index');
-
-            Route::get('/pjlp-absensi', 'pjlp_index')->name('pjlp-absensi.index');
-            Route::get('/pjlp-absensi-create', 'pjlp_create')->name('pjlp-absensi.create');
-            Route::post('/pjlp-absensi', 'pjlp_store')->name('pjlp-absensi.store');
-        });
-
-        Route::controller(KinerjaController::class)->group(function () {
-            // Mainmenu
-            Route::get('/kanit-kinerja', 'kanit_index')->name('kanit-kinerja.index');
-            Route::get('/kasi-kinerja', 'kasi_index')->name('kasi-kinerja.index');
-
-            Route::get('/pjlp-kinerja', 'pjlp_index')->name('pjlp-kinerja.index');
-            Route::get('/pjlp-kinerja-create', 'pjlp_create')->name('pjlp-kinerja.create');
-            Route::post('/pjlp-kinerja', 'pjlp_store')->name('pjlp-kinerja.store');
-        });
-
-        Route::controller(CutiController::class)->group(function () {
-            // Mainmenu
+        Route::controller(CutiController::class)->middleware('permission:kanit')->group(function () {
             Route::get('/kanit-cuti', 'kanit_index')->name('kanit-cuti.index');
             Route::get('/kanit-cuti-approval', 'kanit_approval')->name('kanit-cuti-approval.index');
+        });
 
+        Route::controller(CutiController::class)->middleware('permission:kasi')->group(function () {
             Route::get('/kasi-cuti', 'kasi_index')->name('kasi-cuti.index');
             Route::get('/kasi-cuti-approval', 'kasi_approval')->name('kasi-cuti-approval.index');
+        });
 
+        Route::controller(CutiController::class)->middleware('permission:pjlp')->group(function () {
             Route::get('/pjlp-cuti', 'pjlp_index')->name('pjlp-cuti.index');
             Route::get('/pjlp-cuti-create', 'pjlp_create')->name('pjlp-cuti.create');
             Route::post('/pjlp-cuti', 'pjlp_store')->name('pjlp-cuti.store');
@@ -154,10 +164,19 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/pjlp-cuti/{uuid}', 'pjlp_pdf')->name('pjlp-cuti.pdf'); //Belum beres
         });
 
-        Route::controller(UserController::class)->group(function () {
-            // Mainmenu
-            Route::get('/profile', 'profile')->name('profile.index');
-            Route::get('/update_password', 'update_password')->name('update_password.index');
+
+
+
+        // MENU KINERJA
+        Route::controller(KinerjaController::class)->group(function () {
+            Route::get('/kanit-kinerja', 'kanit_index')->name('kanit-kinerja.index')->middleware('permission:kanit');
+            Route::get('/kasi-kinerja', 'kasi_index')->name('kasi-kinerja.index')->middleware('permission:kasi');
+        });
+
+        Route::controller(KinerjaController::class)->middleware('permission:pjlp')->group(function () {
+            Route::get('/pjlp-kinerja', 'pjlp_index')->name('pjlp-kinerja.index');
+            Route::get('/pjlp-kinerja-create', 'pjlp_create')->name('pjlp-kinerja.create');
+            Route::post('/pjlp-kinerja', 'pjlp_store')->name('pjlp-kinerja.store');
         });
     });
 });

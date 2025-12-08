@@ -9,6 +9,7 @@ use App\Models\Cuti;
 use App\Models\User;
 use App\Models\JenisCuti;
 use App\Http\Controllers\Controller;
+use App\Mail\CutiMail;
 use App\Models\Absensi;
 use App\Models\FormasiTim;
 use App\Models\KonfigurasiAbsensi;
@@ -20,6 +21,7 @@ use App\Services\ImageUploadService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class CutiController extends Controller
@@ -101,6 +103,16 @@ class CutiController extends Controller
 
     public function approval_cuti(CutiPersetujuanDataTable $dataTable, Request $request)
     {
+        $user = Auth::user();
+
+        if ($user->hasRole('kanit')) {
+            return redirect()->route('kanit-cuti-approval.index');
+        }
+
+        if ($user->hasRole('kasi')) {
+            return redirect()->route('kasi-cuti-approval.index');
+        }
+
         return $dataTable->render('page.admin.cuti.approval');
     }
 
@@ -143,6 +155,7 @@ class CutiController extends Controller
         $cuti->update([
             'status_cuti_id'   => 2,
             'nomor_surat'         => $request->no_surat,
+            'diketahui_at'     => Carbon::now(),
             'disetujui_at'     => Carbon::now(),
         ]);
 
@@ -487,9 +500,24 @@ class CutiController extends Controller
                     ->withError('Anda belum memiliki formasi tim di tahun ' . $tahun . ', silahkan hubungi admin.');
         }
 
-        $disetujui_oleh_id = $user_id;
-        $diketahui_oleh_id = $user_id;
-        $jabatan_id = $user->jabatan_id;
+        $seksi_id = $formasi_tim->tim->seksi_id;
+        $unit_kerja_id = $formasi_tim->tim->seksi->unit_kerja_id;
+
+        $kanit_id = User::where('jabatan_id', 2)
+            ->where('unit_kerja_id', $unit_kerja_id)
+            ->notBanned()
+            ->latest('created_at')
+            ->value('id');
+
+        $kasi_id = User::where('jabatan_id', 3)
+            ->where('unit_kerja_id', $unit_kerja_id)
+            ->where('seksi_id', $seksi_id)
+            ->notBanned()
+            ->latest('created_at')
+            ->value('id');
+
+        $diketahui_oleh_id = $kasi_id ?? $kanit_id;
+        $disetujui_oleh_id = $kanit_id;
 
         $tanggalAwal = Carbon::parse($request->tanggal_awal);
         $tanggalAkhir = Carbon::parse($request->tanggal_akhir);
@@ -530,7 +558,7 @@ class CutiController extends Controller
         if($check_cuti) {
             return redirect()
                     ->route('dashboard.index')
-                    ->withError('Pengajuan cuti anda sebelumnya <strong>(' . $check_cuti->tanggal_awal ?? 'N/A' . ')</strong> masih diproses, silahkan hubungi Koordinator anda!');
+                    ->withError('Pengajuan cuti anda sebelumnya <strong>(' . $check_cuti->tanggal_awal ?? 'N/A' . ')</strong> masih diproses, silahkan hubungi Atasan anda!');
         }
 
         $data = [
@@ -559,7 +587,49 @@ class CutiController extends Controller
             'lampiran' => $imagePath,
         ]);
 
-        return redirect()->route('pjlp-cuti.index')->withNotify('Data pengajuan cuti berhasil ditambahkan.');
+        // KIRIM NOTIFIKASI EMAIL
+        $nama = $user->name ?? '-';
+        $jabatan = $user->jabatan->name ?? '-';
+        $pulau = $user->area->pulau->name ?? '-';
+        $route = route('approval-cuti.index'); //Link untuk show approval via email
+        $tanggal = Carbon::parse($tanggal_awal)->format('d-m-Y') . ' s/d ' . Carbon::parse($tanggal_akhir)->format('d-m-Y');
+        $lampiran = $imagePath ? storage_path('app/public/' . $imagePath) : null;
+
+        $message = null;
+        if (filter_var(env('SEND_NOTIF_CUTI', false), FILTER_VALIDATE_BOOLEAN)) {
+            $message = $this->send_email($nama, $jabatan, $pulau, $jumlahHariCuti, $tanggal, $catatan, $route, $lampiran);
+        }
+
+        return redirect()->route('pjlp-cuti.index')->withNotify("Data pengajuan cuti berhasil ditambahkan & {$message}.");
+    }
+
+    public function send_email($nama, $jabatan, $lokasi_pulau, $jumlah_hari, $tanggal, $alasan, $url, $lampiran)
+    {
+        $email_tujuan = env('EMAIL_NOTIFICATION');
+
+        if(!$email_tujuan) {
+            return "Email tujuan untuk notifikasi belum ditambahkan, silahkan hubungi admin.";
+        }
+
+        $mailData = [
+            'nama' => $nama,
+            'jabatan' => $jabatan,
+            'lokasi_pulau' => $lokasi_pulau,
+            'jumlah_hari' => $jumlah_hari,
+            'tanggal' => $tanggal,
+            'alasan' => $alasan,
+            'url' => $url,
+        ];
+
+        $emailMethod = env('SEND_EMAIL_METHOD', 'send'); // default send
+
+        if ($emailMethod === 'queue') {
+            Mail::to($email_tujuan)->queue(new CutiMail($mailData, $lampiran));
+        } else {
+            Mail::to($email_tujuan)->send(new CutiMail($mailData, $lampiran));
+        }
+
+        return "Email notifikasi berhasil dikirim ke Atasan anda";
     }
 
     public function pjlp_destroy($uuid) {

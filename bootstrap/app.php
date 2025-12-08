@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'CheckBanned' => \App\Http\Middleware\CheckBanned::class,
+            'CheckKonfigurasiPJLP' => \App\Http\Middleware\CheckKonfigurasiPJLP::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -36,9 +38,9 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // ❹ — Method not allowed (optional)
-        // $exceptions->render(function (Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
-        //     return response()->view('components.errors.404', [], 404);
-        // });
+        $exceptions->render(function (Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
+            return response()->view('components.errors.404', [], 404);
+        });
 
         // 419 Page Expired → CSRF token mismatch
         $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
