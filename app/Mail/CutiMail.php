@@ -33,7 +33,7 @@ class CutiMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'pages.admin.cuti.email',
+            view: 'page.admin.cuti.email',
         );
     }
 
