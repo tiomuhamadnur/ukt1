@@ -11,6 +11,7 @@ use App\Models\KonfigurasiAbsensi;
 use App\Models\Pulau;
 use App\Models\Seksi;
 use App\Models\User;
+use App\Services\ReverseGeocodingService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -246,7 +247,7 @@ class AbsensiController extends Controller
         ]));
     }
 
-    public function pjlp_store(Request $request)
+    public function pjlp_store(Request $request, ReverseGeocodingService $geoService)
     {
         $request->validate([
             'photo' => 'required',
@@ -339,6 +340,9 @@ class AbsensiController extends Controller
             return back()->withError('Anda harus melakukan absensi, pada rentang Waktu yang telah ditentukan!');
         }
 
+        // GeoLocation
+        $lokasi = $geoService->getAddress($latitude, $longitude);
+
         // Simpan ke DB
         if ($mode == 'masuk') {
             $validasi = Absensi::where('user_id', $user_id)
@@ -361,6 +365,7 @@ class AbsensiController extends Controller
                 'status_masuk' => $status_absensi,
                 'status_absensi_id' => $status_absensi_id,
                 'catatan_masuk' => $catatan,
+                'lokasi_masuk' => $lokasi,
             ]);
         } else { // pulang
             $validasi = Absensi::where('user_id', $user_id)
@@ -387,6 +392,7 @@ class AbsensiController extends Controller
                     'status_pulang' => $status_absensi,
                     'status_absensi_id'=> $status_absensi_id,
                     'catatan_pulang' => $catatan,
+                    'lokasi_pulang' => $lokasi,
                 ]);
             } else {
                 $absensi = Absensi::create([
@@ -400,6 +406,7 @@ class AbsensiController extends Controller
                     'status_pulang' => $status_absensi,
                     'status_absensi_id'=> 3, // Tidak Absen Datang
                     'catatan_pulang' => $catatan,
+                    'lokasi_pulang' => $lokasi,
                 ]);
             }
         }
@@ -483,10 +490,40 @@ class AbsensiController extends Controller
             $font->valign('bottom');
             $font->size(10);
         });
+        $image->text($this->wrapText($lokasi, 11, public_path('assets/fonts/Roboto-Regular.ttf'), 400), 10, 10, function($font) {
+            $font->file(public_path('assets/fonts/Roboto-Regular.ttf'));
+            $font->color('#000000');
+            $font->align('left');   // kiri
+            $font->valign('top');   // atas
+            $font->size(11);
+        });
 
         $destinationPath = public_path('storage/'. $folderPath);
         $image->save($destinationPath.$imageName);
 
         return redirect()->route('pjlp-absensi.index')->withNotify("Data absensi berhasil disimpan!");
+    }
+
+    // Fungsi untuk membungkus teks
+    private function wrapText($text, $fontSize, $fontFile, $maxWidth) {
+        $words = explode(' ', $text);
+        $lines = '';
+        $currentLine = '';
+
+        foreach ($words as $word) {
+            $testLine = $currentLine . ' ' . $word;
+            $bbox = imagettfbbox($fontSize, 0, $fontFile, trim($testLine));
+            $lineWidth = $bbox[2] - $bbox[0];
+
+            if ($lineWidth > $maxWidth) {
+                $lines .= trim($currentLine) . "\n";
+                $currentLine = $word . ' ';
+            } else {
+                $currentLine = $testLine . ' ';
+            }
+        }
+        $lines .= trim($currentLine);
+
+        return $lines;
     }
 }

@@ -28,13 +28,13 @@
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3 text-left">
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <a href="{{ route('kanit.index') }}"
-                                    class="btn btn-outline-primary mr-2 mb-2 mb-sm-0"><i class="fa fa-arrow-left"></i>
+                                <a href="{{ route('kanit.index') }}" class="btn btn-outline-primary mr-2 mb-2 mb-sm-0"><i
+                                        class="fa fa-arrow-left"></i>
                                     Kembali</a>
                                 <a href="javascript:;" class="btn btn-primary mr-2 mb-2 mb-sm-0" data-toggle="modal"
                                     data-target="#modalFilter" title="Filter"><i class="fa fa-filter"></i></a>
-                                <a href="{{ route('kanit-absensi.index') }}" title="Reset Filter" class="btn btn-primary mr-2 mb-2 mb-sm-0"><i
-                                        class="fa fa-refresh"></i>
+                                <a href="{{ route('kanit-absensi.index') }}" title="Reset Filter"
+                                    class="btn btn-primary mr-2 mb-2 mb-sm-0"><i class="fa fa-refresh"></i>
                                 </a>
                                 <div class="dropdown">
                                     <button class="btn btn-primary mr-2 mb-2 mb-sm-0 text-white" id="exportDropdown"
@@ -71,8 +71,7 @@
     </div>
 
     {{-- START: FILTER ABSENSI --}}
-    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter"
-        aria-hidden="true">
+    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -130,7 +129,8 @@
                                         <div class="form-group">
                                             <select class="form-control" name="tahun" id="tahun" required>
                                                 @foreach ($tahuns as $y)
-                                                    <option value="{{ $y }}" @selected($y == $tahun)>{{ $y }}</option>
+                                                    <option value="{{ $y }}" @selected($y == $tahun)>
+                                                        {{ $y }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -196,13 +196,17 @@
                         <div class="mb-4 text-center align-middle">
                             <div class="border mx-auto" style="width: 90%">
                                 <h4 class="fw-bolder mb-0">Lokasi Absen Masuk</h4>
-                                <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                                <div id="maps_masuk_wrapper">
+                                    <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="mb-4 text-center align-middle">
                             <div class="border mx-auto" style="width: 90%">
                                 <h4 class="fw-bolder mb-0">Lokasi Absen Pulang</h4>
-                                <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                                <div id="maps_pulang_wrapper">
+                                    <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -359,19 +363,42 @@
                 var latPulang = parseFloat(button.data('latitude_pulang'));
                 var longPulang = parseFloat(button.data('longitude_pulang'));
 
-                // Update marker Masuk
-                markerMasuk.setLatLng([latMasuk, longMasuk]);
-                mapMasuk.setView([latMasuk, longMasuk], 16);
-                mapMasuk.invalidateSize(); // <- penting untuk modal
+                // Wrapper dan pesan
+                var masukWrapper = $('#maps_masuk_wrapper');
+                var pulangWrapper = $('#maps_pulang_wrapper');
 
-                // Update marker Pulang
-                markerPulang.setLatLng([latPulang, longPulang]);
-                mapPulang.setView([latPulang, longPulang], 16);
-                mapPulang.invalidateSize(); // <- penting untuk modal
+                var masukMsg = $('#maps_masuk_msg');
+                var pulangMsg = $('#maps_pulang_msg');
 
-                // Blur tombol
+                // ===== MAP MASUK =====
+                if (!isNaN(latMasuk) && !isNaN(longMasuk)) {
+                    masukWrapper.show();
+                    masukMsg.hide();
+
+                    markerMasuk.setLatLng([latMasuk, longMasuk]);
+                    mapMasuk.setView([latMasuk, longMasuk], 16);
+                    mapMasuk.invalidateSize();
+                } else {
+                    masukWrapper.hide();
+                    masukMsg.show();
+                }
+
+                // ===== MAP PULANG =====
+                if (!isNaN(latPulang) && !isNaN(longPulang)) {
+                    pulangWrapper.show();
+                    pulangMsg.hide();
+
+                    markerPulang.setLatLng([latPulang, longPulang]);
+                    mapPulang.setView([latPulang, longPulang], 16);
+                    mapPulang.invalidateSize();
+                } else {
+                    pulangWrapper.hide();
+                    pulangMsg.show();
+                }
+
                 button.blur();
             });
+
 
             $('#modalDokumentasi').on('show.bs.modal', function(e) {
                 var photoMasuk = $(e.relatedTarget).data('photo_masuk');

@@ -196,13 +196,17 @@
                         <div class="mb-4 text-center align-middle">
                             <div class="border mx-auto" style="width: 90%">
                                 <h4 class="fw-bolder mb-0">Lokasi Absen Masuk</h4>
-                                <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                                <div id="maps_masuk_wrapper">
+                                    <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="mb-4 text-center align-middle">
                             <div class="border mx-auto" style="width: 90%">
                                 <h4 class="fw-bolder mb-0">Lokasi Absen Pulang</h4>
-                                <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                                <div id="maps_pulang_wrapper">
+                                    <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -359,17 +363,30 @@
                 var latPulang = parseFloat(button.data('latitude_pulang'));
                 var longPulang = parseFloat(button.data('longitude_pulang'));
 
-                // Update marker Masuk
-                markerMasuk.setLatLng([latMasuk, longMasuk]);
-                mapMasuk.setView([latMasuk, longMasuk], 16);
-                mapMasuk.invalidateSize(); // <- penting untuk modal
+                // ======= Kondisi: sembunyikan/tampilkan wrapper map =======
+                var masukWrapper = $('#maps_masuk_wrapper');
+                var pulangWrapper = $('#maps_pulang_wrapper');
 
-                // Update marker Pulang
-                markerPulang.setLatLng([latPulang, longPulang]);
-                mapPulang.setView([latPulang, longPulang], 16);
-                mapPulang.invalidateSize(); // <- penting untuk modal
+                // Cek MAP MASUK
+                if (!isNaN(latMasuk) && !isNaN(longMasuk)) {
+                    masukWrapper.show();
+                    markerMasuk.setLatLng([latMasuk, longMasuk]);
+                    mapMasuk.setView([latMasuk, longMasuk], 16);
+                    mapMasuk.invalidateSize();
+                } else {
+                    masukWrapper.hide();
+                }
 
-                // Blur tombol
+                // Cek MAP PULANG
+                if (!isNaN(latPulang) && !isNaN(longPulang)) {
+                    pulangWrapper.show();
+                    markerPulang.setLatLng([latPulang, longPulang]);
+                    mapPulang.setView([latPulang, longPulang], 16);
+                    mapPulang.invalidateSize();
+                } else {
+                    pulangWrapper.hide();
+                }
+
                 button.blur();
             });
 

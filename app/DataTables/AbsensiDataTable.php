@@ -194,7 +194,7 @@ class AbsensiDataTable extends DataTable
     {
         return [
             Column::make('tanggal')->title('Tanggal')->sortable(true),
-            Column::make('user.name')->title('Nama')->addClass('font-weight-bold')->sortable(true),
+            Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
             Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),
             Column::make('user.formasi_tim.tim.seksi.name')->title('Seksi')->addClass('text-wrap')->sortable(false),
@@ -204,7 +204,7 @@ class AbsensiDataTable extends DataTable
             Column::computed('status_pulang')->title('Status Pulang')->sortable(false),
             Column::make('status')->title('Status')->sortable(false),
             Column::computed('catatan')->title('Catatan')->sortable(false),
-            Column::computed('maps')->title('Location')->addClass('text-center text-nowrap')->sortable(false),
+            Column::computed('maps')->title('Lokasi Absen')->addClass('text-center text-nowrap')->sortable(false),
             Column::computed('aksi')
                 ->exportable(false)
                 ->printable(false)

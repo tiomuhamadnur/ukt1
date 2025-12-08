@@ -240,16 +240,33 @@
                 </div>
                 <form action="" method="POST">
                     <div class="modal-body">
+                        <!-- Lokasi Masuk -->
                         <div class="mb-4 text-center align-middle">
                             <div class="border mx-auto" style="width: 90%">
                                 <h4 class="fw-bolder mb-0">Lokasi Absen Masuk</h4>
-                                <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                                <div id="maps_masuk_wrapper">
+                                    <!-- Pesan ketika tidak ada data -->
+                                    <div id="maps_masuk_msg" class="text-muted py-3" style="display: none;">
+                                        Tidak ada data lokasi absensi.
+                                    </div>
+                                    <!-- Map -->
+                                    <div id="maps_masuk_id" style="width: 100%; height: 400px;"></div>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Lokasi Pulang -->
                         <div class="mb-4 text-center align-middle">
                             <div class="border mx-auto" style="width: 90%">
                                 <h4 class="fw-bolder mb-0">Lokasi Absen Pulang</h4>
-                                <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                                <div id="maps_pulang_wrapper">
+                                    <!-- Pesan ketika tidak ada data -->
+                                    <div id="maps_pulang_msg" class="text-muted py-3" style="display: none;">
+                                        Tidak ada data lokasi absensi.
+                                    </div>
+                                    <!-- Map -->
+                                    <div id="maps_pulang_id" style="width: 100%; height: 400px;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -407,19 +424,44 @@
                 var latPulang = parseFloat(button.data('latitude_pulang'));
                 var longPulang = parseFloat(button.data('longitude_pulang'));
 
-                // Update marker Masuk
-                markerMasuk.setLatLng([latMasuk, longMasuk]);
-                mapMasuk.setView([latMasuk, longMasuk], 16);
-                mapMasuk.invalidateSize(); // <- penting untuk modal
+                // Wrapper dan pesan
+                var masukWrapper = $('#maps_masuk_wrapper');
+                var pulangWrapper = $('#maps_pulang_wrapper');
 
-                // Update marker Pulang
-                markerPulang.setLatLng([latPulang, longPulang]);
-                mapPulang.setView([latPulang, longPulang], 16);
-                mapPulang.invalidateSize(); // <- penting untuk modal
+                var masukMsg = $('#maps_masuk_msg');
+                var pulangMsg = $('#maps_pulang_msg');
 
-                // Blur tombol
+                // MAP MASUK
+                if (!isNaN(latMasuk) && !isNaN(longMasuk)) {
+                    $('#maps_masuk_msg').hide();
+                    $('#maps_masuk_id').show();
+
+                    markerMasuk.setLatLng([latMasuk, longMasuk]);
+                    mapMasuk.setView([latMasuk, longMasuk], 16);
+                    mapMasuk.invalidateSize();
+                } else {
+                    $('#maps_masuk_msg').show();
+                    $('#maps_masuk_id').hide();
+                }
+
+                // MAP PULANG
+                if (!isNaN(latPulang) && !isNaN(longPulang)) {
+                    $('#maps_pulang_msg').hide();
+                    $('#maps_pulang_id').show();
+
+                    markerPulang.setLatLng([latPulang, longPulang]);
+                    mapPulang.setView([latPulang, longPulang], 16);
+                    mapPulang.invalidateSize();
+                } else {
+                    $('#maps_pulang_msg').show();
+                    $('#maps_pulang_id').hide();
+                }
+
+
                 button.blur();
             });
+
+
 
 
             $('#modalDokumentasi').on('show.bs.modal', function(e) {
