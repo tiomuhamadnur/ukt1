@@ -83,3 +83,41 @@
     </div>
 </div>
 <!-- End Modal Hapus Data -->
+
+<!-- Modal Logout -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                @csrf
+                @method('POST')
+
+                <div class="modal-body text-center">
+                    <p>Apakah Anda yakin ingin <strong>Keluar</strong> dari sistem ini?</p>
+                </div>
+
+                <div class="modal-footer custom">
+                    <div class="left-side">
+                        <button type="button" class="btn btn-link danger" data-dismiss="modal">Tidak</button>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="right-side">
+                        <button type="submit" class="btn btn-link success">Ya, Keluar</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- End Modal Logout -->

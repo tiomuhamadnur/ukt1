@@ -82,7 +82,7 @@
                                                     <li>
                                                         <a class="dropdown-item" href="javascript:;" data-toggle="modal"
                                                             data-target="#modalDownloadPDFAll">
-                                                            <i class="fa fa-file-pdf text-danger"></i> PDF
+                                                            <i class="fa fa-file-pdf text-danger"></i> Export PDF
                                                         </a>
                                                     </li>
                                                     <li>
@@ -234,7 +234,7 @@
     {{-- END: MODAL DOKUMENTASI --}}
 
     {{-- BEGIN: Konfirmasi Excel --}}
-    {{-- <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -250,14 +250,14 @@
                                 Data ini akan di-generate dalam format Excel!
                             </p>
                         </div>
-                        <form id="exportExcel" action="{{ route('simoja.kasi.kinerja.export.excel') }}" method="GET"
+                        <form id="exportExcel" action="{{ route('kinerja.export.excel') }}" method="GET"
                             hidden>
                             @csrf
                             @method('GET')
                             <input type="text" name="seksi_id" value="{{ $seksi_id ?? '' }}">
                             <input type="text" name="user_id" value="{{ $user_id ?? '' }}">
                             <input type="text" name="pulau_id" value="{{ $pulau_id ?? '' }}">
-                            <input type="text" name="kategori_id" value="{{ $kategori_id ?? '' }}">
+                            <input type="text" name="kegiatan_id" value="{{ $kegiatan_id ?? '' }}">
                             <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
                             <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
                         </form>
@@ -269,7 +269,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi Excel --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}
@@ -390,7 +390,7 @@
     {{-- END: Konfirmasi PDF Kegiatan --}}
 
     {{-- BEGIN: Konfirmasi PDF All --}}
-    {{-- <div id="modalDownloadPDFAll" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="modalDownloadPDFAll" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -406,14 +406,14 @@
                                 Data ini akan di-generate dalam format PDF!
                             </p>
                         </div>
-                        <form id="formKegiatanPDFAll" action="{{ route('simoja.kasi.kinerja.export.pdf.all') }}" method="GET"
+                        <form id="formKegiatanPDFAll" action="{{ route('kinerja.export.pdf') }}" method="GET"
                             hidden>
                             @csrf
                             @method('GET')
                             <input type="text" name="seksi_id" value="{{ $seksi_id ?? '' }}">
                             <input type="text" name="user_id" value="{{ $user_id ?? '' }}">
                             <input type="text" name="pulau_id" value="{{ $pulau_id ?? '' }}">
-                            <input type="text" name="kategori_id" value="{{ $kategori_id ?? '' }}">
+                            <input type="text" name="kegiatan_id" value="{{ $kegiatan_id ?? '' }}">
                             <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
                             <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
                         </form>
@@ -426,7 +426,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi PDF All --}}
 @endsection
 

@@ -218,8 +218,7 @@
                                 @if ($cuti->disetujui_oleh->is_plt == true)
                                     Plt.
                                 @endif
-                                {{ $cuti->disetujui_oleh->jabatan->name ?? '-' }}
-                                {{ $cuti->disetujui_oleh->unit_kerja->name ?? '-' }}
+                                Kepala {{ $cuti->disetujui_oleh->unit_kerja->name ?? '-' }}
                             </td>
                         </tr>
                         <tr>

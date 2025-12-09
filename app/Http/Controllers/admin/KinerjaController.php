@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\DataTables\KinerjaDataTable;
+use App\Exports\kinerja\KinerjaExport;
 use App\Http\Controllers\Controller;
 use App\Models\FormasiTim;
 use App\Models\Kegiatan;
@@ -15,6 +16,8 @@ use App\Services\ImageUploadService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KinerjaController extends Controller
 {
@@ -101,6 +104,89 @@ class KinerjaController extends Controller
         ]));
     }
 
+    public function export_excel(Request $request)
+    {
+        $request->validate([
+            'seksi_id' => 'nullable|exists:seksi,id',
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'kegiatan_id' => 'nullable|exists:kegiatan,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date|required_with:start_date',
+        ]);
+
+        $seksi_id = $request->seksi_id ?? null;
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+        $kegiatan_id = $request->kegiatan_id ?? null;
+        $start_date = $request->start_date ?? null;
+        $end_date = $request->end_date ?? $start_date;
+
+        $waktu = Carbon::now()->format('Ymd');
+        $nama_file = $waktu . '_Data Kinerja.xlsx';
+
+        return Excel::download(new KinerjaExport(
+            $seksi_id,
+            $user_id,
+            $pulau_id,
+            $kegiatan_id,
+            $start_date,
+            $end_date),
+            $nama_file,
+            \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function export_pdf(Request $request)
+    {
+        $request->validate([
+            'seksi_id' => 'nullable|exists:seksi,id',
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'kegiatan_id' => 'nullable|exists:kegiatan,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date|required_with:start_date',
+        ]);
+
+        $seksi_id = $request->seksi_id ?? null;
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+        $kegiatan_id = $request->kegiatan_id ?? null;
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date) ?? $start_date;
+
+        $query = Kinerja::query();
+
+        if ($seksi_id) {
+            $query->where('seksi_id', $seksi_id);
+        }
+
+        if ($user_id) {
+            $query->where('user_id', $user_id);
+        }
+
+        if ($pulau_id) {
+            $query->where('pulau_id', $pulau_id);
+        }
+
+        if ($kegiatan_id) {
+            $query->where('kegiatan_id', $kegiatan_id);
+        }
+
+        if ($start_date) {
+            $query->whereBetween('tanggal', [$start_date, $end_date]);
+        }
+
+        $kinerja = $query->orderBy('tanggal', 'ASC')->get();
+
+        $pdf = Pdf::loadView('page.admin.kinerja.pdf_all', [
+            'kinerja' => $kinerja,
+            'start_date' => $start_date->isoFormat('D MMMM Y'),
+            'end_date' => $end_date->isoFormat('D MMMM Y'),
+        ]);
+
+        return $pdf->setPaper('A4', 'potrait')->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
+    }
+
 
 
 
@@ -184,8 +270,11 @@ class KinerjaController extends Controller
             'tahuns',
             'tahun'
         ]));
-        // return view('page.users.sigma.kanit.kinerja.index');
     }
+
+
+
+
 
     // KASI
     public function kasi_index(KinerjaDataTable $dataTable, Request $request)

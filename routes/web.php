@@ -132,11 +132,11 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::get('/kasi-absensi', 'kasi_index')->name('kasi-absensi.index')->middleware('permission:kasi');
         });
 
-        Route::controller(AbsensiController::class)->group(function () {
+        Route::controller(AbsensiController::class)->middleware('permission:pjlp')->group(function () {
             Route::get('/pjlp-absensi', 'pjlp_index')->name('pjlp-absensi.index');
             Route::get('/pjlp-absensi-create', 'pjlp_create')->name('pjlp-absensi.create');
             Route::post('/pjlp-absensi', 'pjlp_store')->name('pjlp-absensi.store');
-        })->middleware('permission:pjlp');
+        });
 
 
 
@@ -147,7 +147,7 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::put('/approval-cuti/approve', 'cuti_approve')->name('approval-cuti.approve');
             Route::put('/approval-cuti/reject', 'cuti_reject')->name('approval-cuti.reject');
 
-            Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf'); //Belum beres
+            Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf');
             Route::get('/cuti/export/excel', 'export_excel')->name('cuti.export.excel');
         });
 
@@ -173,9 +173,12 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
 
 
         // MENU KINERJA
-        Route::controller(KinerjaController::class)->group(function () {
+        Route::controller(KinerjaController::class)->middleware('permission:kanit|kasi')->group(function () {
             Route::get('/kanit-kinerja', 'kanit_index')->name('kanit-kinerja.index')->middleware('permission:kanit');
             Route::get('/kasi-kinerja', 'kasi_index')->name('kasi-kinerja.index')->middleware('permission:kasi');
+
+            Route::get('/kinerja/export/pdf', 'export_pdf')->name('kinerja.export.pdf');
+            Route::get('/kinerja/export/excel', 'export_excel')->name('kinerja.export.excel');
         });
 
         Route::controller(KinerjaController::class)->middleware('permission:pjlp')->group(function () {

@@ -112,7 +112,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="optional">Pulau:</label>
                             <select name="pulau_id" class="form-control">
                                 <option value="" disabled selected>-- Pilih Pulau --</option>
@@ -120,15 +120,15 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="required">NIP:</label>
                             <input type="text" class="form-control" name="nip" required>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="optional">NIK KTP:</label>
                             <input type="number" min="1" class="form-control" name="nik">
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="optional">Tempat Lahir:</label>
                             <input type="text" class="form-control" name="tempat_lahir">
@@ -137,14 +137,14 @@
                             <label class="optional">Tanggal Lahir:</label>
                             <input type="date" class="form-control" name="tanggal_lahir">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="optional">Alamat Lengkap:</label>
                             <textarea name="alamat" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="optional">Bio:</label>
                             <textarea name="bio" class="form-control" rows="4"></textarea>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="required">Apakah PLT?:</label>
                             <select name="is_plt" class="form-control" required>
@@ -243,7 +243,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="optional">Pulau:</label>
                             <select name="pulau_id" id="pulau_id_edit" class="form-control">
                                 <option value="" disabled selected>-- Pilih Pulau --</option>
@@ -252,15 +252,15 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="required">NIP:</label>
                             <input type="text" class="form-control" name="nip" id="nip_edit" required>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="optional">NIK KTP:</label>
                             <input type="number" min="1" class="form-control" name="nik" id="nik_edit">
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="optional">Tempat Lahir:</label>
                             <input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir_edit">
@@ -269,14 +269,14 @@
                             <label class="optional">Tanggal Lahir:</label>
                             <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir_edit">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="optional">Alamat Lengkap:</label>
                             <textarea name="alamat" id="alamat_edit" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="optional">Bio:</label>
                             <textarea name="bio" id="bio_edit" class="form-control" rows="4"></textarea>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="required">Apakah PLT?:</label>
                             <select name="is_plt" id="is_plt_edit" class="form-control" required>
@@ -401,38 +401,38 @@
                 var url = $(e.relatedTarget).data('url');
                 var name = $(e.relatedTarget).data('name');
                 var email = $(e.relatedTarget).data('email');
-                var nik = $(e.relatedTarget).data('nik');
+                // var nik = $(e.relatedTarget).data('nik');
                 var nip = $(e.relatedTarget).data('nip');
                 var no_hp = $(e.relatedTarget).data('no_hp');
                 var tempat_lahir = $(e.relatedTarget).data('tempat_lahir');
                 var tanggal_lahir = $(e.relatedTarget).data('tanggal_lahir');
-                var alamat = $(e.relatedTarget).data('alamat');
-                var bio = $(e.relatedTarget).data('bio');
+                // var alamat = $(e.relatedTarget).data('alamat');
+                // var bio = $(e.relatedTarget).data('bio');
                 var is_plt = $(e.relatedTarget).data('is_plt');
                 var unit_kerja_id = $(e.relatedTarget).data('unit_kerja_id');
                 var seksi_id = $(e.relatedTarget).data('seksi_id');
                 var user_type_id = $(e.relatedTarget).data('user_type_id');
                 var gender_id = $(e.relatedTarget).data('gender_id');
-                var pulau_id = $(e.relatedTarget).data('pulau_id');
+                // var pulau_id = $(e.relatedTarget).data('pulau_id');
                 var jabatan_id = $(e.relatedTarget).data('jabatan_id');
                 var role_name = $(e.relatedTarget).data('role_name');
 
                 document.getElementById("editForm").action = url;
                 $('#name_edit').val(name);
                 $('#email_edit').val(email);
-                $('#nik_edit').val(nik);
+                // $('#nik_edit').val(nik);
                 $('#nip_edit').val(nip);
                 $('#no_hp_edit').val(no_hp);
                 $('#tempat_lahir_edit').val(tempat_lahir);
                 $('#tanggal_lahir_edit').val(tanggal_lahir);
-                $('#alamat_edit').val(alamat);
-                $('#bio_edit').val(bio);
+                // $('#alamat_edit').val(alamat);
+                // $('#bio_edit').val(bio);
                 $('#is_plt_edit').val(is_plt);
                 $('#unit_kerja_id_edit').val(unit_kerja_id);
                 $('#seksi_id_edit').val(seksi_id);
                 $('#user_type_id_edit').val(user_type_id);
                 $('#gender_id_edit').val(gender_id);
-                $('#pulau_id_edit').val(pulau_id);
+                // $('#pulau_id_edit').val(pulau_id);
                 $('#jabatan_id_edit').val(jabatan_id);
                 $('#role_name_edit').val(role_name);
             });

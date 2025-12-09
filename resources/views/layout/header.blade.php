@@ -52,15 +52,18 @@
                             <p>{{ auth()->user()->email }}</p>
                         </div>
                         <a href="{{ route('profile.index') }}"><i class="icon-user1"></i> Profile Saya</a>
-                        <a href="#"><i class="icon-lock"></i> Ubah Password</a>
-                        <a href="javascript;"
+                        <a href="{{ route('update_password.index') }}"><i class="icon-lock"></i> Ubah Password</a>
+                        <a href="javascript;" data-toggle='modal' data-target='#logoutModal'>
+                            <i class="icon-log-out1"></i> Logout
+                        </a>
+                        {{-- <a href="javascript;"
                             onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
                             <i class="icon-log-out1"></i> Logout
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
-                        </form>
+                        </form> --}}
                     </div>
                 </div>
             </li>

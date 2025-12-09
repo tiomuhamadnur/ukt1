@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -21,6 +22,18 @@ class Kinerja extends Model
         self::creating(function ($model) {
             $model->uuid = Str::uuid();
         });
+    }
+
+    public function getFormattedTanggalAttribute()
+    {
+        return Carbon::parse($this->tanggal)->format('d-m-Y');
+    }
+
+    public function getHariAttribute()
+    {
+        return $this->tanggal
+            ? Carbon::parse($this->tanggal)->locale('id')->dayName
+            : null;
     }
 
     public function user()

@@ -49,7 +49,7 @@
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="javascript:;" data-toggle="modal"
-                                                data-target="#modalDownloadPDF" title="Export PDF">
+                                                data-target="#modalDownloadPDFAll" title="Export PDF">
                                                 <i class="fa fa-file-pdf text-danger"></i> Export PDF
                                             </a>
                                         </li>
@@ -170,6 +170,85 @@
         </div>
     </div>
     {{-- END: MODAL DOKUMENTASI --}}
+
+    {{-- BEGIN: Konfirmasi Excel --}}
+    <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-2">
+                    <div class="p-2 text-center">
+                        <div class="mt-2 fw-bolder">Apakah anda yakin?</div>
+                        <div class="mt-2">
+                            <img style="height: 100px;"
+                                src="https://i.pinimg.com/originals/1b/db/8a/1bdb8ac897512116cbac58ffe7560d82.png"
+                                alt="PDF">
+                        </div>
+                        <div class="text-slate-500 mt-2">
+                            <p>
+                                Data ini akan di-generate dalam format Excel!
+                            </p>
+                        </div>
+                        <form id="exportExcel" action="{{ route('kinerja.export.excel') }}" method="GET"
+                            hidden>
+                            @csrf
+                            @method('GET')
+                            <input type="text" name="seksi_id" value="{{ $seksi_id ?? '' }}">
+                            <input type="text" name="user_id" value="{{ $user_id ?? '' }}">
+                            <input type="text" name="pulau_id" value="{{ $pulau_id ?? '' }}">
+                            <input type="text" name="kegiatan_id" value="{{ $kegiatan_id ?? '' }}">
+                            <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
+                            <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" form="exportExcel" formtarget="_blank" class="btn btn-primary">Unduh</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: Konfirmasi Excel --}}
+
+    {{-- BEGIN: Konfirmasi PDF All --}}
+    <div id="modalDownloadPDFAll" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-2">
+                    <div class="p-2 text-center">
+                        <div class="mt-2 fw-bolder">Apakah anda yakin?</div>
+                        <div class="mt-2">
+                            <img style="height: 100px;"
+                                src="https://static.vecteezy.com/system/resources/previews/019/016/806/non_2x/adobe-acrobat-reader-icon-free-png.png"
+                                alt="PDF">
+                        </div>
+                        <div class="text-slate-500 mt-2">
+                            <p>
+                                Data ini akan di-generate dalam format PDF!
+                            </p>
+                        </div>
+                        <form id="formKegiatanPDFAll" action="{{ route('kinerja.export.pdf') }}" method="GET"
+                            hidden>
+                            @csrf
+                            @method('GET')
+                            <input type="text" name="seksi_id" value="{{ $seksi_id ?? '' }}">
+                            <input type="text" name="user_id" value="{{ $user_id ?? '' }}">
+                            <input type="text" name="pulau_id" value="{{ $pulau_id ?? '' }}">
+                            <input type="text" name="kegiatan_id" value="{{ $kegiatan_id ?? '' }}">
+                            <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
+                            <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" form="formKegiatanPDFAll" formtarget="_blank"
+                        class="btn btn-primary">Unduh</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: Konfirmasi PDF All --}}
 @endsection
 
 

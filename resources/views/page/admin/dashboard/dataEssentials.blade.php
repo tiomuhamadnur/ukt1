@@ -27,6 +27,19 @@
     </div>
     <div class="row gutters">
         <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
+            <a href="/log-viewer">
+                <div class="info-tiles">
+                    <div class="info-icon">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stats-detail">
+                        <h5>Log Viewer</h5>
+                        <p>Detail debug app</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
             <a href="{{ route('user.index') }}">
                 <div class="info-tiles">
                     <div class="info-icon">
