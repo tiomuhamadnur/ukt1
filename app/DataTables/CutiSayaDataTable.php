@@ -40,7 +40,7 @@ class CutiSayaDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('aksi', function ($item) {
-                $printURL = route('pjlp-cuti.pdf', $item->uuid);
+                $printURL = route('cuti.export.pdf', $item->uuid);
                 $printButton = "<a href='javascript:;' class='btn btn-outline-warning'
                                     title='Print' title='Download PDF' data-toggle='modal'
                                     data-target='#modalDownloadPDF'

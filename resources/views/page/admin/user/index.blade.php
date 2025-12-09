@@ -318,7 +318,7 @@
                     @method('DELETE')
 
                     <div class="modal-body text-center">
-                        <p>Apakah Anda yakin ingin melakukan ini?</p>
+                        <p id="mode"></p>
                     </div>
 
                     <div class="modal-footer custom">
@@ -385,8 +385,10 @@
             $(document).ready(function() {
             $('#banModal').on('show.bs.modal', function(e) {
                 var url = $(e.relatedTarget).data('url');
+                var mode = $(e.relatedTarget).data('mode');
 
                 document.getElementById("banForm").action = url;
+                document.getElementById("mode").innerHTML = mode;
             });
 
             $('#resetPasswordModal').on('show.bs.modal', function(e) {

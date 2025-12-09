@@ -181,7 +181,7 @@
     {{-- END: Pengajuan Cuti --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}
-    {{-- <div id="modalDownloadPDF" class="modal" tabindex="-1" aria-hidden="true">
+    <div id="modalDownloadPDF" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -205,11 +205,11 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi PDF --}}
 
     {{-- BEGIN: Konfirmasi Excel --}}
-    {{-- <div id="modalDownloadExcel" class="modal" tabindex="-1" aria-hidden="true">
+    <div id="modalDownloadExcel" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -225,18 +225,18 @@
                                 Data ini akan di-generate dalam format Excel!
                             </p>
                         </div>
-                        <form id="exportExcel" action="{{ route('simoja.kasi.cuti.export.excel') }}" method="GET"
+                        <form id="exportExcel" action="{{ route('cuti.export.excel') }}" method="GET"
                             hidden>
                             @csrf
                             @method('GET')
-                            <input type="text" name="seksi_id" value="{{ $seksi_id ?? '' }}">
                             <input type="text" name="user_id" value="{{ $user_id ?? '' }}">
+                            <input type="text" name="disetujui_oleh_id" value="{{ $disetujui_oleh_id ?? '' }}">
+                            <input type="text" name="seksi_id" value="{{ $seksi_id ?? '' }}">
                             <input type="text" name="pulau_id" value="{{ $pulau_id ?? '' }}">
                             <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
                             <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
-                            <input type="text" name="status" value="{{ $status ?? '' }}">
+                            <input type="text" name="status_cuti_id" value="{{ $status_cuti_id ?? '' }}">
                             <input type="text" name="jenis_cuti_id" value="{{ $jenis_cuti_id ?? '' }}">
-                            <input type="text" name="sort" value="{{ $sort ?? 'ASC' }}">
                         </form>
                     </div>
                     <div class="px-5 pb-8 text-center mt-3">
@@ -247,7 +247,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi Excel --}}
 @endsection
 
@@ -265,7 +265,6 @@
 
             $('#modalDownloadPDF').on('show.bs.modal', function(e) {
                 var href = $(e.relatedTarget).data('href');
-                console.log(href);
                 document.getElementById("downloadPDF").href = href;
             });
         });

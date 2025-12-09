@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\DataTables\CutiDataTable;
 use App\DataTables\CutiPersetujuanDataTable;
 use App\DataTables\CutiSayaDataTable;
+use App\Exports\cuti\CutiExport;
 use App\Models\Cuti;
 use App\Models\User;
 use App\Models\JenisCuti;
@@ -23,6 +24,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CutiController extends Controller
 {
@@ -200,6 +203,51 @@ class CutiController extends Controller
         ]);
 
         return back()->withNotify("Pengajuan cuti <strong>{$cuti->user->name}</strong> berhasil ditolak.");
+    }
+
+    public function export_excel(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'seksi_id' => 'nullable|exists:seksi,id',
+            'disetujui_oleh_id' => 'nullable|exists:users,id',
+            'tim_id' => 'nullable|exists:tim,id',
+            'status_cuti_id' => 'nullable|exists:status_cuti,id',
+            'start_date' => 'nullable|date',
+            'end_date'   => 'nullable|date|after_or_equal:start_date|required_with:start_date',
+        ]);
+
+        $user_id = $request->user_id ?? null;
+        $pulau_id = $request->pulau_id ?? null;
+        $seksi_id = $request->seksi_id ?? null;
+        $disetujui_oleh_id = $request->disetujui_oleh_id ?? null;
+        $tim_id = $request->tim_id ?? null;
+        $status_cuti_id = $request->status_cuti_id ?? null;
+        $start_date = $request->start_date ?? null;
+        $end_date = $request->end_date ?? $start_date;
+
+        $waktu = Carbon::now()->format('Ymd');
+
+        return Excel::download(new CutiExport($user_id, $pulau_id, $seksi_id, $disetujui_oleh_id, $tim_id, $status_cuti_id, $start_date, $end_date), $waktu . '_data cuti.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function export_pdf ($uuid) {
+        $cuti = Cuti::where('uuid', $uuid)->first();
+        if(!$cuti) {
+            return back()->withError('Data cuti tidak ditemukan');
+        }
+
+        $tanggal = ($cuti->tanggal_awal == $cuti->tanggal_akhir) ? Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') : Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') . ' s/d ' . Carbon::parse($cuti->tanggal_akhir)->isoFormat('D MMMM Y');
+        $tahun = Carbon::parse($cuti->tanggal_awal)->isoFormat('Y');
+        $tanggal_approve = 'Jakarta, ' . Carbon::parse($cuti->disetujui_at)->isoFormat('D MMMM Y');
+        $pdf = Pdf::loadView('page.admin.cuti.pdf', [
+            'cuti' => $cuti,
+            'tanggal' => $tanggal,
+            'tahun' => $tahun,
+            'tanggal_approve' => $tanggal_approve,
+        ]);
+        return $pdf->stream(Carbon::now()->format('Ymd_') . 'Surat ' . $cuti->jenis_cuti->name . '_' . $cuti->user->name . '.pdf');
     }
 
 
@@ -590,7 +638,7 @@ class CutiController extends Controller
         // KIRIM NOTIFIKASI EMAIL
         $nama = $user->name ?? '-';
         $jabatan = $user->jabatan->name ?? '-';
-        $pulau = $user->area->pulau->name ?? '-';
+        $pulau = $user->formasi_tim->pulau->name ?? '-';
         $route = route('approval-cuti.index'); //Link untuk show approval via email
         $tanggal = Carbon::parse($tanggal_awal)->format('d-m-Y') . ' s/d ' . Carbon::parse($tanggal_akhir)->format('d-m-Y');
         $lampiran = $imagePath ? storage_path('app/public/' . $imagePath) : null;
@@ -646,12 +694,5 @@ class CutiController extends Controller
         $cuti->forceDelete();
 
         return redirect()->route('pjlp-cuti.index')->withNotify('Data cuti berhasil dihapus secara permanen!');
-    }
-
-    public function pjlp_pdf ($uuid) {
-        $cuti = Cuti::where('uuid', $uuid)->first();
-        if(!$cuti) {
-            return back()->withError('Data cuti tidak ditemukan');
-        }
     }
 }

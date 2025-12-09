@@ -62,12 +62,13 @@ class UserDataTable extends DataTable
                     </button>";
 
                 $banRoute = route('user.destroy', $item->uuid);
+                $mode = $item->isBanned() ? "Apakah anda yakin <strong>Mengaktifkan</strong> lagi <strong>{$item->name}</strong>?" : "Apakah anda yakin melakukan <strong>Banned</strong> pada <strong>{$item->name}</strong>?";
                 $color = $item->isBanned() ? 'btn-success' : 'btn-outline-danger';
                 $title = $item->isBanned() ? 'Aktifkan User ini' : 'Ban User ini';
                 $icon  = $item->isBanned() ? 'fa-user-plus' : 'fa-user-times';
                 $banButton = "
                     <a href='javascript:void(0);' title='{$title}' class='btn {$color}' data-toggle='modal'
-                    data-target='#banModal' data-url='{$banRoute}'>
+                    data-target='#banModal' data-url='{$banRoute}' data-mode='{$mode}'>
                         <i class='fa {$icon}'></i>
                     </a>";
 

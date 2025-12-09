@@ -40,7 +40,7 @@ class AbsensiDataTable extends DataTable
             ->addColumn('aksi', function ($item) {
                 $photoMasuk = asset('storage/' . $item->photo_masuk);
                 $photoPulang = asset('storage/' . $item->photo_pulang);
-                $actionButton = "<a href='#' data-toggle='modal' data-target='#modalDokumentasi'
+                $actionButton = "<a href='#' title='Lihat Dokumentasi Absen' data-toggle='modal' data-target='#modalDokumentasi'
                                     data-photo_masuk='{$photoMasuk}'
                                     data-photo_pulang='{$photoPulang}'>
                                     <button class='btn btn-outline-primary'>
@@ -113,7 +113,7 @@ class AbsensiDataTable extends DataTable
 
                 // Jika minimal satu pasangan ada, generate button
                 $mapsButton = "
-                    <a href='#'
+                    <a href='#' title='Lihat Lokasi di Maps'
                         data-toggle='modal'
                         data-target='#mapsModal'
                         data-latitude_masuk='{$lat_masuk}'

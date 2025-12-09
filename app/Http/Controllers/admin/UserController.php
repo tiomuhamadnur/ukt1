@@ -155,7 +155,7 @@ class UserController extends Controller
             return back()->withNotify("User <b>{$user->name}</b> berhasil diaktifkan kembali.");
         } else {
             $user->ban();
-            return back()->withNotify("User <b>{$user->name}</b> berhasil di-ban.");
+            return back()->withNotify("User <b>{$user->name}</b> berhasil di-banned.");
         }
     }
 }

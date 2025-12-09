@@ -40,6 +40,10 @@ Route::get('/register', function () {
     return redirect()->route('dashboard.index');
 });
 
+Route::get('/dashboard', function () {
+    return redirect()->route('dashboard.index');
+});
+
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard');
@@ -142,7 +146,9 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::get('/approval-cuti', 'approval_cuti')->name('approval-cuti.index');
             Route::put('/approval-cuti/approve', 'cuti_approve')->name('approval-cuti.approve');
             Route::put('/approval-cuti/reject', 'cuti_reject')->name('approval-cuti.reject');
-            Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf');
+
+            Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf'); //Belum beres
+            Route::get('/cuti/export/excel', 'export_excel')->name('cuti.export.excel');
         });
 
         Route::controller(CutiController::class)->middleware('permission:kanit')->group(function () {
@@ -161,7 +167,6 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::post('/pjlp-cuti', 'pjlp_store')->name('pjlp-cuti.store');
             Route::post('/pjlp-cuti', 'pjlp_store')->name('pjlp-cuti.store');
             Route::delete('/pjlp-cuti/{uuid}', 'pjlp_destroy')->name('pjlp-cuti.destroy');
-            Route::get('/pjlp-cuti/{uuid}', 'pjlp_pdf')->name('pjlp-cuti.pdf'); //Belum beres
         });
 
 

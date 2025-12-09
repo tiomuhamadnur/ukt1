@@ -59,7 +59,6 @@
             <h2 class="text-center">SIGMA APP - UKT 1</h2>
             <p class="text-center">Sistem Integrasi Manajemen Kinerja</p>
 
-            <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}" />
             @error('email')
                 <span class="badge" role="alert"
                     style="
@@ -76,6 +75,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
             @enderror
+            <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}" />
 
             <input type="password" name="password" placeholder="Password" required />
             @error('password')
