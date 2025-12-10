@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\DataTables\AbsensiDataTable;
 use App\DataTables\AbsensiSayaDataTable;
+use App\Exports\absensi\AbsensiExport;
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\JenisAbsensi;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AbsensiController extends Controller
 {
@@ -83,6 +85,27 @@ class AbsensiController extends Controller
         ]));
     }
 
+    public function export_excel(Request $request)
+    {
+        $request->validate([
+            'seksi_id' => 'nullable|exists:seksi,id',
+            'user_id' => 'nullable|exists:users,id',
+            'pulau_id' => 'nullable|exists:pulau,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date|required_with:start_date',
+        ]);
+
+        $seksi_id = $request->seksi_id;
+        $user_id = $request->user_id;
+        $pulau_id = $request->pulau_id;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date ?? $start_date;
+
+        $waktu = Carbon::now()->format('Ymd');
+
+        return Excel::download(new AbsensiExport($seksi_id, $user_id, $pulau_id, $start_date, $end_date), $waktu . '_data absensi.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
+
 
 
 
@@ -145,7 +168,6 @@ class AbsensiController extends Controller
             'tahun',
             'bulan',
         ]));
-        // return view('page.users.sigma.kanit.absensi.index');
     }
 
     public function kasi_index(AbsensiDataTable $dataTable, Request $request)

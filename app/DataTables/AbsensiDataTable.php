@@ -56,7 +56,7 @@ class AbsensiDataTable extends DataTable
 
                 return "
                     <div class='{$badgeClass}'>
-                        " . ($item->status_masuk ?? '-') . "<br>
+                        " . ($item->status_masuk ?? null) . "<br>
                         {$telatText}
                     </div>
                 ";
@@ -67,7 +67,7 @@ class AbsensiDataTable extends DataTable
 
                 return "
                     <div class='{$badgeClass}'>
-                        " . ($item->status_pulang ?? '-') . "<br>
+                        " . ($item->status_pulang ?? null) . "<br>
                         {$cepatText}
                     </div>
                 ";
@@ -108,7 +108,7 @@ class AbsensiDataTable extends DataTable
                 $pulang_ada = $lat_pulang && $lng_pulang;
 
                 if (!$masuk_ada && !$pulang_ada) {
-                    return '-'; // Kedua pasangan kosong → tidak tampil
+                    return null;
                 }
 
                 // Jika minimal satu pasangan ada, generate button
@@ -202,7 +202,7 @@ class AbsensiDataTable extends DataTable
             Column::computed('status_masuk')->title('Status Datang')->sortable(false),
             Column::make('jam_pulang')->title('Jam Pulang')->sortable(false),
             Column::computed('status_pulang')->title('Status Pulang')->sortable(false),
-            Column::make('status')->title('Status')->sortable(false),
+            Column::make('status')->title('Status')->addClass('text-center')->sortable(false),
             Column::computed('catatan')->title('Catatan')->sortable(false),
             Column::computed('maps')->title('Lokasi Absen')->addClass('text-center text-nowrap')->sortable(false),
             Column::computed('aksi')

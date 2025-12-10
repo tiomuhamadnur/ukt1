@@ -222,7 +222,7 @@
     {{-- END: MODAL MAPS --}}
 
     {{-- BEGIN: Konfirmasi Excel --}}
-    {{-- <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body p-2">
@@ -238,7 +238,7 @@
                                 Data ini akan di-generate dalam format Excel!
                             </p>
                         </div>
-                        <form id="exportExcel" action="{{ route('simoja.kasi.absensi.export.excel') }}" method="GET"
+                        <form id="exportExcel" action="{{ route('absensi.export.excel') }}" method="GET"
                             hidden>
                             @csrf
                             @method('GET')
@@ -247,7 +247,6 @@
                             <input type="text" name="pulau_id" value="{{ $pulau_id ?? '' }}">
                             <input type="text" name="start_date" value="{{ $start_date ?? '' }}">
                             <input type="text" name="end_date" value="{{ $end_date ?? '' }}">
-                            <input type="text" name="sort" value="{{ $sort ?? 'ASC' }}">
                         </form>
                     </div>
                 </div>
@@ -257,7 +256,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi Excel --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}

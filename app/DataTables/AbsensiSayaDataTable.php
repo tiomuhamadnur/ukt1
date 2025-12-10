@@ -119,7 +119,7 @@ class AbsensiSayaDataTable extends DataTable
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),
             Column::make('jam_masuk')->title('Jam Datang')->sortable(false),
             Column::make('jam_pulang')->title('Jam Pulang')->sortable(false),
-            Column::make('status')->title('Status')->sortable(false),
+            Column::make('status')->title('Status')->addClass('text-center')->sortable(false),
             Column::computed('aksi')
                     ->exportable(false)
                     ->printable(false)
