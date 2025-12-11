@@ -260,30 +260,30 @@
     {{-- END: Konfirmasi Excel --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}
-    {{-- <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form id="formPDF" action="#" method="GET">
+                    <form id="formPDF" action="{{ route('absensi.export.pdf') }}" method="GET">
                         @csrf
                         @method('GET')
                         <div class="form-row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label for="">Personel</label>
+                                    <label class="required">Personel</label>
                                     <select name="user_id" class="form-control" required>
                                         <option value="" selected disabled>- Pilih Personel -</option>
                                         @foreach ($user as $item)
-                                            <option value="{{ $item->id }}"
-                                                @if ($item->id == $user_id) selected @endif>{{ $item->name }} -
-                                                {{ $item->nip ?? '-' }}
+                                            <option value="{{ $item->id }}" @selected($item->id == $user_id)>
+                                                {{ $item->name }} - {{ $item->nip ?? '-' }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Periode</label>
-                                    <input type="month" class="form-control" name="periode" value="{{ $periode }}">
+                                    <label class="required">Periode</label>
+                                    <input type="month" class="form-control" name="periode"
+                                        value="{{ $periode }}">
                                 </div>
                             </div>
                         </div>
@@ -291,11 +291,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
-                    <button type="submit" form="formPDF" formtarget="_blank" class="btn btn-primary">Buat</button>
+                    <button type="submit" form="formPDF" formtarget="_blank" class="btn btn-primary">Generate</button>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi PDF --}}
 @endsection
 

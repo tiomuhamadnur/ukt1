@@ -43,7 +43,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // 419 Page Expired → CSRF token mismatch
-        $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
+        $exceptions->renderable(function (\Illuminate\Session\TokenMismatchException $e, $request) {
             return response()->view('components.errors.419', [], 419);
         });
 

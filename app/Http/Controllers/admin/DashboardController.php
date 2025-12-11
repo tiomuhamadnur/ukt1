@@ -21,6 +21,7 @@ use App\Models\JenisAbsensi;
 use Illuminate\Http\Request;
 use App\Models\StatusAbsensi;
 use App\Http\Controllers\Controller;
+use App\Models\Absensi;
 use App\Models\Cuti;
 use App\Models\Kinerja;
 use App\Models\KonfigurasiAbsensi;
@@ -41,7 +42,50 @@ class DashboardController extends Controller
         switch ($role) {
             case 'superadmin':
             case 'admin':
-                return view('page.admin.dashboard.index');
+
+                $today = Carbon::now();
+                $tanggal = Carbon::parse($today)->isoFormat('dddd, D MMMM Y');
+                $tahun = $today->format('Y');
+
+                $user = User::where('user_type_id', 4) //PJLP
+                            ->where('jabatan_id', 5) //PJLP
+                            ->notBanned()
+                            ->get();
+
+                $total_user = User::when(!Auth::user()->hasRole('superadmin'), function($query) {
+                    $query->whereDoesntHave('roles', fn($q) => $q->where('name', 'superadmin'));
+                })->count();
+
+                $total_absensi = Absensi::where('tanggal', $today)->count();
+
+                $total_kinerja = Kinerja::whereYear('tanggal', $tahun)->count();
+
+                $total_cuti = Cuti::whereIn('status_cuti_id', [1, 2])
+                    ->whereDate('tanggal_awal', '<=', $today)
+                    ->whereDate('tanggal_akhir', '>=', $today)
+                    ->count();
+
+                $total_pjlp = $user->count();
+
+                $sudahAbsen = Absensi::whereDate('tanggal', $today)
+                        ->distinct('user_id')
+                        ->count('user_id');
+
+                $belumAbsen = $total_pjlp - $sudahAbsen;
+
+                return view('page.admin.dashboard.index', compact([
+                    'user',
+                    'total_user',
+                    'total_absensi',
+                    'total_kinerja',
+                    'total_cuti',
+                    'tanggal',
+                    'tahun',
+                    'sudahAbsen',
+                    'belumAbsen',
+                ]));
+
+
             case 'kanit':
                 return redirect()->route('kanit.index');
             case 'kasi':

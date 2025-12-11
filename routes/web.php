@@ -132,6 +132,7 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::get('/kasi-absensi', 'kasi_index')->name('kasi-absensi.index')->middleware('permission:kasi');
 
             Route::get('/absensi/export/excel', 'export_excel')->name('absensi.export.excel');
+            Route::get('/absensi/export/pdf', 'export_pdf')->name('absensi.export.pdf');
         });
 
         Route::controller(AbsensiController::class)->middleware('permission:pjlp')->group(function () {
