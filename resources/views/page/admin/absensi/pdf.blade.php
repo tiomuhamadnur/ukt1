@@ -301,14 +301,14 @@
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
                 <tr>
-                    <td class="text-center">@if($kepala_seksi->is_plt == true)Plt.@endif Kepala Seksi</td>
+                    <td class="text-center">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi</td>
                     <td style="width: 4cm;"></td>
-                    <td class="text-center">@if($kepala_unit->is_plt == true)Plt.@endif Kepala Unit</td>
+                    <td class="text-center">@if(optional($kepala_unit)->is_plt == true)Plt.@endif Kepala Unit</td>
                 </tr>
                 <tr>
-                    <td class="text-center">{{ $kepala_seksi->seksi->name ?? 'N/A' }}</td>
+                    <td class="text-center">{{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
                     <td></td>
-                    <td class="text-center">{{ $kepala_unit->unit_kerja->name ?? 'N/A' }}</td>
+                    <td class="text-center">{{ $kepala_unit?->unit_kerja?->name ?? 'N/A' }}</td>
                 </tr>
                 <tr>
                     <td style="height: 27mm;"></td>
@@ -317,13 +317,13 @@
                 </tr>
                 <tr>
                     <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
-                        {{ $kepala_seksi->name ?? '-' }}</td>
+                        {{ $kepala_seksi->name ?? 'N/A' }}</td>
                     <td></td>
                     <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
                         {{ $kepala_unit->name ?? 'N/A' }}</td>
                 </tr>
                 <tr>
-                    <td class="text-center">NIP. {{ $kepala_seksi->nip ?? '-' }}</td>
+                    <td class="text-center">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
                     <td></td>
                     <td class="text-center">NIP. {{ $kepala_unit->nip ?? 'N/A' }}</td>
                 </tr>
