@@ -591,6 +591,7 @@ class AbsensiController extends Controller
             // Cek keterlambatan
             if ($waktu > $jam_masuk){
                 $telat = $waktu->diffInMinutes($jam_masuk);
+                $telat = abs($telat);
                 $status_absensi = 'Datang terlambat';
             } else {
                 $telat = 0;
@@ -605,6 +606,7 @@ class AbsensiController extends Controller
             // Cek pulang cepat
             if ($waktu < $jam_pulang){
                 $telat = $waktu->diffInMinutes($jam_pulang);
+                $telat = abs($telat);
                 $status_absensi = 'Pulang Cepat';
             } else {
                 $telat = 0;
@@ -765,7 +767,7 @@ class AbsensiController extends Controller
             $font->valign('bottom');
             $font->size(10);
         });
-        $image->text($this->wrapText($lokasi, 11, public_path('assets/fonts/Roboto-Regular.ttf'), 400), 10, 10, function($font) {
+        $image->text($this->wrapText($lokasi, 11, public_path('assets/fonts/Roboto-Regular.ttf'), 390), 10, 10, function($font) {
             $font->file(public_path('assets/fonts/Roboto-Regular.ttf'));
             $font->color('#000000');
             $font->align('left');   // kiri
