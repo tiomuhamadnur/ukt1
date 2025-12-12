@@ -22,15 +22,21 @@ class ReverseGeocodingService
             if ($response->successful()) {
                 $data = $response->json();
 
-                // Ambil elemen address
-                $address = $data['address'] ?? [];
+            // Ambil elemen address
+            $address = $data['address'] ?? [];
 
-                $road = $address['road'] ?? null;
-                $suburb = $address['suburb'] ?? null;
-                $city = $address['city'] ?? ($address['town'] ?? ($address['village'] ?? null));
+            $road   = $address['road']   ?? null;
+            $suburb = $address['suburb'] ?? null;
 
-                // Gabungkan elemen yang ada
-                $parts = array_filter([$road, $suburb, $city]);
+            // City hierarchy (pilih yang tersedia)
+            $city = $address['city']
+                ?? $address['county']
+                ?? $address['town']
+                ?? $address['village']
+                ?? null;
+
+            // Gabungkan elemen yang ada
+            $parts = array_filter([$road, $suburb, $city]);
 
                 // Jika ada yang terisi, pakai ini
                 if (!empty($parts)) {
