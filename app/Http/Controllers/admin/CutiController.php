@@ -473,7 +473,7 @@ class CutiController extends Controller
 
         $jatah_cuti = optional($konfigurasi_cuti)->jumlah_awal ?? 0;
 
-        $jumlah = $jatah_cuti - $jumlah_cuti;
+        $sisa_cuti = optional($konfigurasi_cuti)->jumlah_akhir ?? 0;
 
         return $dataTable->with([
             'user_id' => $user_id,
@@ -481,7 +481,7 @@ class CutiController extends Controller
             'end_date' => $end_date,
             'periode' => $periode,
         ])->render('page.users.sigma.pjlp.cuti.index', compact([
-            'jumlah',
+            'sisa_cuti',
             'start_date',
             'end_date',
         ]));
@@ -506,11 +506,11 @@ class CutiController extends Controller
 
         $jatah_cuti = optional($konfigurasi_cuti)->jumlah_awal ?? 0;
 
-        $jumlah = $jatah_cuti - $jumlah_cuti;
+        $sisa_cuti = optional($konfigurasi_cuti)->jumlah_akhir ?? 0;
 
         return view('page.users.sigma.pjlp.cuti.create', compact([
             'jenis_cuti',
-            'jumlah',
+            'sisa_cuti',
         ]));
     }
 

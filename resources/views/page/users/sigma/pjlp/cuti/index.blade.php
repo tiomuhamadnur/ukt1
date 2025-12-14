@@ -23,29 +23,38 @@
                     <h4 class="d-flex justify-content-center mb-3 text-center" style="text-decoration: underline">Pengajuan
                         Cuti Saya - {{ auth()->user()->name }}
                     </h4>
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3 text-left">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <a href="{{ route('pjlp.index') }}"
-                                    class="btn btn-outline-primary mr-2 mb-2 mb-sm-0"><i class="fa fa-arrow-left"></i>
-                                    Kembali</a>
-                                <a href="{{ route('pjlp-cuti.create') }}"
-                                    class="btn btn-primary mr-2 mb-2 mb-sm-0">Tambah
-                                    Data</a>
-                                <a href="" class="btn btn-primary mb-2 mr-2 mb-sm-0" data-toggle="modal"
-                                    data-target="#modalFilter"><i class="fa fa-filter"></i></a>
+                                <a href="{{ route('pjlp.index') }}" class="btn btn-outline-primary mr-2 mb-2 mb-sm-0">
+                                    <i class="fa fa-arrow-left"></i> Kembali
+                                </a>
+
+                                <a href="{{ route('pjlp-cuti.create') }}" class="btn btn-primary mr-2 mb-2 mb-sm-0">
+                                    Tambah Data
+                                </a>
+
+                                <a href="#" class="btn btn-primary mr-2 mb-2 mb-sm-0" data-toggle="modal"
+                                    data-target="#modalFilter">
+                                    <i class="fa fa-filter"></i>
+                                </a>
+
                                 <a href="{{ route('pjlp-cuti.index') }}" class="btn btn-primary mr-2 mb-2 mb-sm-0"
                                     title="Reset Filter">
                                     <i class="fa fa-refresh"></i>
                                 </a>
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12 mb-2 ml-2">
-                            <span class="btn btn-outline-primary">Sisa Cuti:
-                                <strong>{{ $jumlah ?? '0' }} hari</strong>
+
+                        <!-- KANAN -->
+                        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-2 ml-auto text-right">
+                            <span class="btn btn-outline-primary">
+                                Sisa Cuti:
+                                <strong>{{ $sisa_cuti ?? '0' }} hari</strong>
                             </span>
                         </div>
                     </div>
+
                     <div class="projectLog">
                         <div class="logs-container">
                             <div class="table-responsive mt-2">
@@ -61,8 +70,7 @@
     </div>
 
     {{-- START: FILTER CUTI --}}
-    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter"
-        aria-hidden="true">
+    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -79,8 +87,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label for="">Personel</label>
-                                    <input type="text" class="form-control" value="{{ auth()->user()->name }}"
-                                        disabled>
+                                    <input type="text" class="form-control" value="{{ auth()->user()->name }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -88,14 +95,12 @@
                         <div class="form-row gutters">
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" value="#"
-                                        name="start_date">
+                                    <input type="date" class="form-control" value="#" name="start_date">
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" value="#"
-                                        name="end_date">
+                                    <input type="date" class="form-control" value="#" name="end_date">
                                 </div>
                             </div>
                         </div>
@@ -111,8 +116,8 @@
     {{-- END: FILTER CUTI --}}
 
     {{-- START: Modal Detail Pengajuan --}}
-    <div class="modal fade" id="modalDetailPengajuan" tabindex="-1" role="dialog"
-        aria-labelledby="modalDetailPengajuan" aria-hidden="true">
+    <div class="modal fade" id="modalDetailPengajuan" tabindex="-1" role="dialog" aria-labelledby="modalDetailPengajuan"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">

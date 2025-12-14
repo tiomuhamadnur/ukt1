@@ -220,15 +220,17 @@ class DashboardController extends Controller
                         ->where('status_cuti_id', 2) //Status diterima
                         ->sum('jumlah');
 
-        $jatah_cuti = KonfigurasiCuti::where('periode', $tahun)
+        $konfigurasi_cuti = KonfigurasiCuti::where('periode', $tahun)
                         ->where('user_id', $user->id)
-                        ->first()
-                        ->jumlah_awal;
+                        ->first();
 
-        $sisa_cuti = $jatah_cuti - $jumlah_cuti;
+        $jatah_cuti = $konfigurasi_cuti->jumlah_awal;
+
+        $sisa_cuti = $konfigurasi_cuti->jumlah_akhir;
 
         return view('page.users.sigma.pjlp.dashboard.index', compact([
             'tanggal',
+            'jatah_cuti',
             'sisa_cuti',
         ]));
     }

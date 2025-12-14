@@ -78,7 +78,7 @@
                                 <div class="form-group">
                                     <label for="nama">Cuti Tahunan Tersedia</label>
                                     <input type="text" class="form-control"
-                                        value="{{ $jumlah ?? '#' }} hari" disabled>
+                                        value="{{ $sisa_cuti ?? '0' }} hari" disabled>
                                 </div>
                             </div>
                         </div>

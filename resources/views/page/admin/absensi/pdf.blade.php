@@ -113,6 +113,10 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 margin-right: 2%;
             }
+
+            .bg-yellow {
+                background-color:#ffe282;
+            }
         </style>
     </head>
 
@@ -185,13 +189,13 @@
                         <td style="text-align:center">{{ $jumlah_hari_masuk ?? 'N/A' }}</td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr @if(($jumlah_hari_tidak_lengkap ?? 0) > 0) class="bg-yellow" @endif>
                         <td class="text-center">2</td>
                         <td>Presensi Tidak Lengkap</td>
                         <td style="text-align:center">{{ $jumlah_hari_tidak_lengkap ?? 'N/A' }}</td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr @if(($jumlah_hari_tidak_ok ?? 0) > 0) class="bg-yellow" @endif>
                         <td class="text-center">3</td>
                         <td>Presensi Tidak Tertib</td>
                         <td style="text-align:center">{{ $jumlah_hari_tidak_ok ?? 'N/A' }}</td>
@@ -232,7 +236,7 @@
                         : number_format($ketertiban, 1, ',', '.');
                 @endphp
 
-                <div
+                {{-- <div
                     style="display:inline-block; background:{{ getColor($persentase_menit_telat ?? null) }}; color:#000; padding:18px; width:20%; text-align:center; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); margin-right:2%;">
                     <div style="font-size:50px; font-weight:bold;">
                         {{ $ketertiban }}%
@@ -241,7 +245,7 @@
                         Ketertiban Absensi <br>
                         <p style="font-size:10px">{{ $total_menit_telat }} Menit Waktu Telat</p>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 
