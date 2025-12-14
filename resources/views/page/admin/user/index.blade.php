@@ -125,6 +125,14 @@
                             <label class="required">NIP:</label>
                             <input type="text" class="form-control" name="nip" required>
                         </div>
+                        <div class="form-group">
+                            <label class="required">Apakah PLT?:</label>
+                            <select name="is_plt" class="form-control" required>
+                                <option value="" disabled selected>-- Apakah akun ini PLT? --</option>
+                                <option value="1">Ya</option>
+                                <option value="0">Tidak</option>
+                            </select>
+                        </div>
                         {{-- <div class="form-group">
                             <label class="optional">NIK KTP:</label>
                             <input type="number" min="1" class="form-control" name="nik">
@@ -145,14 +153,6 @@
                             <label class="optional">Bio:</label>
                             <textarea name="bio" class="form-control" rows="4"></textarea>
                         </div> --}}
-                        <div class="form-group">
-                            <label class="required">Apakah PLT?:</label>
-                            <select name="is_plt" class="form-control" required>
-                                <option value="" disabled selected>-- Apakah akun ini PLT? --</option>
-                                <option value="1">Ya</option>
-                                <option value="0">Tidak</option>
-                            </select>
-                        </div>
                     </div>
                     <div class="modal-footer custom">
                         <div class="left-side">
@@ -177,7 +177,7 @@
                     <h5 class="modal-title">Edit Data User</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <form id="editForm" action="#" method="POST">
+                <form id="editForm" action="#" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -257,6 +257,14 @@
                             <label class="required">NIP:</label>
                             <input type="text" class="form-control" name="nip" id="nip_edit" required>
                         </div>
+                        <div class="form-group">
+                            <label class="required">Apakah PLT?:</label>
+                            <select name="is_plt" id="is_plt_edit" class="form-control" required>
+                                <option value="" disabled selected>-- Apakah akun ini PLT? --</option>
+                                <option value="1">Ya</option>
+                                <option value="0">Tidak</option>
+                            </select>
+                        </div>
                         {{-- <div class="form-group">
                             <label class="optional">NIK KTP:</label>
                             <input type="number" min="1" class="form-control" name="nik" id="nik_edit">
@@ -278,12 +286,20 @@
                             <textarea name="bio" id="bio_edit" class="form-control" rows="4"></textarea>
                         </div> --}}
                         <div class="form-group">
-                            <label class="required">Apakah PLT?:</label>
-                            <select name="is_plt" id="is_plt_edit" class="form-control" required>
-                                <option value="" disabled selected>-- Apakah akun ini PLT? --</option>
-                                <option value="1">Ya</option>
-                                <option value="0">Tidak</option>
-                            </select>
+                            <label class="optional">Photo Profile:</label>
+                            <div class="text-left">
+                                <img style="height: 120px" class="img-thumbnail mb-1" id="previewImage" src="#"
+                                    alt="Belum ada photo profil">
+                            </div>
+                            <input type="file" id="imageInput" name="photo" class="form-control" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label class="optional">Photo Tandatangan:</label>
+                            <div class="text-left">
+                                <img style="height: 120px" class="img-thumbnail mb-1" id="previewImageTTD" src="#"
+                                    alt="Belum ada photo tandatangan">
+                            </div>
+                            <input type="file" id="imageInputTTD" name="ttd" class="form-control" accept="image/*">
                         </div>
                     </div>
                     <div class="modal-footer custom">
@@ -382,7 +398,7 @@
 
 @section('javascript')
     <script>
-            $(document).ready(function() {
+        $(document).ready(function() {
             $('#banModal').on('show.bs.modal', function(e) {
                 var url = $(e.relatedTarget).data('url');
                 var mode = $(e.relatedTarget).data('mode');
@@ -416,6 +432,8 @@
                 // var pulau_id = $(e.relatedTarget).data('pulau_id');
                 var jabatan_id = $(e.relatedTarget).data('jabatan_id');
                 var role_name = $(e.relatedTarget).data('role_name');
+                var photo = $(e.relatedTarget).data('photo');
+                var ttd = $(e.relatedTarget).data('ttd');
 
                 document.getElementById("editForm").action = url;
                 $('#name_edit').val(name);
@@ -435,7 +453,47 @@
                 // $('#pulau_id_edit').val(pulau_id);
                 $('#jabatan_id_edit').val(jabatan_id);
                 $('#role_name_edit').val(role_name);
+                document.getElementById("previewImage").src = photo;
+                document.getElementById("previewImageTTD").src = ttd;
             });
         })
+    </script>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const previewImage = document.getElementById('previewImage');
+
+        imageInput.addEventListener('change', function(event) {
+            const selectedFile = event.target.files[0];
+
+            if (selectedFile) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                }
+
+                reader.readAsDataURL(selectedFile);
+            }
+        });
+
+        const imageInputTTD = document.getElementById('imageInputTTD');
+        const previewImageTTD = document.getElementById('previewImageTTD');
+
+        imageInputTTD.addEventListener('change', function(event) {
+            const selectedFile = event.target.files[0];
+
+            if (selectedFile) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImageTTD.src = e.target.result;
+                    previewImageTTD.style.display = 'block';
+                }
+
+                reader.readAsDataURL(selectedFile);
+            }
+        });
     </script>
 @endsection

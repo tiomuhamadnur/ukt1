@@ -52,7 +52,7 @@
                             <p>{{ auth()->user()->email }}</p>
                         </div>
                         <a href="{{ route('profile.index') }}"><i class="icon-user1"></i> Profile Saya</a>
-                        <a href="{{ route('update_password.index') }}"><i class="icon-lock"></i> Ubah Password</a>
+                        <a href="{{ route('password.index') }}"><i class="icon-lock"></i> Ubah Password</a>
                         <a href="javascript;" data-toggle='modal' data-target='#logoutModal'>
                             <i class="icon-log-out1"></i> Logout
                         </a>

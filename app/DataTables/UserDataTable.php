@@ -36,6 +36,8 @@ class UserDataTable extends DataTable
             ->addColumn('aksi', function ($item) {
                 $editRoute = route('user.update', $item->uuid);
                 $roleName = $item->getRoleNames()->first() ?? '';
+                $photo = $item->photo ? asset('storage/' . Auth::user()->photo) : asset('assets/img/no-image.png');
+                $ttd = $item->ttd ? asset('storage/' . Auth::user()->ttd) : asset('assets/img/no-image.png');
                 $editButton = "
                     <button class='btn btn-outline-primary' title='Edit User' data-toggle='modal'
                             data-target='#editModal'
@@ -57,6 +59,8 @@ class UserDataTable extends DataTable
                             data-seksi_id='{$item->seksi_id}'
                             data-pulau_id='{$item->pulau_id}'
                             data-role_name='{$roleName}'
+                            data-photo='{$photo}'
+                            data-ttd='{$ttd}'
                             >
                         <i class='fa fa-edit'></i>
                     </button>";

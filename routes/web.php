@@ -120,7 +120,9 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
         // MENU PROFILE
         Route::controller(UserController::class)->group(function () {
             Route::get('/profile', 'profile')->name('profile.index');
-            Route::get('/update_password', 'update_password')->name('update_password.index');
+            Route::get('/update-password', 'password')->name('password.index');
+            Route::put('/update-password', 'update_password')->name('user.password.update');
+            Route::put('/update-photo/{uuid}', 'update_photo')->name('user.photo.update');
         });
 
 

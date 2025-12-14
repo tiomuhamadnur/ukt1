@@ -48,6 +48,7 @@ class FormasiTimDataTable extends DataTable
     {
         $query = $model->select('formasi_tim.*')->with([
             'tim',
+            'tim.seksi',
             'pulau',
             'user',
             'koordinator',
@@ -85,6 +86,7 @@ class FormasiTimDataTable extends DataTable
             Column::make('user.name')->title('Personel'),
             // Column::make('koordinator.name')->title('Koordinator'),
             Column::make('tim.name')->title('Tim'),
+            Column::make('tim.seksi.name')->title('Seksi'),
             Column::make('pulau.name')->title('Pulau'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),
         ];

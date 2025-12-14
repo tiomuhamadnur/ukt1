@@ -12,8 +12,11 @@ use App\Models\Seksi;
 use App\Models\UnitKerja;
 use App\Models\User;
 use App\Models\UserType;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -47,16 +50,6 @@ class UserController extends Controller
             'unit_kerja',
             'seksi',
         ]));
-    }
-
-    public function profile()
-    {
-        return view('page.users.profile.index');
-    }
-
-    public function update_password()
-    {
-        return view('page.users.profile.update_password');
     }
 
     public function create()
@@ -118,7 +111,7 @@ class UserController extends Controller
         //
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user, ImageUploadService $imageService)
     {
         $rawData = $request->validate([
             'name' => 'required|max:50|string',
@@ -139,9 +132,52 @@ class UserController extends Controller
             'seksi_id' => 'nullable|exists:seksi,id',
         ]);
 
+        $request->validate([
+            'photo' => 'nullable|file|image',
+            'ttd' => 'nullable|file|image',
+        ]);
+
         $user->update($rawData);
 
         $user->syncRoles([$rawData['role_name']]);
+
+        // Photo Profile
+        if ($request->hasFile('photo')) {
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $imagePath = $imageService->uploadImage(
+                $request->file('photo'),
+                'user/profile/',
+                null,
+                250,
+                60
+            );
+
+            $user->update([
+                'photo' => $imagePath
+            ]);
+        }
+
+        // Photo TTD
+        if ($request->hasFile('ttd')) {
+            if ($user->ttd && Storage::disk('public')->exists($user->ttd)) {
+                Storage::disk('public')->delete($user->ttd);
+            }
+
+            $imagePath = $imageService->uploadImage(
+                $request->file('ttd'),
+                'user/ttd/',
+                null,
+                250,
+                60
+            );
+
+            $user->update([
+                'ttd' => $imagePath
+            ]);
+        }
 
         return back()->withNotify("Data user <b>{$user->name}</b> berhasil diperbarui.");
     }
@@ -157,5 +193,93 @@ class UserController extends Controller
             $user->ban();
             return back()->withNotify("User <b>{$user->name}</b> berhasil di-banned.");
         }
+    }
+
+
+
+
+
+
+    public function profile()
+    {
+        $user = Auth::user();
+        $tahun = date('Y');
+        return view('page.users.profile.index', compact([
+            'user',
+            'tahun',
+        ]));
+    }
+
+    public function password()
+    {
+        return view('page.users.profile.update_password');
+    }
+
+    public function update_password(Request $request)
+    {
+        $request->validate([
+            'old_password' => ['required'],
+            'new_password' => ['required', 'confirmed', 'min:8'],
+        ], [
+            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai!',
+            'new_password.min' => 'Password minimal 8 karakter',
+        ]);
+
+
+        $user = Auth::user();
+
+        // cek password lama
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->withError('Password lama tidak sesuai.');
+        }
+
+        // cek password baru tidak boleh sama dengan password lama
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withError('Password baru tidak boleh sama dengan password lama.');
+        }
+
+        // update password
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        Auth::logout();
+
+        return redirect()
+            ->route('login')
+            ->withErrors(['email' => 'Password berhasil diubah. Silakan login kembali.']);
+    }
+
+    public function update_photo($uuid, Request $request, ImageUploadService $imageService)
+    {
+        $request->validate([
+            'photo' => 'required|file|image',
+        ]);
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->hasFile('photo')) {
+
+            // HAPUS FOTO LAMA (JIKA ADA)
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            // UPLOAD FOTO BARU
+            $imagePath = $imageService->uploadImage(
+                $request->file('photo'),
+                'user/profile/',
+                null,
+                250,
+                60
+            );
+
+            // UPDATE DB
+            $user->update([
+                'photo' => $imagePath
+            ]);
+        }
+
+        return back()->withNotify("Photo profil <strong>{$user->name}</strong> berhasil diperbarui.");
     }
 }

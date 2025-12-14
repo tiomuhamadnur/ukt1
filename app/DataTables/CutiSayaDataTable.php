@@ -162,7 +162,7 @@ class CutiSayaDataTable extends DataTable
                     ->minifiedAjax()
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
-                    ->orderBy([0, 'asc'])
+                    ->orderBy([3, 'desc'])
                     ->selectStyleSingle()
                     ->buttons([
                         [

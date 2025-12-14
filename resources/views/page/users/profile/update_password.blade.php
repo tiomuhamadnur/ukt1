@@ -18,25 +18,25 @@
 @section('content')
     <div class="row gutters justify-content-center">
         <div class="col-xl-4 col-lg-4 col-md-5 col-sm-6 col-12">
-            <form action="#" method="POST">
+            <form action="{{ route('user.password.update') }}" method="POST">
                 @csrf
-                @method('put')
+                @method('PUT')
                 <div class="card m-0">
                     <div class="card-body">
                         <h4 class="text-center"><u>Form Ubah Password</u></h4>
                         <div class="form-group">
-                            <label for="old_password">Password Lama</label>
+                            <label for="old_password" class="required">Password Lama</label>
                             <input type="password" id="old_password" name="old_password" class="form-control"
                                 placeholder="input password lama" required autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label for="new_password">Password Baru</label>
+                            <label for="new_password" class="required">Password Baru</label>
                             <input type="password" id="new_password" name="new_password" class="form-control"
                                 placeholder="input password baru" required autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label for="confirm_new_password">Konfirmasi Password Baru</label>
-                            <input type="password" id="confirm_new_password" name="confirm_new_password"
+                            <label for="new_password_confirmation" class="required">Konfirmasi Password Baru</label>
+                            <input type="password" id="new_password_confirmation" name="new_password_confirmation"
                                 class="form-control" placeholder="input konfirmasi password baru" required
                                 autocomplete="off">
                         </div>
@@ -49,44 +49,4 @@
             </form>
         </div>
     </div>
-@endsection
-
-@section('javascript')
-    <script>
-        const imageInput = document.getElementById('imageInput');
-        const previewImage = document.getElementById('previewImage');
-
-        imageInput.addEventListener('change', function(event) {
-            const selectedFile = event.target.files[0];
-
-            if (selectedFile) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                }
-
-                reader.readAsDataURL(selectedFile);
-            }
-        });
-
-        const imageInputTTD = document.getElementById('imageInputTTD');
-        const previewImageTTD = document.getElementById('previewImageTTD');
-
-        imageInputTTD.addEventListener('change', function(event) {
-            const selectedFile = event.target.files[0];
-
-            if (selectedFile) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    previewImageTTD.src = e.target.result;
-                    previewImageTTD.style.display = 'block';
-                }
-
-                reader.readAsDataURL(selectedFile);
-            }
-        });
-    </script>
 @endsection

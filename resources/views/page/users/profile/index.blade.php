@@ -19,18 +19,23 @@
     <div class="row gutters">
         <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="user-details h-320">
-                <a href="javascript:;" data-toggle="modal" data-target="#formPhotoProfilModal">
+                <a href="javascript:;" data-toggle="modal" data-target="#formPhotoProfilModal"
+                    data-photo="{{ $user->photo != null ? asset('storage/' . $user->photo) : asset('assets/img/avadefault.jpg') }}">
                     <div class="user-thumb">
-                        <img src="{{ auth()->user()->photo != null ? asset('storage/' . auth()->user()->photo) : asset('assets/img/avadefault.jpg') }}"
+                        <img src="{{ $user->photo != null ? asset('storage/' . $user->photo) : asset('assets/img/avadefault.jpg') }}"
                             alt="Photo">
                     </div>
                 </a>
-                <h4>{{ auth()->user()->name }}</h4>
-                <h5>{{ auth()->user()->nip ?? '-' }}</h5>
+                <h4>{{ $user->name }}</h4>
+                <h5>{{ $user->nip ?? '-' }}</h5>
                 <br>
-                <h5>Seksi {{ auth()->user()->struktur->seksi->name ?? 'N/A' }}</h5>
-                <p>Pulau {{ auth()->user()->area->pulau->name ?? 'N/A' }}</p>
-                <h5>Sisa Cuti Anda: {{ $sisa_cuti ??'-' }} </h5>
+                <h6>{{ $user->formasi_tim?->tim?->seksi?->unit_kerja?->name ?? ($user->unit_kerja?->name ?? 'Unit Kerja N/A') }}
+                </h6>
+                <h6>Seksi {{ $user->formasi_tim?->tim?->seksi?->name ?? ($user->seksi?->name ?? 'N/A') }}</h6>
+                <p>Pulau {{ $user->formasi_tim->pulau->name ?? 'N/A' }}</p>
+                @role('pjlp')
+                    <h6>Sisa Cuti Anda Tahun {{ $tahun }}: {{ $user->konfigurasi_cuti->jumlah_akhir ?? 'N/A' }} hari</h6>
+                @endrole
             </div>
         </div>
         <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -43,43 +48,49 @@
                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label for="nama">Nama</label>
-                                <input type="text" class="form-control" id="name" placeholder="Nama"
-                                    value={{ auth()->user()->name }} readonly>
-
+                                <input type="text" class="form-control" placeholder="Nama" value="{{ $user->name }}"
+                                    disabled>
                             </div>
                             <div class="form-group">
-                                <label for="eMail">Email</label>
+                                <label for="email">Email</label>
                                 <input type="email" class="form-control" id="email" placeholder="Email"
-                                    value={{ auth()->user()->email }} disabled>
+                                    value={{ $user->email }} disabled>
                             </div>
+                            {{-- <div class="form-group">
+                                <label for="no_hp" class="optional">Nomor HP/WA</label>
+                                <input type="text" class="form-control" id="no_hp" name="no_hp"
+                                    placeholder="input nomor hp" value="{{ $user->no_hp }}">
+                            </div> --}}
                             <div class="form-group">
-                                <label for="phone">Nomer HP</label>
-                                <input type="text" class="form-control" id="no_hp" placeholder="Nomer HP"
-                                    value="#">
+                                <label>Jabatan</label>
+                                <input type="text" class="form-control" value="{{ $user->jabatan->name ?? 'N/A' }}"
+                                    disabled>
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="form-group">
-                                <label for="seksi">Seksi</label>
-                                <input type="text" class="form-control" id="pulau" placeholder="Seksi"
-                                    value="{{ auth()->user()->struktur->seksi->name ?? 'N/A' }}" disabled>
+                                <label>Unit Kerja</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ $user->formasi_tim?->tim?->seksi?->unit_kerja?->name ?? ($user->unit_kerja->name ?? 'N/A') }}">
                             </div>
                             <div class="form-group">
-                                <label for="ciTy">Jabatan</label>
-                                <input type="koordinator" class="form-control" id="pulau" placeholder="Jabatan"
-                                    value="{{ auth()->user()->jabatan->name ?? 'N/A' }}" disabled>
+                                <label>Seksi</label>
+                                <input type="text" class="form-control"
+                                    value="{{ $user->formasi_tim?->tim?->seksi?->name ?? ($user->seksi->name ?? 'N/A') }}"
+                                    disabled>
                             </div>
                             <div class="form-group">
                                 <label for="pulau">Tempat Bertugas</label>
                                 <input type="text" class="form-control" id="pulau" placeholder="Pulau"
-                                    value="Pulau {{ auth()->user()->area->pulau->name ?? '-' }}" disabled>
+                                    value="{{ $user->formasi_tim?->pulau?->name ? 'Pulau ' . $user->formasi_tim->pulau->name : 'N/A' }}"
+                                    disabled>
                             </div>
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="text-right">
-                                <button type="button" id="submit" name="submit" class="btn btn-dark">Simpan
-                                    Perubahan</button>
-                                <a href="{{ route('update_password.index') }}" class="btn btn-warning">Ubah
+                                {{-- <button type="button" id="submit" name="submit" class="btn btn-dark">Simpan
+                                    Perubahan</button> --}}
+                                <a href="{{ route('password.index') }}" class="btn btn-warning">Ubah
                                     Password</a>
                                 <a href="{{ route('dashboard.index') }}" class="btn btn-danger">Kembali</a>
                             </div>
@@ -89,22 +100,22 @@
             </div>
         </div>
     </div>
-    <div class="row gutters">
+    {{-- <div class="row gutters">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <h5 class="m-0">📄 Daftar Surat Peringatan (SP) - Tahun #</h5>
                 </div>
                 <div class="card-body">
-                    {{-- <div class="table-responsive">
+                    <div class="table-responsive">
                         {{ $dataTable->table([
                             'class' => 'table table-bordered table-striped',
                         ]) }}
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
     {{-- BEGIN: Update Photo Profil --}}
@@ -118,23 +129,27 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="text-center">
+                    <!-- PREVIEW -->
+                    <div class="d-flex justify-content-center mb-3">
                         <img class="img-thumbnail" id="previewImage" src="#" alt="Preview"
-                            style="max-width: 250px; max-height: 250px; display: none;">
+                            style="max-width: 250px; max-height: 250px;">
                     </div>
-                    <div class="form-row gutters mt-3">
-                        {{-- <form action="{{ route('user.update_photo') }}" id="formPhotoProfil" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            @method('put')
-                            <div class="form-group">
-                                <label for="">Photo Profil</label>
-                                <input type="file" id="imageInput" name="photo" class="form-control"
-                                    accept="image/*" required>
+
+                    <!-- FORM -->
+                    <form action="{{ route('user.photo.update', $user->uuid) }}" id="formPhotoProfil" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('put')
+                        <div class="d-flex justify-content-center">
+                            <div class="form-group w-75 text-center">
+                                <label class="required">Photo Profil</label>
+                                <input type="file" id="imageInput" name="photo" class="form-control" accept="image/*"
+                                    required>
                             </div>
-                        </form> --}}
-                    </div>
+                        </div>
+                    </form>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Tutup</button>
                     <button type="submut" form="formPhotoProfil" class="btn btn-primary">Ubah</button>
@@ -188,40 +203,49 @@
 
 @section('javascript')
     <script>
-        const imageInput = document.getElementById('imageInput');
-        const previewImage = document.getElementById('previewImage');
+        $(document).ready(function() {
+            $('#formPhotoProfilModal').on('show.bs.modal', function(e) {
+                var photo = $(e.relatedTarget).data('photo');
 
-        imageInput.addEventListener('change', function(event) {
-            const selectedFile = event.target.files[0];
+                document.getElementById("previewImage").src = photo;
+            });
 
-            if (selectedFile) {
-                const reader = new FileReader();
+            const imageInput = document.getElementById('imageInput');
+            const previewImage = document.getElementById('previewImage');
 
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
+            imageInput.addEventListener('change', function(event) {
+                const selectedFile = event.target.files[0];
+
+                if (selectedFile) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                    }
+
+                    reader.readAsDataURL(selectedFile);
                 }
-
-                reader.readAsDataURL(selectedFile);
-            }
+            });
         });
 
-        const imageInputTTD = document.getElementById('imageInputTTD');
-        const previewImageTTD = document.getElementById('previewImageTTD');
 
-        imageInputTTD.addEventListener('change', function(event) {
-            const selectedFile = event.target.files[0];
+        // const imageInputTTD = document.getElementById('imageInputTTD');
+        // const previewImageTTD = document.getElementById('previewImageTTD');
 
-            if (selectedFile) {
-                const reader = new FileReader();
+        // imageInputTTD.addEventListener('change', function(event) {
+        //     const selectedFile = event.target.files[0];
 
-                reader.onload = function(e) {
-                    previewImageTTD.src = e.target.result;
-                    previewImageTTD.style.display = 'block';
-                }
+        //     if (selectedFile) {
+        //         const reader = new FileReader();
 
-                reader.readAsDataURL(selectedFile);
-            }
-        });
+        //         reader.onload = function(e) {
+        //             previewImageTTD.src = e.target.result;
+        //             previewImageTTD.style.display = 'block';
+        //         }
+
+        //         reader.readAsDataURL(selectedFile);
+        //     }
+        // });
     </script>
 @endsection
