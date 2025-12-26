@@ -142,8 +142,8 @@
                                     value="" disabled>
                             </div>
                             <div class="form-group">
-                                <label for="koordinator">Koordinator</label>
-                                <input type="text" class="form-control" id="koordinator" placeholder="Koordinator"
+                                <label for="koordinator">Diketahui</label>
+                                <input type="text" class="form-control" id="koordinator"
                                     value="" disabled>
                             </div>
                             <div class="form-group">
