@@ -103,6 +103,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="dokumentasi" class="required">Photo Tambahan <i>(Timemark)</i>:</label>
+                            <input type="file" class="form-control" id="dokumentasi" name="dokumentasi" accept="image/*" required onchange="previewImage(event)">
+                            <div class="text-center mt-3">
+                                <img id="preview-dokumentasi"
+                                    src=""
+                                    alt="Preview"
+                                    class="img-thumbnail d-none"
+                                    style="max-height: 300px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="catatan" class="optional">Catatan:</label>
                             <textarea id="catatan" class="form-control" name="catatan" rows="3"></textarea>
                             <input type="hidden" name="latitude" id="latitude" required>
@@ -215,5 +226,21 @@
         $(document).ready(function() {
             startTime();
         });
+
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview-dokumentasi');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 @endsection

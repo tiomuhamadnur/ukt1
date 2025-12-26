@@ -40,9 +40,13 @@ class AbsensiDataTable extends DataTable
             ->addColumn('aksi', function ($item) {
                 $photoMasuk = asset('storage/' . $item->photo_masuk);
                 $photoPulang = asset('storage/' . $item->photo_pulang);
+                $dokumentasiMasuk = asset('storage/' . $item->dokumentasi_masuk);
+                $dokumentasiPulang = asset('storage/' . $item->dokumentasi_pulang);
                 $actionButton = "<a href='#' title='Lihat Dokumentasi Absen' data-toggle='modal' data-target='#modalDokumentasi'
                                     data-photo_masuk='{$photoMasuk}'
-                                    data-photo_pulang='{$photoPulang}'>
+                                    data-photo_pulang='{$photoPulang}'
+                                    data-dokumentasi_masuk='{$dokumentasiMasuk}'
+                                    data-dokumentasi_pulang='{$dokumentasiPulang}'>
                                     <button class='btn btn-outline-primary'>
                                         <i class='fa fa-eye'></i>
                                     </button>
@@ -204,7 +208,7 @@ class AbsensiDataTable extends DataTable
             Column::computed('status_pulang')->title('Status Pulang')->sortable(false),
             Column::make('status')->title('Status')->addClass('text-center')->sortable(false),
             Column::computed('catatan')->title('Catatan')->sortable(false),
-            Column::computed('maps')->title('Lokasi Absen')->addClass('text-center text-nowrap')->sortable(false),
+            Column::computed('maps')->title('Lokasi')->addClass('text-center text-nowrap')->sortable(false),
             Column::computed('aksi')
                 ->exportable(false)
                 ->printable(false)

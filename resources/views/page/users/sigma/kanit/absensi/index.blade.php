@@ -159,17 +159,21 @@
                 <form action="" method="POST">
                     <div class="modal-body">
                         <div class="mb-4 text-center align-middle">
-                            <div class="border mx-auto" style="width: 70%">
-                                <p class="fw-bolder mb-0">Dokumentasi Masuk</p>
-                                <img src="#" id="photo_masuk_modal" class="img-thumbnail"
-                                    alt="Tidak ada dokumentasi absen masuk">
+                            <div class="border mx-auto" style="width: 80%">
+                                <h6 class="fw-bolder mb-0">Dokumentasi Masuk</h6>
+                                <img style="height: 250px" src="#" id="photo_masuk_modal" class="img-thumbnail"
+                                    alt="No Photo SIGMA">
+                                <img style="height: 250px" src="#" id="dokumentasi_masuk_modal" class="img-thumbnail"
+                                    alt="No Photo TIMEMARK">
                             </div>
                         </div>
                         <div class="mb-4 text-center align-middle">
-                            <div class="border mx-auto" style="width: 70%">
-                                <p class="fw-bolder mb-0">Dokumentasi Pulang</p>
-                                <img src="#" id="photo_pulang_modal" class="img-thumbnail"
-                                    alt="Belum ada dokumentasi absen pulang">
+                            <div class="border mx-auto" style="width: 80%">
+                                <h6 class="fw-bolder mb-0">Dokumentasi Pulang</h6>
+                                <img style="height: 250px" src="#" id="photo_pulang_modal" class="img-thumbnail"
+                                    alt="No Photo SIGMA">
+                                <img style="height: 250px" src="#" id="dokumentasi_pulang_modal" class="img-thumbnail"
+                                    alt="No Photo TIMEMARK">
                             </div>
                         </div>
                     </div>
@@ -402,9 +406,13 @@
             $('#modalDokumentasi').on('show.bs.modal', function(e) {
                 var photoMasuk = $(e.relatedTarget).data('photo_masuk');
                 var photoPulang = $(e.relatedTarget).data('photo_pulang');
+                var dokumentasiMasuk = $(e.relatedTarget).data('dokumentasi_masuk');
+                var dokumentasiPulang = $(e.relatedTarget).data('dokumentasi_pulang');
 
                 document.getElementById("photo_masuk_modal").src = photoMasuk;
                 document.getElementById("photo_pulang_modal").src = photoPulang;
+                document.getElementById("dokumentasi_masuk_modal").src = dokumentasiMasuk;
+                document.getElementById("dokumentasi_pulang_modal").src = dokumentasiPulang;
             });
         });
     </script>

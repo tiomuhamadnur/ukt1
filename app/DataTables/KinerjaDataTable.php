@@ -51,10 +51,29 @@ class KinerjaDataTable extends DataTable
 
                 return $actionButton;
             })
+            ->addColumn('waktu', function ($item) {
+                if (!$item->waktu_mulai || !$item->waktu_selesai) {
+                    return '-';
+                }
+
+                $mulai   = Carbon::createFromFormat('H:i:s', $item->waktu_mulai);
+                $selesai = Carbon::createFromFormat('H:i:s', $item->waktu_selesai);
+
+                $durasiMenit = abs($selesai->diffInMinutes($mulai, false));
+
+                return $mulai->format('H:i') . ' s/d ' . $selesai->format('H:i');
+
+                // return sprintf(
+                //     '%s s/d %s (%d menit)',
+                //     $mulai->format('H:i'),
+                //     $selesai->format('H:i'),
+                //     $durasiMenit
+                // );
+            })
             ->addColumn('kegiatan', function ($item) {
                 return $item->kegiatan->name ?? $item->kegiatan_lainnya;
             })
-            ->rawColumns(['kegiatan', 'aksi']);
+            ->rawColumns(['waktu', 'kegiatan', 'aksi']);
     }
 
     public function query(Kinerja $model): QueryBuilder
@@ -129,6 +148,7 @@ class KinerjaDataTable extends DataTable
     {
         return [
             Column::make('tanggal')->title('Tanggal')->sortable(true),
+            Column::computed('waktu')->title('Waktu')->sortable(false)->addClass('text-center text-nowrap'),
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
             Column::make('pulau.name')->title('Pulau')->sortable(false)->addClass('text-nowrap'),
             Column::make('seksi.name')->title('Seksi')->sortable(false),

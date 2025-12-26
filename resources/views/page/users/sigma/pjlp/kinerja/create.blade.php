@@ -93,11 +93,20 @@
                         </div>
                         <div class="form-group">
                             <label class="required">Tanggal:</label>
-                            <input type="date" class="form-control" name="tanggal" placeholder="input tanggal kegiatan" required
-                                autocomplete="off">
+                            <input type="date" class="form-control" name="tanggal" placeholder="input tanggal kegiatan"
+                                required autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label class="required">Photo Kegiatan: <span class="text-secondary">(Max: 3 photo)</span></label>
+                            <label class="required">Waktu Mulai & Waktu Selesai:</label>
+                            <div class="input-group">
+                                <input type="time" class="form-control" name="waktu_mulai" required>
+                                <span class="input-group-text">s/d</span>
+                                <input type="time" class="form-control" name="waktu_selesai" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Photo Kegiatan: <span class="text-secondary">(Max: 3
+                                    photo)</span></label>
                             <input type="file" class="form-control image-input" name="photo[]" multiple accept="image/*"
                                 required>
                             @error('photo')

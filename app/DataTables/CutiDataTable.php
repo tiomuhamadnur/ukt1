@@ -155,7 +155,7 @@ class CutiDataTable extends DataTable
                     ->minifiedAjax()
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
-                    ->orderBy([4, 'desc'])
+                    ->orderBy([3, 'desc'])
                     ->selectStyleSingle()
                     ->buttons([
                         [
@@ -173,7 +173,7 @@ class CutiDataTable extends DataTable
     {
         return [
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
-            Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
+            // Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.formasi_tim.tim.seksi.name')->title('Seksi')->sortable(false),
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),
             Column::make('tanggal_awal')->title('Tanggal Awal')->sortable(true),
@@ -181,10 +181,10 @@ class CutiDataTable extends DataTable
             Column::make('jenis_cuti.name')->title('Jenis Izin')->sortable(false),
             Column::computed('jumlah_hari')->title('Jumlah Hari')->sortable(false),
             // Column::computed('sisa_cuti')->title('Sisa Cuti')->sortable(false),
+            Column::make('catatan')->title('Alasan')->sortable(false)->addClass('text-wrap'),
             Column::make('diketahui_oleh.name')->title('Diketahui')->sortable(false),
             Column::computed('disetujui')->title('Disetujui')->sortable(false),
             Column::computed('status')->title('Status')->addClass('text-center')->sortable(false),
-            // Column::make('catatan')->title('Catatan')->sortable(false)->addClass('text-wrap'),
             Column::computed('#')
                 ->exportable(false)
                 ->printable(false)

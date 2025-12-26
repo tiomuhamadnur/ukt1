@@ -85,7 +85,7 @@
                                                             <i class="fa fa-file-pdf text-danger"></i> Export PDF
                                                         </a>
                                                     </li>
-                                                    <li>
+                                                    {{-- <li>
                                                         <a class="dropdown-item" href="javascript:;" data-toggle="modal"
                                                             data-target="#modalDownloadPDF">
                                                             <i class="fa fa-file-pdf text-danger"></i> PDF per Personil
@@ -96,7 +96,7 @@
                                                             data-target="#modalDownloadPDFKegiatan">
                                                             <i class="fa fa-file-pdf text-danger"></i> PDF per Kegiatan
                                                         </a>
-                                                    </li>
+                                                    </li> --}}
                                                 </ul>
                                             </div>
                                         </div>

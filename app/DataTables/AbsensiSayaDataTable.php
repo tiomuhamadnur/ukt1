@@ -39,9 +39,13 @@ class AbsensiSayaDataTable extends DataTable
             ->addColumn('aksi', function ($item) {
                 $photoMasuk = asset('storage/' . $item->photo_masuk);
                 $photoPulang = asset('storage/' . $item->photo_pulang);
+                $dokumentasiMasuk = asset('storage/' . $item->dokumentasi_masuk);
+                $dokumentasiPulang = asset('storage/' . $item->dokumentasi_pulang);
                 $actionButton = "<a href='#' data-toggle='modal' data-target='#modalDokumentasi'
                                     data-photo_masuk='{$photoMasuk}'
-                                    data-photo_pulang='{$photoPulang}'>
+                                    data-photo_pulang='{$photoPulang}'
+                                    data-dokumentasi_masuk='{$dokumentasiMasuk}'
+                                    data-dokumentasi_pulang='{$dokumentasiPulang}'>
                                     <button class='btn btn-outline-primary'>
                                         <i class='fa fa-eye'></i>
                                     </button>

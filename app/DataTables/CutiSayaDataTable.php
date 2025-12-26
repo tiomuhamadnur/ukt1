@@ -162,7 +162,7 @@ class CutiSayaDataTable extends DataTable
                     ->minifiedAjax()
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
-                    ->orderBy([3, 'desc'])
+                    ->orderBy([2, 'desc'])
                     ->selectStyleSingle()
                     ->buttons([
                         [
@@ -180,16 +180,17 @@ class CutiSayaDataTable extends DataTable
     {
         return [
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
-            Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
+            // Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.pulau.name')->title('Pulau')->sortable(false),
             Column::make('tanggal_awal')->title('Tanggal Awal')->sortable(true),
             Column::make('tanggal_akhir')->title('Tanggal Akhir')->sortable(true),
             Column::make('jenis_cuti.name')->title('Jenis Izin')->sortable(false),
             Column::computed('jumlah_hari')->title('Jumlah Hari')->sortable(false),
             // Column::computed('sisa_cuti')->title('Sisa Cuti')->sortable(false),
+            Column::make('catatan')->title('Alasan')->sortable(false)->addClass('text-wrap'),
             Column::make('diketahui_oleh.name')->title('Diketahui')->sortable(false),
             Column::computed('disetujui')->title('Disetujui')->sortable(false),
-            Column::computed('status')->title('Status')->sortable(false),
+            Column::computed('status')->title('Status')->addClass('text-center')->sortable(false),
             Column::computed('aksi')
                     ->exportable(false)
                     ->printable(false)

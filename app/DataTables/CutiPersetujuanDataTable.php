@@ -128,7 +128,7 @@ class CutiPersetujuanDataTable extends DataTable
                     ->minifiedAjax()
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
-                    ->orderBy([3, 'desc'])
+                    ->orderBy([2, 'desc'])
                     ->selectStyleSingle()
                     ->buttons([
                         [
@@ -146,12 +146,13 @@ class CutiPersetujuanDataTable extends DataTable
     {
         return [
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
-            Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
+            // Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),
             Column::make('tanggal_awal')->title('Tanggal Awal')->sortable(true),
             Column::make('tanggal_akhir')->title('Tanggal Akhir')->sortable(true),
             Column::computed('jumlah_hari')->title('Jumlah Hari')->sortable(false),
             Column::make('jenis_cuti.name')->title('Jenis Izin')->sortable(false),
+            Column::make('catatan')->title('Alasan')->sortable(false)->addClass('text-wrap'),
             Column::make('diketahui_oleh.name')->title('Diketahui')->sortable(false),
             Column::make('disetujui_oleh.name')->title('Disetujui')->sortable(false),
             Column::computed('#')

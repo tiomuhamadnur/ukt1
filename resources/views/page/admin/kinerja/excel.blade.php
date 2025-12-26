@@ -19,6 +19,12 @@
                     Tanggal
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
+                    Waktu Mulai
+                </th>
+                <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
+                    Waktu Selesai
+                </th>
+                <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Nama
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
@@ -61,6 +67,8 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->formatted_tanggal }}</td>
+                    <td>{{ $item->waktu_mulai ?? '-' }}</td>
+                    <td>{{ $item->waktu_selesai ?? '-' }}</td>
                     <td>{{ $item->user->name ?? '-' }}</td>
                     <td>{{ $item->user->nip ?? '-' }}</td>
                     <td>{{ $item->user->jabatan->name ?? '-' }}</td>

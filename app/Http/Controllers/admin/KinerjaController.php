@@ -415,10 +415,13 @@ class KinerjaController extends Controller
         $rawData = $request->validate([
             'kegiatan_id' => 'nullable|exists:kegiatan,id',
             'tanggal' => 'required|date|before_or_equal:today',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required|after:waktu_mulai',
             'lokasi' => 'required|string|max:255',
             'deskripsi' => 'nullable|string|max:255',
         ], [
-            'tanggal.before_or_equal' => 'isian Tanggal tidak boleh di masa depan!',
+            'tanggal.before_or_equal' => 'isian tanggal tidak boleh di masa depan.',
+            'waktu_selesai.after' => 'isian waktu selesai tidak boleh kurang atau sama dengan waktu mulai.',
         ]);
 
         $request->validate([

@@ -13,6 +13,7 @@ use App\Models\KonfigurasiAbsensi;
 use App\Models\Pulau;
 use App\Models\Seksi;
 use App\Models\User;
+use App\Services\ImageUploadService;
 use App\Services\ReverseGeocodingService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -522,10 +523,11 @@ class AbsensiController extends Controller
         ]));
     }
 
-    public function pjlp_store(Request $request, ReverseGeocodingService $geoService)
+    public function pjlp_store(Request $request, ReverseGeocodingService $geoService, ImageUploadService $imageService)
     {
         $request->validate([
             'photo' => 'required',
+            'dokumentasi' => 'required|file|image',
             'latitude' => 'required|string',
             'longitude' => 'required|string',
             'catatan' => 'nullable|string|max:255',
@@ -708,17 +710,32 @@ class AbsensiController extends Controller
 
         Storage::put($file, $image_base64);
 
+
+        // Photo Dokumentasi Timemark
+        $dokumentasiPath = null;
+        if ($request->hasFile('dokumentasi')) {
+            $dokumentasiPath = $imageService->uploadImage(
+                $request->file('dokumentasi'),
+                'absensi/dokumentasi/',
+                null,
+                300,
+                60
+            );
+        }
+
         $absen = Absensi::find($absensi->id);
 
         if ($mode == 'pulang') {
             $absen->update([
                 'photo_pulang' => $file,
+                'dokumentasi_pulang' => $dokumentasiPath,
             ]);
 
             $path = public_path('storage/'. $absen->photo_pulang);
         } else { // masuk
             $absen->update([
                 'photo_masuk' => $file,
+                'dokumentasi_masuk' => $dokumentasiPath,
             ]);
 
             $path = public_path('storage/'. $absen->photo_masuk);

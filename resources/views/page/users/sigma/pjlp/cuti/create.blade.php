@@ -84,15 +84,15 @@
                         </div>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                <label for="catatan" class="optional">Catatan:</label>
-                                <textarea id="catatan" class="form-control" name="catatan" rows="5"></textarea>
+                                <label for="catatan" class="required">Alasan:</label>
+                                <textarea id="catatan" class="form-control" name="catatan" rows="4" required></textarea>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
                                 <label for="catatan" id="label_lampiran" class="">Lampiran:</label>
                                 <div class="">
-                                    <input type="file" id="lampiran" name="lampiran" accept="image/*">
+                                    <input type="file" id="lampiran" class="form-control" name="lampiran" accept="image/*">
                                 </div>
                                 @error('lampiran')
                                     <div class="container">

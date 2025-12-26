@@ -521,6 +521,7 @@ class CutiController extends Controller
             'tanggal_awal' => 'required|date|after_or_equal:today',
             'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
             'lampiran' => 'nullable|file|image',
+            'catatan' => 'required|string|max:254'
         ], [
             'tanggal_awal.after_or_equal' => 'Tanggal mulai cuti tidak boleh sebelum hari ini (' . now()->format('d-m-Y') . ').',
             'tanggal_akhir.after_or_equal' => 'Tanggal akhir tidak boleh kurang dari tanggal awal.',

@@ -34,7 +34,10 @@ class UserController extends Controller
         $jabatan = Jabatan::all();
         $kelurahan = Kelurahan::all();
         $pulau = Pulau::all();
-        $roles = Role::all();
+        $roles = Role::when(
+    !Auth::user()->hasRole('superadmin'),
+            fn ($q) => $q->where('name', '!=', 'superadmin')
+        )->get();
         $unit_kerja = UnitKerja::all();
         $seksi = Seksi::all();
 

@@ -34,13 +34,13 @@
                     Seksi
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
-                    Jam Datang
+                    Jam Masuk
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
-                    Telat Datang (Menit)
+                    Telat Masuk (Menit)
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
-                    Status Datang
+                    Status Masuk
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Catatan Masuk
@@ -61,7 +61,7 @@
                     Status
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
-                    Photo Datang
+                    Photo Masuk
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Photo Pulang
@@ -71,6 +71,12 @@
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Lokasi Pulang
+                </th>
+                <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
+                    Photo Timemark Masuk
+                </th>
+                <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
+                    Photo Timemark Pulang
                 </th>
             </tr>
         </thead>
@@ -101,11 +107,17 @@
                     </td>
                     <td>{{ $item->lokasi_masuk }}</td>
                     <td>{{ $item->lokasi_pulang }}</td>
+                    <td>
+                        {{ $item->dokumentasi_masuk ? asset('storage/' . $item->dokumentasi_masuk) : '' }}
+                    </td>
+                    <td>
+                        {{ $item->dokumentasi_pulang ? asset('storage/' . $item->dokumentasi_pulang) : '' }}
+                    </td>
                 </tr>
             @endforeach
             @if ($absensi->count() == 0)
                 <tr>
-                    <td style="text-align: center;" colspan="20">
+                    <td style="text-align: center;" colspan="22">
                         Tidak ada data.
                     </td>
                 </tr>
