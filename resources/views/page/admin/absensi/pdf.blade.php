@@ -206,25 +206,25 @@
                     <tr>
                         <td class="text-center">1</td>
                         <td>Presensi Masuk & Pulang</td>
-                        <td style="text-align:center">{{ $jumlah_hari_masuk ?? 'N/A' }}</td>
+                        <td style="text-align:center">{{ $jumlah_hari_masuk ?? '0' }} hari</td>
                         <td></td>
                     </tr>
                     <tr @if(($jumlah_hari_tidak_lengkap ?? 0) > 0) class="bg-yellow" @endif>
                         <td class="text-center">2</td>
                         <td>Presensi Tidak Lengkap</td>
-                        <td style="text-align:center">{{ $jumlah_hari_tidak_lengkap ?? 'N/A' }}</td>
+                        <td style="text-align:center">{{ $jumlah_hari_tidak_lengkap ?? '0' }} hari</td>
                         <td></td>
                     </tr>
                     <tr @if(($jumlah_hari_tidak_ok ?? 0) > 0) class="bg-yellow" @endif>
                         <td class="text-center">3</td>
                         <td>Presensi Tidak Tertib</td>
-                        <td style="text-align:center">{{ $jumlah_hari_tidak_ok ?? 'N/A' }}</td>
+                        <td style="text-align:center">{{ $jumlah_hari_tidak_ok ?? '0' }} hari</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="text-center">4</td>
                         <td>Tidak Hadir</td>
-                        <td style="text-align:center">{{ $jumlah_hari_tidak_masuk ?? 'N/A' }}</td>
+                        <td style="text-align:center">{{ $jumlah_hari_tidak_masuk ?? '0' }} hari</td>
                         <td>
                             Cuti: {{ $cuti ?? 'N/A' }} <br>
                             Sakit: {{ $sakit ?? 'N/A' }} <br>
@@ -272,10 +272,10 @@
             <div class="ml-4" style="font-size:12px;">
                 <p><u>Catatan:</u></p>
                 <p>Total Waktu Telat (Menit):
-                    {{ $total_menit_telat ?? 'N/A' }} menit dari
+                    {{ $total_menit_telat ?? '0' }} menit dari
                     {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
                     menit jam kerja</p>
-                <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? 'N/A' }}% dari 100% jam kerja</p>
+                <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
             </div>
 
             <div class="footer">
