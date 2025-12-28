@@ -20,6 +20,10 @@
                 text-align: center;
             }
 
+            .text-left {
+                text-align: left;
+            }
+
             .text-uppercase {
                 text-transform: uppercase;
             }
@@ -116,6 +120,22 @@
 
             .bg-yellow {
                 background-color:#ffe282;
+            }
+
+            .photo-cell {
+                vertical-align: middle;
+                text-align: center;
+                padding: 5px;
+                /* height: 60px; */
+                white-space: nowrap;
+            }
+
+            .photo-cell img {
+                display: inline-block;
+                height: 60px;
+                width: auto;
+                margin: 5px 2px 0 0;
+                vertical-align: middle;
             }
         </style>
     </head>
@@ -270,15 +290,15 @@
         </div>
 
         <div class="mt-3">
-            <table class="table table-bordered text-center" style="font-size: 12px;">
+            <table class="table table-bordered text-center" style="font-size: 11px;">
                 <thead>
                     <tr style="background-color: grey">
                         <th>No.</th>
                         <th>Hari</th>
                         <th>Tanggal</th>
-                        <th>Jam Datang</th>
+                        <th>Jam Masuk</th>
                         <th>Jam Pulang</th>
-                        <th>Photo Datang</th>
+                        <th>Photo Masuk</th>
                         <th>Photo Pulang</th>
                         <th>Status</th>
                     </tr>
@@ -287,14 +307,18 @@
                     @foreach ($datesInRange as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['hari'] }}</td>
-                            <td>{{ $item['tanggal']->isoFormat('D MMMM Y') }}</td>
+                            <td class="text-left">{{ $item['hari'] }}</td>
+                            <td>{{ $item['tanggal']->format('d-m-Y') }}</td>
                             <td>{{ $item['jam_masuk'] }}<br><span>{{ $item['status_masuk'] }}</span></td>
                             <td>{{ $item['jam_pulang'] }}<br><span>{{ $item['status_pulang'] }}</span></td>
-                            <td><img class="img-thumbnail" src="{{ $item['url_photo_masuk'] }}" alt="photo_datang"
-                                    style="height: 70px"></td>
-                            <td><img class="img-thumbnail" src="{{ $item['url_photo_pulang'] }}" alt="photo_pulang"
-                                    style="height: 70px"></td>
+                            <td class="photo-cell">
+                                <img class="img-thumbnail" src="{{ $item['url_photo_masuk'] }}" alt="photo_sigma">
+                                <img class="img-thumbnail" src="{{ $item['url_dokumentasi_masuk'] }}" alt="photo_timemark">
+                            </td>
+                            <td class="photo-cell">
+                                <img class="img-thumbnail" src="{{ $item['url_photo_pulang'] }}" alt="photo_sigma">
+                                <img class="img-thumbnail" src="{{ $item['url_dokumentasi_pulang'] }}" alt="photo_timemark">
+                            </td>
                             <td class="{{ $item['bg'] }}">{{ $item['status'] }}</td>
                         </tr>
                     @endforeach

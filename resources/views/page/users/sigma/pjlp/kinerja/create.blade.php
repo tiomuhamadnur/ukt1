@@ -39,7 +39,7 @@
                                     <td class="font-weight-bolder">{{ $user->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td>NIP/ID</td>
+                                    <td>ID PJLP</td>
                                     <td>:</td>
                                     <td>{{ $user->nip ?? '-' }}</td>
                                 </tr>

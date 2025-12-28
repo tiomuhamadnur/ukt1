@@ -241,6 +241,8 @@ class AbsensiController extends Controller
                 'bg' => $bg,
                 'url_photo_masuk' => $absen && $absen->photo_masuk ? public_path('storage/' . $absen->photo_masuk) : '',
                 'url_photo_pulang' => $absen && $absen->photo_pulang ? public_path('storage/' . $absen->photo_pulang) : '',
+                'url_dokumentasi_masuk' => $absen && $absen->dokumentasi_masuk ? public_path('storage/' . $absen->dokumentasi_masuk) : '',
+                'url_dokumentasi_pulang' => $absen && $absen->dokumentasi_pulang ? public_path('storage/' . $absen->dokumentasi_pulang) : '',
             ];
         }
 
