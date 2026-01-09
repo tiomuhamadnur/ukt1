@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="optional">Deskripsi:</label>
+                            <label class="optional">Catatan:</label>
                             <textarea class="form-control" name="deskripsi" rows="3"></textarea>
                         </div>
                         <div class="btn group-button">

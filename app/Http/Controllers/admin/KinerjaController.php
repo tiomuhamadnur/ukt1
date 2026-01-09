@@ -458,7 +458,7 @@ class KinerjaController extends Controller
                     'kinerja/kegiatan/',
                     null,
                     300,
-                    60,
+                    100,
                 );
 
                 $datas = [

@@ -153,7 +153,7 @@ class KinerjaDataTable extends DataTable
             Column::make('pulau.name')->title('Pulau')->sortable(false)->addClass('text-nowrap'),
             Column::make('seksi.name')->title('Seksi')->sortable(false),
             Column::computed('kegiatan')->title('Kegiatan')->sortable(false),
-            Column::make('deskripsi')->title('Deskripsi')->sortable(false),
+            Column::make('deskripsi')->title('Catatan')->sortable(false),
             Column::make('lokasi')->title('Lokasi')->sortable(false),
             Column::computed('aksi')
                 ->exportable(false)
