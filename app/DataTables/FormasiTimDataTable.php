@@ -14,6 +14,21 @@ use Yajra\DataTables\Services\DataTable;
 
 class FormasiTimDataTable extends DataTable
 {
+    protected $periode;
+
+    public function with(array|string $key, mixed $value = null): static
+    {
+        if (is_array($key)) {
+            foreach ($key as $k => $v) {
+                $this->{$k} = $v;
+            }
+        } else {
+            $this->{$key} = $value;
+        }
+
+        return $this;
+    }
+
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
@@ -54,6 +69,12 @@ class FormasiTimDataTable extends DataTable
             'koordinator',
         ])->newQuery();
 
+        // Filter
+        if($this->periode != null)
+        {
+            $query->where('periode', $this->periode);
+        }
+
         return $query;
     }
 
@@ -65,7 +86,7 @@ class FormasiTimDataTable extends DataTable
                     ->minifiedAjax()
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
-                    ->orderBy([0, 'asc'])
+                    ->orderBy([0, 'desc'])
                     ->selectStyleSingle()
                     ->buttons([
                         [

@@ -12,18 +12,27 @@ use Illuminate\Http\Request;
 
 class FormasiTimController extends Controller
 {
-    public function index(FormasiTimDataTable $dataTable)
+    public function index(FormasiTimDataTable $dataTable, Request $request)
     {
+        $request->validate([
+            'periode' => 'nullable|date_format:Y'
+        ]);
+
+        $periode = $request->periode ?? date('Y');
         $tim = Tim::orderBy('name')->get();
         $pulau = Pulau::orderBy('name')->get();
         $user = User::where('jabatan_id', 5)->notBanned()->orderBy('name')->get();
 
         $tahun_ini = date('Y');
         $tahun = [$tahun_ini, $tahun_ini + 1, $tahun_ini + 2];
-        return $dataTable->render('page.admin.dataEssentials.formasi_tim.index', compact([
+        return $dataTable->with([
+            'periode' => $periode,
+        ])->render('page.admin.dataEssentials.formasi_tim.index', compact([
             'tim',
             'pulau',
             'user',
+            'periode',
+            'tahun_ini',
             'tahun',
         ]));
     }

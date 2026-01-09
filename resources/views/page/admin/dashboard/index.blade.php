@@ -37,7 +37,7 @@
                         <i class="icon-database"></i>
                     </div>
                     <div class="sale-num">
-                        <h4>{{ $total_absensi ?? 'N/A' }}</h4>
+                        <h4>{{ $sudahAbsen ?? '0' }} / {{ $sudahAbsen + $belumAbsen }}</h4>
                         <p>PJLP Absen Hari Ini</p>
                     </div>
                 </div>

@@ -414,6 +414,7 @@ class KinerjaController extends Controller
     {
         $rawData = $request->validate([
             'kegiatan_id' => 'nullable|exists:kegiatan,id',
+            'kegiatan_lainnya' => 'nullable|string|max:255',
             'tanggal' => 'required|date|before_or_equal:today',
             'waktu_mulai' => 'required',
             'waktu_selesai' => 'required|after:waktu_mulai',

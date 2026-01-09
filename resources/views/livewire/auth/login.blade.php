@@ -75,9 +75,9 @@
                     <strong>{{ $message }}</strong>
                 </span>
             @enderror
-            <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}" />
+            <input type="email" name="email" id="email" placeholder="Email" required value="{{ old('email') }}" />
 
-            <input type="password" name="password" placeholder="Password" required />
+            <input type="password" name="password" id="password" placeholder="Password" required />
             @error('password')
                 <span class="badge bg-danger p-2 mb-3 text-start fs-6 w-100 text-wrap" role="alert">
                     <strong>{{ $message }}</strong>

@@ -10,7 +10,7 @@
             <li class="breadcrumb-item">Masterdata</li>
             <li class="breadcrumb-item">Data Essentials</li>
             <li class="breadcrumb-item">Tim</li>
-            <li class="breadcrumb-item active">Formasi Tim</li>
+            <li class="breadcrumb-item active">Formasi Tim Tahun {{ $periode }}</li>
         </ol>
     </div>
 @endsection
@@ -24,8 +24,14 @@
                         <div class="col-12 mb-3 text-left">
                             <a href="{{ url()->previous() }}" class="btn btn-outline-primary"><i
                                     class="fa fa-arrow-left"></i> Kembali</a>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambahData">Tambah
+                            <a href="#" class="btn btn-primary" data-toggle="modal"
+                                data-target="#tambahData">Tambah
                                 Data</a>
+                            <a href="javascript:;" class="btn btn-primary mb-2 mb-sm-0" data-toggle="modal"
+                                data-target="#modalFilter" title="Filter"><i class="fa fa-filter"></i></a>
+                            <a href="{{ route('formasi-tim.index') }}" class="btn btn-primary mb-2 mb-sm-0">
+                                <i class="fa fa-refresh"></i>
+                            </a>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -184,6 +190,42 @@
         </div>
     </div>
     <!-- End Modal Edit Formasi Tim -->
+
+    {{-- START: FILTER KINERJA --}}
+    <div class="modal fade" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Filter Data Kinerja</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formFilter" action="{{ route('formasi-tim.index') }}" method="GET">
+                        @csrf
+                        @method('GET')
+                        <div class="form-row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="periode">Periode Tahun:</label>
+                                    <input type="number" class="form-control" name="periode"
+                                        value="{{ $periode }}" min="1900" max="3000" step="1"
+                                        placeholder="YYYY">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" form="formFilter" class="btn btn-primary">Filter Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: FILTER KINERJA --}}
 @endsection
 
 @push('scripts')
