@@ -61,11 +61,13 @@
                             <input type="text" class="form-control" name="code" required>
                         </div>
                         <div class="form-group">
-                            <label class="required">Seksi:</label>
-                            <select name="seksi_id" class="form-control" required>
-                                <option value="">-- Pilih Seksi --</option>
-                                @foreach ($seksi as $s)
-                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
+                            <label class="required">Rumpun:</label>
+                            <select name="tim_id" class="form-control" required>
+                                <option value="">-- Pilih Rumpun --</option>
+                                @foreach ($tim as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->name }} - Seksi {{ $item->seksi->name ?? 'N/A' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -108,11 +110,13 @@
                             <input type="text" class="form-control" name="code" id="code_edit" required>
                         </div>
                         <div class="form-group">
-                            <label class="required">Seksi:</label>
-                            <select name="seksi_id" id="seksi_id_edit" class="form-control" required>
-                                <option value="">-- Pilih Seksi --</option>
-                                @foreach ($seksi as $s)
-                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
+                            <label class="required">Rumpun:</label>
+                            <select name="tim_id" id="tim_id_edit" class="form-control" required>
+                                <option value="">-- Pilih Rumpun --</option>
+                                @foreach ($tim as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->name }} - Seksi {{ $item->seksi->name ?? 'N/A' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -145,7 +149,7 @@
                 var url = $(e.relatedTarget).data('url');
                 var name = $(e.relatedTarget).data('name');
                 var code = $(e.relatedTarget).data('code');
-                var seksi_id = $(e.relatedTarget).data('seksi_id');
+                var tim_id = $(e.relatedTarget).data('tim_id');
 
                 document.getElementById("editForm").action = url;
                 $('#name_edit').val(name);

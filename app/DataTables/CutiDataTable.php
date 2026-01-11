@@ -58,11 +58,35 @@ class CutiDataTable extends DataTable
                                     <i class='fa fa-eye'></i>
                                 </a>";
 
+                $revokeURL = route('cuti.revoke', $item->uuid);
+                $revokeButton = "<a href='javascript:;' class='btn btn-outline-danger'
+                                    title='Batalkan Persetujuan Cuti' data-toggle='modal'
+                                    data-target='#modalRevoke'
+                                    data-href='{$revokeURL}'>
+                                    <i class='fa fa-undo'></i>
+                                </a>";
+
+                if (!Auth::user()->hasRole('superadmin')) {
+                    $revokeButton = null;
+                }
+
                 if ($item->status_cuti_id == 2) {
-                    return $printButton . ' ' . $lampiranButton;
+                    return $printButton . ' ' . $lampiranButton . ' ' . $revokeButton;
                 }
 
                 return $lampiranButton;
+            })
+            ->addColumn('tanggal_awal_cuti', function ($item) {
+                return $item->formatted_tanggal_awal;
+            })
+            ->orderColumn('tanggal_awal_cuti', function ($query, $order) {
+                $query->orderBy('tanggal_awal', $order);
+            })
+            ->addColumn('tanggal_akhir_cuti', function ($item) {
+                return $item->formatted_tanggal_akhir;
+            })
+            ->orderColumn('tanggal_akhir_cuti', function ($query, $order) {
+                $query->orderBy('tanggal_akhir', $order);
             })
             ->addColumn('jumlah_hari', function ($item) {
                 return $item->jumlah . ' hari';
@@ -88,7 +112,7 @@ class CutiDataTable extends DataTable
             ->addColumn('status', function ($item) {
                 $class = match ($item->status_cuti_id) {
                     1 => 'btn-warning', //Diproses
-                    3 => 'btn-secondary', //Ditolak
+                    3 => 'btn-danger', //Ditolak
                     default    => 'btn-info',
                 };
 
@@ -176,8 +200,8 @@ class CutiDataTable extends DataTable
             // Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.formasi_tim.tim.seksi.name')->title('Seksi')->sortable(false),
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),
-            Column::make('tanggal_awal')->title('Tanggal Awal')->sortable(true),
-            Column::make('tanggal_akhir')->title('Tanggal Akhir')->sortable(true),
+            Column::computed('tanggal_awal_cuti')->title('Tanggal Awal')->sortable(true),
+            Column::computed('tanggal_akhir_cuti')->title('Tanggal Akhir')->sortable(true),
             Column::make('jenis_cuti.name')->title('Jenis Izin')->sortable(false),
             Column::computed('jumlah_hari')->title('Jumlah Hari')->sortable(false),
             // Column::computed('sisa_cuti')->title('Sisa Cuti')->sortable(false),

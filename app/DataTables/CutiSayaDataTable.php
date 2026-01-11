@@ -90,6 +90,18 @@ class CutiSayaDataTable extends DataTable
 
                 return $lampiranButton . ' ' . $deleteButton;
             })
+            ->addColumn('tanggal_awal_cuti', function ($item) {
+                return $item->formatted_tanggal_awal;
+            })
+            ->orderColumn('tanggal_awal_cuti', function ($query, $order) {
+                $query->orderBy('tanggal_awal', $order);
+            })
+            ->addColumn('tanggal_akhir_cuti', function ($item) {
+                return $item->formatted_tanggal_akhir;
+            })
+            ->orderColumn('tanggal_akhir_cuti', function ($query, $order) {
+                $query->orderBy('tanggal_akhir', $order);
+            })
             ->addColumn('jumlah_hari', function ($item) {
                 return $item->jumlah . ' hari';
             })
@@ -116,8 +128,8 @@ class CutiSayaDataTable extends DataTable
             ->addColumn('status', function ($item) {
                 $class = match ($item->status_cuti_id) {
                     1 => 'btn-warning',
-                    3  => 'btn-secondary',
-                    default    => 'btn-primary',
+                    3  => 'btn-danger',
+                    default    => 'btn-info',
                 };
 
                 return '<span class="btn ' . $class . '">' . e($item->status_cuti->name) . '</span>';
@@ -182,8 +194,8 @@ class CutiSayaDataTable extends DataTable
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
             // Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.pulau.name')->title('Pulau')->sortable(false),
-            Column::make('tanggal_awal')->title('Tanggal Awal')->sortable(true),
-            Column::make('tanggal_akhir')->title('Tanggal Akhir')->sortable(true),
+            Column::computed('tanggal_awal_cuti')->title('Tanggal Awal')->sortable(true),
+            Column::computed('tanggal_akhir_cuti')->title('Tanggal Akhir')->sortable(true),
             Column::make('jenis_cuti.name')->title('Jenis Izin')->sortable(false),
             Column::computed('jumlah_hari')->title('Jumlah Hari')->sortable(false),
             // Column::computed('sisa_cuti')->title('Sisa Cuti')->sortable(false),

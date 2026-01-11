@@ -399,7 +399,7 @@ class KinerjaController extends Controller
         $formasi_tim = FormasiTim::where('periode', $periode)
                     ->where('user_id', $user->id)
                     ->first();
-        $kegiatan = Kegiatan::where('seksi_id', $formasi_tim->tim->seksi_id)
+        $kegiatan = Kegiatan::where('tim_id', $formasi_tim->tim_id)
                     ->orderBy('name', 'asc')
                     ->get();
 

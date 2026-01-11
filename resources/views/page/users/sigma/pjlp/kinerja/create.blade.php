@@ -31,7 +31,7 @@
                         </div>
                         <h4 class="text-center">Form Input Kinerja</h4>
                         <div class="form-group">
-                            <label>Data Lengkap</label>
+                            <label class="required">Data Lengkap:</label>
                             <table>
                                 <tr>
                                     <td style="width: 90px">Nama</td>
@@ -46,15 +46,15 @@
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>{{ $user->jabatan->name ?? '-' }}</td>
+                                    <td>Petugas {{ $user->jabatan->name ?? 'N/A' }} Seksi {{ $formasi_tim->tim->seksi->name ?? 'N/A' }}</td>
                                 </tr>
-                                {{-- <tr>
-                                    <td>Koordinator</td>
+                                <tr>
+                                    <td>Pengawas</td>
                                     <td>:</td>
                                     <td>{{ $formasi_tim->koordinator->name ?? '#' }}</td>
-                                </tr> --}}
+                                </tr>
                                 <tr>
-                                    <td>Tim</td>
+                                    <td>Rumpun</td>
                                     <td>:</td>
                                     <td>{{ $formasi_tim->tim->name ?? '-' }}</td>
                                 </tr>
@@ -64,7 +64,7 @@
                                     <td>{{ $formasi_tim->tim->seksi->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Pulau</td>
+                                    <td>Lokasi</td>
                                     <td>:</td>
                                     <td>{{ $formasi_tim->pulau->name }}</td>
                                 </tr>
@@ -75,10 +75,12 @@
                             <label class="required">Nama Kegiatan:</label>
                             <select id="kegiatan_id" name="kegiatan_id" class="form-control" required>
                                 <option value="" selected disabled>- pilih kegiatan -</option>
-                                @foreach ($kegiatan as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
                                 <option value="">Lainnya</option>
+                                @foreach ($kegiatan as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->name }} - Rumpun {{ $item->tim->name ?? 'N/A' }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group" id="kegiatan_lainnya_container" style="display: none">

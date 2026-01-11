@@ -54,6 +54,12 @@ class AbsensiDataTable extends DataTable
 
                 return $actionButton;
             })
+            ->addColumn('tanggal_absensi', function ($item) {
+                return $item->formatted_tanggal;
+            })
+            ->orderColumn('tanggal_absensi', function ($query, $order) {
+                $query->orderBy('tanggal', $order);
+            })
             ->addColumn('status_masuk', function ($item) {
                 $badgeClass = $item->telat_masuk > 0 ? 'badge badge-pill badge-warning' : '';
                 $telatText  = $item->telat_masuk > 0 ? $item->telat_masuk . ' menit' : '';
@@ -197,7 +203,7 @@ class AbsensiDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('tanggal')->title('Tanggal')->sortable(true),
+            Column::computed('tanggal_absensi')->title('Tanggal')->addClass('text-nowrap')->sortable(true),
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
             Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),

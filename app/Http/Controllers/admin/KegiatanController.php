@@ -7,14 +7,17 @@ use App\Models\Seksi;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Tim;
 
 class KegiatanController extends Controller
 {
     public function index(KegiatanDataTable $dataTable)
     {
         $seksi = Seksi::orderBy('name')->get();
+        $tim = Tim::orderBy('name')->get();
         return $dataTable->render('page.admin.dataEssentials.kegiatan.index', compact([
-            'seksi'
+            'seksi',
+            'tim',
         ]));
     }
 
@@ -23,7 +26,8 @@ class KegiatanController extends Controller
         $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:kegiatan,code',
-            'seksi_id' => 'required|exists:seksi,id',
+            'seksi_id' => 'nullable|exists:seksi,id',
+            'tim_id' => 'required|exists:tim,id',
         ]);
 
         Kegiatan::updateOrCreate($rawData, $rawData);
@@ -37,7 +41,8 @@ class KegiatanController extends Controller
         $rawData = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:kegiatan,code,' . $kegiatan->uuid . ',uuid',
-            'seksi_id' => 'required|exists:seksi,id',
+            'seksi_id' => 'nullable|exists:seksi,id',
+            'tim_id' => 'required|exists:tim,id',
         ]);
 
         $kegiatan->update($rawData);

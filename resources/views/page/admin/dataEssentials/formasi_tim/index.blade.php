@@ -58,11 +58,13 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Tim:</label>
+                            <label class="required">Rumpun:</label>
                             <select name="tim_id" class="form-control" required>
-                                <option value="" disabled selected>-- Pilih Tim --</option>
+                                <option value="" disabled selected>-- Pilih Rumpun --</option>
                                 @foreach ($tim as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->name }} - Seksi {{ $item->seksi->name ?? 'N/A' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -75,15 +77,15 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="form-group">
-                            <label class="required">Koordinator:</label>
+                        <div class="form-group">
+                            <label class="required">Pengawas:</label>
                             <select name="koordinator_id" class="form-control" required>
-                                <option value="" disabled selected>-- Pilih Koordinator --</option>
-                                @foreach ($user as $item)
+                                <option value="" disabled selected>-- Pilih Pengawas --</option>
+                                @foreach ($pengawas as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
                         <div class="form-group">
                             <label class="required">Personel:</label>
                             <select name="user_id" class="form-control" required>
@@ -131,11 +133,13 @@
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Tim:</label>
+                            <label class="required">Rumpun:</label>
                             <select name="tim_id" id="tim_id_edit" class="form-control" required>
-                                <option value="" disabled selected>-- Pilih Tim --</option>
+                                <option value="" disabled selected>-- Pilih Rumpun --</option>
                                 @foreach ($tim as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->name }} - Seksi {{ $item->seksi->name ?? 'N/A' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -148,15 +152,15 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="form-group">
-                            <label class="required">Koordinator:</label>
+                        <div class="form-group">
+                            <label class="required">Pengawas:</label>
                             <select name="koordinator_id" id="koordinator_id_edit" class="form-control" required>
-                                <option value="" disabled selected>-- Pilih Koordinator --</option>
-                                @foreach ($user as $item)
+                                <option value="" disabled selected>-- Pilih Pengawas --</option>
+                                @foreach ($pengawas as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
                         <div class="form-group">
                             <label class="required">Personel:</label>
                             <select name="user_id" id="user_id_edit" class="form-control" required>
@@ -239,14 +243,14 @@
                 var url = $(e.relatedTarget).data('url');
                 var tim_id = $(e.relatedTarget).data('tim_id');
                 var pulau_id = $(e.relatedTarget).data('pulau_id');
-                // var koordinator_id = $(e.relatedTarget).data('koordinator_id');
+                var koordinator_id = $(e.relatedTarget).data('koordinator_id');
                 var user_id = $(e.relatedTarget).data('user_id');
                 var periode = $(e.relatedTarget).data('periode');
 
                 document.getElementById("editForm").action = url;
                 $('#tim_id_edit').val(tim_id);
                 $('#pulau_id_edit').val(pulau_id);
-                // $('#koordinator_id_edit').val(koordinator_id);
+                $('#koordinator_id_edit').val(koordinator_id);
                 $('#user_id_edit').val(user_id);
                 $('#periode_edit').val(periode);
             });

@@ -10,6 +10,7 @@ use App\Models\Absensi;
 use App\Models\FormasiTim;
 use App\Models\JenisAbsensi;
 use App\Models\KonfigurasiAbsensi;
+use App\Models\KonfigurasiAbsensiTim;
 use App\Models\Pulau;
 use App\Models\Seksi;
 use App\Models\User;
@@ -516,12 +517,21 @@ class AbsensiController extends Controller
     {
         $user = Auth::user();
         $tanggal = Carbon::now()->isoFormat('dddd, D MMMM Y');
-        $jenis_absensi = JenisAbsensi::findOrFail(1); //Jenis absensi biasa
+        $tim_id = $user->formasi_tim->tim_id;
+        $jenis_absensi = KonfigurasiAbsensi::whereHas('tims', function ($q) use ($tim_id) {
+                    $q->where('tim_id', $tim_id);
+                })->get();
+
+        $periode = date('Y');
+        $formasi_tim = FormasiTim::where('periode', $periode)
+                    ->where('user_id', $user->id)
+                    ->first();
 
         return view('page.users.sigma.pjlp.absensi.create', compact([
             'user',
             'tanggal',
             'jenis_absensi',
+            'formasi_tim',
         ]));
     }
 
@@ -529,6 +539,7 @@ class AbsensiController extends Controller
     {
         $request->validate([
             'photo' => 'required',
+            'jenis_absensi_id' => 'required|exists:jenis_absensi,id',
             'dokumentasi' => 'required|file|image',
             'latitude' => 'required|string',
             'longitude' => 'required|string',
@@ -536,6 +547,7 @@ class AbsensiController extends Controller
         ]);
 
         $img = $request->photo;
+        $jenis_absensi_id = $request->jenis_absensi_id;
         $catatan = $request->catatan;
         $latitude = $request->latitude ?? null;
         $longitude = $request->longitude ?? null;
@@ -543,10 +555,10 @@ class AbsensiController extends Controller
         $now = Carbon::now();
         $tanggal = Carbon::parse($now)->format('Y-m-d');
         $waktu = Carbon::parse($now);
-        $konfigurasi_absensi = KonfigurasiAbsensi::where('jenis_absensi_id', 1)->first();
+        $konfigurasi_absensi = KonfigurasiAbsensi::where('jenis_absensi_id', $jenis_absensi_id)->first();
 
         if(!$konfigurasi_absensi) {
-            return back()->withError('Konfigurasi Absensi belum diatur, silahkan hubungi admin.');
+            return back()->withError('Konfigurasi Jenis Absensi yang dipilih belum diatur, silahkan hubungi admin.');
         }
 
         $toleransi_masuk = $konfigurasi_absensi->toleransi_masuk;

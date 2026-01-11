@@ -37,4 +37,9 @@ class Kegiatan extends Model
     {
         return $this->belongsTo(Seksi::class, 'seksi_id');
     }
+
+    public function tim()
+    {
+        return $this->belongsTo(Tim::class, 'tim_id');
+    }
 }

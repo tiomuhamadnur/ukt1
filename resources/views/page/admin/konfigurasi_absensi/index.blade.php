@@ -77,13 +77,15 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Mulai Absen Masuk:</label>
-                                    <input type="time" step="1" class="form-control" name="mulai_absen_masuk" required>
+                                    <input type="time" step="1" class="form-control" name="mulai_absen_masuk"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Selesai Absen Masuk:</label>
-                                    <input type="time" step="1" class="form-control" name="selesai_absen_masuk" required>
+                                    <input type="time" step="1" class="form-control" name="selesai_absen_masuk"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -91,14 +93,16 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Mulai Absen Pulang:</label>
-                                    <input type="time" step="1" class="form-control" name="mulai_absen_pulang" required>
+                                    <input type="time" step="1" class="form-control" name="mulai_absen_pulang"
+                                        required>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Selesai Absen Pulang:</label>
-                                    <input type="time" step="1" class="form-control" name="selesai_absen_pulang" required>
+                                    <input type="time" step="1" class="form-control" name="selesai_absen_pulang"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +113,28 @@
                         <div class="form-group">
                             <label class="required">Toleransi Pulang (Menit):</label>
                             <input type="number" min="0" class="form-control" name="toleransi_pulang" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Rumpun:</label>
+                            <div class="card shadow-sm border">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($tim as $item)
+                                            <div class="col-md-12 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input edit-tim" type="checkbox"
+                                                        name="tim_ids[]" value="{{ $item->name }}"
+                                                        id="tim_label_{{ $item->id }}">
+
+                                                    <label class="form-check-label" for="tim_label_{{ $item->id }}">
+                                                        <p>{{ $item->name }}</p>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer custom">
@@ -151,15 +177,15 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Jam Masuk:</label>
-                                    <input type="time" step="1" class="form-control" name="jam_masuk" id="jam_masuk_edit"
-                                        required>
+                                    <input type="time" step="1" class="form-control" name="jam_masuk"
+                                        id="jam_masuk_edit" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Jam Pulang:</label>
-                                    <input type="time" step="1" class="form-control" name="jam_pulang" id="jam_pulang_edit"
-                                        required>
+                                    <input type="time" step="1" class="form-control" name="jam_pulang"
+                                        id="jam_pulang_edit" required>
                                 </div>
                             </div>
                         </div>
@@ -191,8 +217,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="required">Selesai Absen Pulang:</label>
-                                    <input type="time" step="1" class="form-control" name="selesai_absen_pulang"
-                                        id="selesai_absen_pulang_edit" required>
+                                    <input type="time" step="1" class="form-control"
+                                        name="selesai_absen_pulang" id="selesai_absen_pulang_edit" required>
                                 </div>
                             </div>
                         </div>
@@ -205,6 +231,29 @@
                             <label class="required">Toleransi Pulang (Menit):</label>
                             <input type="number" min="0" class="form-control" name="toleransi_pulang"
                                 id="toleransi_pulang_edit" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required mb-2">Rumpun</label>
+                            <div class="card shadow-sm border">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($tim as $item)
+                                            <div class="col-md-12 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input edit-tim_id" type="checkbox"
+                                                        name="tim_ids[]" value="{{ $item->id }}"
+                                                        id="tim_id_edit_{{ $item->id }}">
+
+                                                    <label class="form-check-label"
+                                                        for="tim_id_edit_{{ $item->id }}">
+                                                        {{ $item->name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer custom">
@@ -252,6 +301,22 @@
                 $('#selesai_absen_pulang_edit').val(selesai_absen_pulang);
                 $('#toleransi_masuk_edit').val(toleransi_masuk);
                 $('#toleransi_pulang_edit').val(toleransi_pulang);
+
+                var button = $(e.relatedTarget);
+
+                var timIdsRaw = button.attr('data-tim_ids');
+                var timIdsArray = [];
+
+                if (timIdsRaw) {
+                    timIdsArray = JSON.parse(timIdsRaw);
+                }
+
+                // reset dulu (WAJIB)
+                $('.edit-tim_id').prop('checked', false);
+
+                timIdsArray.forEach(function(id) {
+                    $('.edit-tim_id[value="' + id + '"]').prop('checked', true);
+                });
             });
         });
     </script>

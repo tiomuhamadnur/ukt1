@@ -100,6 +100,9 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
         Route::resource('/kinerja', KinerjaController::class);
         Route::resource('/absensi', AbsensiController::class);
         Route::resource('/cuti', CutiController::class);
+        Route::controller(CutiController::class)->group(function () {
+            Route::post('/cuti/revoke/{uuid}', 'revoke')->name('cuti.revoke');
+        });
     });
 
     Route::prefix('user')->group(function () {

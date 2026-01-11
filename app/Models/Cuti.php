@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -26,6 +27,20 @@ class Cuti extends Model
     public function getRouteKeyName()
     {
         return 'uuid';
+    }
+
+    public function getFormattedTanggalAwalAttribute()
+    {
+        return Carbon::parse($this->tanggal_awal)
+                ->locale('id')
+                ->translatedFormat('d F Y');
+    }
+
+    public function getFormattedTanggalAkhirAttribute()
+    {
+        return Carbon::parse($this->tanggal_akhir)
+                ->locale('id')
+                ->translatedFormat('d F Y');
     }
 
     public function user()

@@ -88,9 +88,9 @@
                                 <textarea id="catatan" class="form-control" name="catatan" rows="4" required></textarea>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" id="lampiran_wrapper" style="display: none">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                <label for="catatan" id="label_lampiran" class="">Lampiran:</label>
+                                <label for="catatan" id="label_lampiran" class="">Lampiran Surat Keterangan Dokter:</label>
                                 <div class="">
                                     <input type="file" id="lampiran" class="form-control" name="lampiran" accept="image/*">
                                 </div>
@@ -103,7 +103,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-2">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2 justify-content-center d-flex">
                                 <div class="row">
                                     <a href="{{ route('pjlp.index') }}" class="btn btn-dark mx-2">Batal</a>
@@ -153,28 +153,32 @@
             return totalHari;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var jenisCuti = document.getElementById('jenis_cuti_id');
-            var totalCutiTahunan = document.getElementById('total_cuti_tahunan');
-            var alert = document.getElementById('alert');
-            var lampiran = document.getElementById('lampiran');
-            var label_lampiran = document.getElementById('label_lampiran');
+        document.addEventListener('DOMContentLoaded', function () {
+            const jenisCuti = document.getElementById('jenis_cuti_id');
+            const totalCutiTahunan = document.getElementById('total_cuti_tahunan');
+            const alert = document.getElementById('alert');
 
-            jenisCuti.addEventListener('change', function() {
-                if (jenisCuti.value === '2') {
+            const lampiranWrapper = document.getElementById('lampiran_wrapper');
+            const lampiran = document.getElementById('lampiran');
+            const labelLampiran = document.getElementById('label_lampiran');
+
+            jenisCuti.addEventListener('change', function () {
+                if (this.value === '2') {
+                    // IZIN SAKIT
                     alert.style.display = 'block';
                     totalCutiTahunan.style.display = 'none';
+
+                    lampiranWrapper.style.display = 'block';
                     lampiran.required = true;
-                    label_lampiran.classList.add('required');
-                } else if (jenisCuti.value === '1') {
-                    totalCutiTahunan.style.display = 'block';
-                    alert.style.display = 'none';
-                    lampiran.required = false;
-                    label_lampiran.classList.remove('required');
+                    labelLampiran.classList.add('required');
                 } else {
                     alert.style.display = 'none';
-                    totalCutiTahunan.style.display = 'none';
+                    totalCutiTahunan.style.display = 'block';
+
+                    lampiranWrapper.style.display = 'none';
                     lampiran.required = false;
+                    lampiran.value = ''; // reset file
+                    labelLampiran.classList.remove('required');
                 }
             });
         });

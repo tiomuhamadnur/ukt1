@@ -164,7 +164,7 @@
                     </div>
                     <div class="stats-detail">
                         <h3>{{ $tim }}</h3>
-                        <p>Tim</p>
+                        <p>Rumpun</p>
                     </div>
                 </div>
             </a>
