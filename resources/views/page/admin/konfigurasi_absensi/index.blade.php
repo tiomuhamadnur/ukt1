@@ -123,7 +123,7 @@
                                             <div class="col-md-12 mb-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input edit-tim" type="checkbox"
-                                                        name="tim_ids[]" value="{{ $item->name }}"
+                                                        name="tim_ids[]" value="{{ $item->id }}"
                                                         id="tim_label_{{ $item->id }}">
 
                                                     <label class="form-check-label" for="tim_label_{{ $item->id }}">
