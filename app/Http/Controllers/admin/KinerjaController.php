@@ -81,6 +81,8 @@ class KinerjaController extends Controller
                 ->orderBy('tahun', 'asc')
                 ->pluck('tahun');
 
+        $periode = Carbon::now()->format('Y-m');
+
         return $dataTable->with([
             'seksi_id' => $seksi_id,
             'user_id' => $user_id,
@@ -100,7 +102,8 @@ class KinerjaController extends Controller
             'start_date',
             'end_date',
             'tahuns',
-            'tahun'
+            'tahun',
+            'periode',
         ]));
     }
 
@@ -179,6 +182,67 @@ class KinerjaController extends Controller
         $kinerja = $query->orderBy('tanggal', 'ASC')->get();
 
         $pdf = Pdf::loadView('page.admin.kinerja.pdf_all', [
+            'kinerja' => $kinerja,
+            'start_date' => $start_date->isoFormat('D MMMM Y'),
+            'end_date' => $end_date->isoFormat('D MMMM Y'),
+        ]);
+
+        return $pdf->setPaper('A4', 'potrait')->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
+    }
+
+    public function export_pdf_personel(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'periode' => 'required',
+        ]);
+
+        $user_id = $request->user_id;
+        $periode = $request->periode ?? Carbon::now()->format('Y-m');
+
+        $start_date = Carbon::createFromFormat('Y-m', $periode)->startOfMonth();
+        $end_date   = Carbon::createFromFormat('Y-m', $periode)->endOfMonth();
+
+        $user = User::find($user_id);
+
+        $formasi_tim = FormasiTim::where('user_id', $user_id)
+                        ->orderBy('periode', 'DESC')
+                        ->first();
+
+        $kepala_unit = User::where('jabatan_id', 2) //Kepala Unit
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $kepala_seksi = User::where('jabatan_id', 3) //Kepala Seksi
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $pengawas = User::where('jabatan_id', 4) //Pengawas
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $query = Kinerja::query();
+
+        if ($user_id) {
+            $query->where('user_id', $user_id);
+        }
+
+        if ($start_date) {
+            $query->whereBetween('tanggal', [$start_date, $end_date]);
+        }
+
+        $kinerja = $query->orderBy('tanggal', 'ASC')->get();
+
+        $pdf = Pdf::loadView('page.admin.kinerja.pdf', [
+            'user' => $user,
+            'kepala_unit' => $kepala_unit,
+            'kepala_seksi' => $kepala_seksi,
+            'pengawas' => $pengawas,
             'kinerja' => $kinerja,
             'start_date' => $start_date->isoFormat('D MMMM Y'),
             'end_date' => $end_date->isoFormat('D MMMM Y'),

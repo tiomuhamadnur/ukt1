@@ -86,10 +86,8 @@
                 position: fixed;
                 top: -65px;
                 left: 20px;
-                right: 0px;
+                right: 20px;
                 height: 60px;
-                text-align: left;
-                line-height: 35px;
             }
 
             .footer {
@@ -142,7 +140,16 @@
 
     <body>
         <div class="header">
-            <img style="height: 60px" src="{{ public_path('assets/img/ukt1logo.png') }}" alt="logo-ukt1">
+            <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="left">
+                        <img src="{{ public_path('assets/img/ukt1logo.png') }}" style="height:60px;">
+                    </td>
+                    <td align="right">
+                        <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}" style="height:60px;">
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div class="footer">
@@ -169,7 +176,7 @@
                     <tr>
                         <td>Jabatan</td>
                         <td>:</td>
-                        <td>{{ $user->user->jabatan->name ?? '-' }}</td>
+                        <td>Petugas {{ $user->user->jabatan->name ?? '-' }} {{ $user->tim->seksi->name ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td>Seksi</td>
@@ -177,7 +184,7 @@
                         <td>{{ $user->tim->seksi->name ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td>Pulau</td>
+                        <td>Lokasi</td>
                         <td>:</td>
                         <td>{{ $user->pulau->name ?? '-' }}</td>
                     </tr>
@@ -189,7 +196,7 @@
                 </table>
             </div>
 
-            <p class="text-center mt-3 text-uppercase font-weight-bold"><u>SUMMARY PRESENSI</u></p>
+            {{-- <p class="text-center mt-3 text-uppercase font-weight-bold"><u>SUMMARY PRESENSI</u></p>
 
             <p class="ml-4"><u>Total Hari Kerja : {{ $jumlah_hari_kerja ?? 'N/A' }} Hari</u></p>
 
@@ -256,7 +263,7 @@
                         : number_format($ketertiban, 1, ',', '.');
                 @endphp
 
-                {{-- <div
+                <div
                     style="display:inline-block; background:{{ getColor($persentase_menit_telat ?? null) }}; color:#000; padding:18px; width:20%; text-align:center; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); margin-right:2%;">
                     <div style="font-size:50px; font-weight:bold;">
                         {{ $ketertiban }}%
@@ -265,25 +272,16 @@
                         Ketertiban Absensi <br>
                         <p style="font-size:10px">{{ $total_menit_telat }} Menit Waktu Telat</p>
                     </div>
-                </div> --}}
+                </div>
 
-            </div>
+            </div> --}}
 
-            <div class="ml-4" style="font-size:12px;">
-                <p><u>Catatan:</u></p>
-                <p>Total Waktu Telat (Menit):
-                    {{ $total_menit_telat ?? '0' }} menit dari
-                    {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
-                    menit jam kerja</p>
-                <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
-            </div>
-
-            <div class="footer">
+            {{-- <div class="footer">
                 <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
-            </div>
+            </div> --}}
         </div>
 
-        <div class="page-break"></div>
+        {{-- <div class="page-break"></div> --}}
 
         <div class="text-center">
             <p class="mt-3 mb-1 text-uppercase font-weight-bold"><u>DETAIL PRESENSI</u></p>
@@ -308,7 +306,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-left">{{ $item['hari'] }}</td>
-                            <td>{{ $item['tanggal']->format('d-m-Y') }}</td>
+                            <td>{{ $item['tanggal']->locale('id')->translatedFormat('d F Y') }}</td>
                             <td>{{ $item['jam_masuk'] }}<br><span>{{ $item['status_masuk'] }}</span></td>
                             <td>{{ $item['jam_pulang'] }}<br><span>{{ $item['status_pulang'] }}</span></td>
                             <td class="photo-cell">
@@ -326,17 +324,26 @@
             </table>
         </div>
 
+        <div class="ml-4" style="font-size:12px;">
+            <p><u>Catatan:</u></p>
+            <p>Total Waktu Telat (Menit):
+                {{ $total_menit_telat ?? '0' }} menit dari
+                {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
+                menit jam kerja</p>
+            <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
+        </div>
+
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
                 <tr>
-                    <td class="text-center">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi</td>
-                    <td style="width: 4cm;"></td>
-                    <td class="text-center">@if(optional($kepala_unit)->is_plt == true)Plt.@endif Kepala Unit</td>
+                    <td class="text-center">Pengawas</td>
+                    <td style="width: 5cm;"></td>
+                    <td class="text-center">Petugas PJLP</td>
                 </tr>
                 <tr>
-                    <td class="text-center">{{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
+                    <td class="text-center">Seksi {{ $user->tim->seksi->name ?? '-' }}</td>
                     <td></td>
-                    <td class="text-center">{{ $kepala_unit?->unit_kerja?->name ?? 'N/A' }}</td>
+                    <td class="text-center">Seksi {{ $user->tim->seksi->name ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td style="height: 27mm;"></td>
@@ -345,15 +352,45 @@
                 </tr>
                 <tr>
                     <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
-                        {{ $kepala_seksi->name ?? 'N/A' }}</td>
+                        {{ $pengawas->name ?? 'N/A' }}</td>
                     <td></td>
                     <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
-                        {{ $kepala_unit->name ?? 'N/A' }}</td>
+                        {{ $user->user->name ?? 'N/A' }}</td>
                 </tr>
                 <tr>
+                    <td class="text-center">NIP. {{ $pengawas->nip ?? 'N/A' }}</td>
+                    <td></td>
+                    <td class="text-center">ID PJLP. {{ $user->user->nip ?? 'N/A' }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="mt-5 text-center" style="font-size: 14px;">
+            <table class="table table-borderless">
+                <tr>
+                    <td style="width: 6cm;"></td>
+                    <td class="text-center">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi</td>
+                    <td style="width: 6cm;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-center">Seksi {{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="height: 27mm;"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                        {{ $kepala_seksi->name ?? 'N/A' }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
                     <td class="text-center">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
                     <td></td>
-                    <td class="text-center">NIP. {{ $kepala_unit->nip ?? 'N/A' }}</td>
                 </tr>
             </table>
         </div>

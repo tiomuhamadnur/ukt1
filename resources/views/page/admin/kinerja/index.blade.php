@@ -85,13 +85,13 @@
                                                             <i class="fa fa-file-pdf text-danger"></i> Export PDF
                                                         </a>
                                                     </li>
-                                                    {{-- <li>
+                                                    <li>
                                                         <a class="dropdown-item" href="javascript:;" data-toggle="modal"
                                                             data-target="#modalDownloadPDF">
                                                             <i class="fa fa-file-pdf text-danger"></i> PDF per Personil
                                                         </a>
                                                     </li>
-                                                    <li>
+                                                    {{-- <li>
                                                         <a class="dropdown-item" href="javascript:;" data-toggle="modal"
                                                             data-target="#modalDownloadPDFKegiatan">
                                                             <i class="fa fa-file-pdf text-danger"></i> PDF per Kegiatan
@@ -171,7 +171,7 @@
                                         <option value="" selected disabled>- Pilih Kegiatan -</option>
                                         @foreach ($kegiatan as $item)
                                             <option value="{{ $item->id }}" @selected($item->id == $kegiatan_id)>
-                                                ({{ $item->seksi->name ?? '#' }}) - {{ $item->name }}
+                                                {{ $item->name }} - ({{ $item->tim->name }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -273,17 +273,17 @@
     {{-- END: Konfirmasi Excel --}}
 
     {{-- BEGIN: Konfirmasi PDF --}}
-    {{-- <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+    <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form id="formPDF" action="{{ route('simoja.kasi.kinerja.export.pdf') }}" method="GET">
+                    <form id="formPDF" action="{{ route('kinerja.personel.export.pdf') }}" method="GET">
                         @csrf
                         @method('GET')
                         <div class="form-row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label for="">Personil</label>
+                                    <label class="required">Personil</label>
                                     <select name="user_id" class="form-control" required>
                                         <option value="" selected disabled>- Pilih Personil -</option>
                                         @foreach ($user as $item)
@@ -296,18 +296,12 @@
                                 </div>
                             </div>
                         </div>
-                        <label for="periode">Periode</label>
+                        <label for="periode" class="required">Periode</label>
                         <div class="form-row gutters">
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" value="{{ $start_date }}"
-                                        name="start_date" required>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <input type="date" class="form-control" value="{{ $end_date }}"
-                                        name="end_date" required>
+                                    <input type="month" class="form-control" value="{{ $periode ?? '' }}"
+                                        name="periode" required>
                                 </div>
                             </div>
                         </div>
@@ -315,11 +309,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
-                    <button type="submit" form="formPDF" formtarget="_blank" class="btn btn-primary">Buat</button>
+                    <button type="submit" form="formPDF" formtarget="_blank" class="btn btn-primary">Generate</button>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- END: Konfirmasi PDF --}}
 
     {{-- BEGIN: Konfirmasi PDF Kegiatan --}}

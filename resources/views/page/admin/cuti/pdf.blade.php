@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
-        <title>Surat Izin Cuti Tahunan</title>
+        <title>Surat Izin - {{ $cuti->user->name }}</title>
         <style>
             /* === Pengaturan halaman untuk Dompdf === */
             @page {
@@ -19,18 +19,12 @@
                 color: #000;
             }
 
-            /* === Header dan Footer === */
             .header {
                 position: fixed;
-                top: -15mm;
-                left: -10mm;
-                right: 0;
-                height: 20mm;
-                text-align: left;
-            }
-
-            .header img {
-                height: 18mm;
+                top: -65px;
+                left: 20px;
+                right: 20px;
+                height: 70px;
             }
 
             .footer {
@@ -43,7 +37,6 @@
                 color: #555;
             }
 
-            /* === Konten utama === */
             .content {
                 margin-top: 0mm;
             }
@@ -111,7 +104,16 @@
 
         <!-- Header -->
         <div class="header">
-            <img src="{{ public_path('assets/img/ukt1logo.png') }}" alt="logo-ukt1">
+            <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="left">
+                        <img src="{{ public_path('assets/img/ukt1logo.png') }}" style="height:70px;">
+                    </td>
+                    <td align="right">
+                        <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}" style="height:70px;">
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Konten utama -->
@@ -148,14 +150,21 @@
                                     <td><strong>{{ $cuti->user->name ?? '-' }}</strong></td>
                                 </tr>
                                 <tr>
-                                    <td>NIK</td>
+                                    <td>ID PJLP</td>
                                     <td>:</td>
                                     <td>{{ $cuti->user->nip ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>{{ $cuti->user->jabatan->name ?? '-' }}</td>
+                                    <td>Petugas {{ $cuti->user->jabatan->name ?? '-' }} {{ $cuti->user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>seksi</td>
+                                    <td>:</td>
+                                    <td>
+                                        {{ $cuti->user->formasi_tim->tim->seksi->name ?? '-' }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Unit Kerja</td>
@@ -207,52 +216,66 @@
                 <table style="width: 100%;">
                     <tbody>
                         <tr>
-                            <td style="width: 61%;"></td>
+                            <td style="text-align: center;"></td>
+                            <td style="width: 5cm;"></td>
                             <td style="text-align: center;">
                                 <p>{{ $tanggal_approve ?? '-' }}</p>
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td style="text-align: center;">
                                 @if ($cuti->disetujui_oleh->is_plt == true)
                                     Plt.
                                 @endif
                                 Kepala {{ $cuti->disetujui_oleh->unit_kerja->name ?? '-' }}
                             </td>
+                            <td></td>
+                            <td style="text-align: center;">
+                                @if ($cuti->diketahui_oleh->is_plt == true)
+                                    Plt.
+                                @endif
+                                Kepala Seksi {{ $cuti->diketahui_oleh->seksi->name ?? '-' }}
+                            </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td></td>
                             <td style="text-align: center;">Sekretariat Kabupaten Adm. Kep. Seribu</td>
-                        </tr>
+                        </tr> --}}
                         <tr>
-                            <td></td>
                             <td class="signature-space" style="text-align: center;">
                                 {{-- <img style="height: 35mm" src="{{ public_path('storage/' . $cuti->disetujui_oleh->ttd) }}" alt="TTD"> --}}
                             </td>
-                        </tr>
-                        <tr>
                             <td></td>
-                            <td style="border-bottom: 1pt solid black; text-align: center;">
-                                <strong>{{ $cuti->disetujui_oleh->name ?? '-' }}</strong>
+                            <td class="signature-space" style="text-align: center;">
+                                {{-- <img style="height: 35mm" src="{{ public_path('storage/' . $cuti->diketahui_oleh->ttd) }}" alt="TTD"> --}}
                             </td>
                         </tr>
                         <tr>
+                            <td style="border-bottom: 1pt solid black; text-align: center;">
+                                <strong>{{ $cuti->disetujui_oleh->name ?? '-' }}</strong>
+                            </td>
                             <td></td>
+                            <td style="border-bottom: 1pt solid black; text-align: center;">
+                                <strong>{{ $cuti->diketahui_oleh->name ?? '-' }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
                             <td style="text-align: center;">NIP. {{ $cuti->disetujui_oleh->nip ?? '-' }}</td>
+                            <td></td>
+                            <td style="text-align: center;">NIP. {{ $cuti->diketahui_oleh->nip ?? '-' }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- Tembusan -->
-            <div style="margin-top: 10mm;">
+            {{-- <div style="margin-top: 10mm;">
                 <p class="mb-0">Tembusan:</p>
                 <ol style="margin-top: 0;">
                     <li>Kepala Unit Kerja Teknis 1 Kabupaten Administrasi Kepulauan Seribu</li>
                     <li>Pejabat Pembuat Komitmen Unit Kerja Teknis 1 Kabupaten Administrasi Kepulauan Seribu</li>
                 </ol>
-            </div>
+            </div> --}}
 
         </div>
 

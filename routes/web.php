@@ -135,15 +135,17 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
         Route::controller(AbsensiController::class)->middleware('permission:kasi|kanit')->group(function () {
             Route::get('/kanit-absensi', 'kanit_index')->name('kanit-absensi.index')->middleware('permission:kanit');
             Route::get('/kasi-absensi', 'kasi_index')->name('kasi-absensi.index')->middleware('permission:kasi');
+        });
+
+        Route::controller(AbsensiController::class)->middleware('permission:pjlp|kanit|kasi')->group(function () {
+            Route::middleware('permission:pjlp')->group(function () {
+                Route::get('/pjlp-absensi', 'pjlp_index')->name('pjlp-absensi.index');
+                Route::get('/pjlp-absensi-create', 'pjlp_create')->name('pjlp-absensi.create');
+                Route::post('/pjlp-absensi', 'pjlp_store')->name('pjlp-absensi.store');
+            });
 
             Route::get('/absensi/export/excel', 'export_excel')->name('absensi.export.excel');
             Route::get('/absensi/export/pdf', 'export_pdf')->name('absensi.export.pdf');
-        });
-
-        Route::controller(AbsensiController::class)->middleware('permission:pjlp')->group(function () {
-            Route::get('/pjlp-absensi', 'pjlp_index')->name('pjlp-absensi.index');
-            Route::get('/pjlp-absensi-create', 'pjlp_create')->name('pjlp-absensi.create');
-            Route::post('/pjlp-absensi', 'pjlp_store')->name('pjlp-absensi.store');
         });
 
 
@@ -154,9 +156,6 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::get('/approval-cuti', 'approval_cuti')->name('approval-cuti.index');
             Route::put('/approval-cuti/approve', 'cuti_approve')->name('approval-cuti.approve');
             Route::put('/approval-cuti/reject', 'cuti_reject')->name('approval-cuti.reject');
-
-            Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf');
-            Route::get('/cuti/export/excel', 'export_excel')->name('cuti.export.excel');
         });
 
         Route::controller(CutiController::class)->middleware('permission:kanit')->group(function () {
@@ -177,6 +176,11 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
             Route::delete('/pjlp-cuti/{uuid}', 'pjlp_destroy')->name('pjlp-cuti.destroy');
         });
 
+        Route::controller(CutiController::class)->middleware('permission:pjlp|kanit|kasi')->group(function () {
+            Route::get('/cuti/export/pdf/{uuid}', 'export_pdf')->name('cuti.export.pdf');
+            Route::get('/cuti/export/excel', 'export_excel')->name('cuti.export.excel');
+        });
+
 
 
 
@@ -184,15 +188,18 @@ Route::group(['middleware' => ['auth', 'CheckBanned', 'CheckKonfigurasiPJLP']], 
         Route::controller(KinerjaController::class)->middleware('permission:kanit|kasi')->group(function () {
             Route::get('/kanit-kinerja', 'kanit_index')->name('kanit-kinerja.index')->middleware('permission:kanit');
             Route::get('/kasi-kinerja', 'kasi_index')->name('kasi-kinerja.index')->middleware('permission:kasi');
-
-            Route::get('/kinerja/export/pdf', 'export_pdf')->name('kinerja.export.pdf');
-            Route::get('/kinerja/export/excel', 'export_excel')->name('kinerja.export.excel');
         });
 
         Route::controller(KinerjaController::class)->middleware('permission:pjlp')->group(function () {
             Route::get('/pjlp-kinerja', 'pjlp_index')->name('pjlp-kinerja.index');
             Route::get('/pjlp-kinerja-create', 'pjlp_create')->name('pjlp-kinerja.create');
             Route::post('/pjlp-kinerja', 'pjlp_store')->name('pjlp-kinerja.store');
+        });
+
+        Route::controller(KinerjaController::class)->middleware('permission:pjlp|kanit|kasi')->group(function () {
+            Route::get('/kinerja/export/pdf', 'export_pdf')->name('kinerja.export.pdf');
+            Route::get('/kinerja/export/pdf-personel', 'export_pdf_personel')->name('kinerja.personel.export.pdf');
+            Route::get('/kinerja/export/excel', 'export_excel')->name('kinerja.export.excel');
         });
     });
 });

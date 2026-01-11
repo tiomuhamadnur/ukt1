@@ -39,11 +39,14 @@
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Seksi
                 </th>
-                {{-- <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
-                    Koordinator
-                </th> --}}
+                <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
+                    Pengawas
+                </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Giat/Pekerjaan
+                </th>
+                <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
+                    Giat/Pekerjaan Lainnya
                 </th>
                 <th style="border: 3px; background-color:gray; font-weight:bolder; text-align:center;">
                     Deskripsi
@@ -74,8 +77,9 @@
                     <td>{{ $item->user->jabatan->name ?? '-' }}</td>
                     <td>{{ $item->user->formasi_tim->pulau->name ?? '-' }}</td>
                     <td>{{ $item->user->formasi_tim->tim->seksi->name ?? '-' }}</td>
-                    {{-- <td>{{ $item->koordinator->name }}</td> --}}
-                    <td>{{ $item->kegiatan->name ?? $item->kegiatan_lainnya }}</td>
+                    <td>{{ $item->user->formasi_tim->koordinator->name ?? '-' }}</td>
+                    <td>{{ $item->kegiatan->name ?? "Lainnya" }}</td>
+                    <td>{{ $item->kegiatan_lainnya }}</td>
                     <td>{{ $item->deskripsi }}</td>
                     <td>{{ $item->lokasi }}</td>
                     @if ($item->kinerja_photos)
@@ -89,7 +93,7 @@
             @endforeach
             @if ($kinerja->count() == 0)
                 <tr>
-                    <td style="text-align: center;" colspan="13">
+                    <td style="text-align: center;" colspan="17">
                         Tidak ada data.
                     </td>
                 </tr>

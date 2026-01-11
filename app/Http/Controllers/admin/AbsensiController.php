@@ -209,6 +209,12 @@ class AbsensiController extends Controller
                         ->orderBy('updated_at', 'DESC')
                         ->first();
 
+        $pengawas = User::where('jabatan_id', 4) //Pengawas
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
         $absensi = Absensi::where('user_id', $user_id)
                         ->whereBetween('tanggal', [$start_date, $end_date])
                         ->get()
@@ -335,6 +341,7 @@ class AbsensiController extends Controller
 
         $pdf = Pdf::loadView('page.admin.absensi.pdf', [
             'user' => $formasi_tim,
+            'pengawas' => $pengawas,
             'kepala_seksi' => $kepala_seksi,
             'kepala_unit' => $kepala_unit,
             'jumlah_hari_kerja' => $jumlah_hari_kerja,
@@ -510,6 +517,7 @@ class AbsensiController extends Controller
         ])->render('page.users.sigma.pjlp.absensi.index', compact([
             'start_date',
             'end_date',
+            'periode',
         ]));
     }
 

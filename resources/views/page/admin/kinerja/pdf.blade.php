@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
-        <title>Laporan Kinerja</title>
+        <title>Laporan Kinerja - {{ $user->name ?? '-' }}</title>
         <style>
             @page {
                 margin: 20mm 5mm 20mm 5mm;
@@ -72,22 +72,28 @@
                 margin-top: 15px;
             }
 
-            table {
+            .mt-5 {
+                margin-top: 3rem;
+            }
+
+            .table {
                 width: 100%;
                 border-collapse: collapse;
-                font-size: 10px;
             }
 
-            th,
-            td {
+            .table-bordered,
+            .table-bordered th,
+            .table-bordered td {
                 border: 1px solid #000;
-                padding: 5px;
-                vertical-align: top;
             }
 
-            th {
-                background-color: #ccc;
-                text-align: center;
+            .table th,
+            .table td {
+                padding: 4px;
+            }
+
+            .table-borderless td {
+                border: none;
             }
 
             .text-nowrap {
@@ -139,8 +145,43 @@
                 </h2>
             </div>
 
+            <div class="mt-2">
+                <table style="font-size: 14px; margin-left: 1.5rem;">
+                    <tr>
+                        <td style="width: 20mm">Nama</td>
+                        <td style="width: 5mm">:</td>
+                        <td class="font-weight-bold text-uppercase">{{ $user->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td>ID PJLP</td>
+                        <td>:</td>
+                        <td>{{ $user->nip ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jabatan</td>
+                        <td>:</td>
+                        <td>Petugas {{ $user->jabatan->name ?? '-' }} {{ $user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Seksi</td>
+                        <td>:</td>
+                        <td>{{ $user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Lokasi</td>
+                        <td>:</td>
+                        <td>{{ $user->pulau->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Periode</td>
+                        <td>:</td>
+                        <td>{{ $start_date }} s/d {{ $end_date }}</td>
+                    </tr>
+                </table>
+            </div>
+
             <div class="mt-3">
-                <table>
+                <table class="table table-bordered">
                     <thead>
                         <tr class="text-uppercase">
                             <th style="width: 12px">No.</th>
@@ -177,6 +218,68 @@
                             </tr>
                         @endforeach
                     </tbody>
+                </table>
+            </div>
+
+            <div class="mt-5 text-center" style="font-size: 14px;">
+                <table class="table table-borderless">
+                    <tr>
+                        <td style="width: 6cm;" class="text-center">Pengawas</td>
+                        <td ></td>
+                        <td style="width: 6cm;" class="text-center">Petugas PJLP</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Seksi {{ $user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                        <td></td>
+                        <td class="text-center">Seksi {{ $user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="height: 27mm;"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                            {{ $pengawas->name ?? 'N/A' }}</td>
+                        <td></td>
+                        <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                            {{ $user->name ?? 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">NIP. {{ $pengawas->nip ?? 'N/A' }}</td>
+                        <td></td>
+                        <td class="text-center">ID PJLP. {{ $user->nip ?? 'N/A' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mt-5 text-center" style="font-size: 14px;">
+                <table class="table table-borderless">
+                    <tr>
+                        <td style="width: auto;"></td>
+                        <td style="width: 6cm;" class="text-center">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi</td>
+                        <td style="width: auto;"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-center">Seksi {{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="height: 27mm;"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                            {{ $kepala_seksi->name ?? 'N/A' }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-center">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
+                        <td></td>
+                    </tr>
                 </table>
             </div>
         </div>

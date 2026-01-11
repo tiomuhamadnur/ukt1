@@ -38,6 +38,39 @@
                                     title="Reset Filter">
                                     <i class="fa fa-refresh"></i>
                                 </a>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary mr-2 mb-2 mb-sm-0 text-white"
+                                        id="exportDropdown" role="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" title="Export">
+                                        <i class="fa fa-paper-plane"></i> Export
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                        {{-- <li>
+                                            <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                                data-target="#modalDownloadExcel" title="Export Excel">
+                                                <i class="fa fa-file-excel text-primary"></i> Export Excel
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                                data-target="#modalDownloadPDFAll">
+                                                <i class="fa fa-file-pdf text-danger"></i> Export PDF
+                                            </a>
+                                        </li> --}}
+                                        <li>
+                                            <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                                data-target="#modalDownloadPDF">
+                                                <i class="fa fa-file-pdf text-danger"></i> Export PDF
+                                            </a>
+                                        </li>
+                                        {{-- <li>
+                                            <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                                data-target="#modalDownloadPDFKegiatan">
+                                                <i class="fa fa-file-pdf text-danger"></i> PDF per Kegiatan
+                                            </a>
+                                        </li> --}}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,6 +158,43 @@
         </div>
     </div>
     {{-- END: MODAL DOKUMENTASI --}}
+
+    {{-- BEGIN: Konfirmasi PDF --}}
+    <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="formPDF" action="{{ route('kinerja.personel.export.pdf') }}" method="GET">
+                        @csrf
+                        @method('GET')
+                        <div class="form-row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label class="required">Personil</label>
+                                    <input type="hidden" name="user_id" value="{{ auth()->user()->id }}" required>
+                                    <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="periode" class="required">Periode</label>
+                        <div class="form-row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <input type="month" class="form-control" value="{{ $periode ?? '' }}"
+                                        name="periode" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" form="formPDF" formtarget="_blank" class="btn btn-primary">Generate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: Konfirmasi PDF --}}
 @endsection
 
 @push('scripts')

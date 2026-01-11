@@ -239,6 +239,29 @@ class CutiController extends Controller
             return back()->withError('Data cuti tidak ditemukan');
         }
 
+        $user_id = $cuti->user_id;
+        $formasi_tim = FormasiTim::where('user_id', $user_id)
+                        ->orderBy('periode', 'DESC')
+                        ->first();
+
+        $kepala_unit = User::where('jabatan_id', 2) //Kepala Unit
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $kepala_seksi = User::where('jabatan_id', 3) //Kepala Seksi
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $pengawas = User::where('jabatan_id', 4) //Pengawas
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+
         $tanggal = ($cuti->tanggal_awal == $cuti->tanggal_akhir) ? Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') : Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') . ' s/d ' . Carbon::parse($cuti->tanggal_akhir)->isoFormat('D MMMM Y');
         $tahun = Carbon::parse($cuti->tanggal_awal)->isoFormat('Y');
         $tanggal_approve = 'Jakarta, ' . Carbon::parse($cuti->disetujui_at)->isoFormat('D MMMM Y');
@@ -247,6 +270,9 @@ class CutiController extends Controller
             'tanggal' => $tanggal,
             'tahun' => $tahun,
             'tanggal_approve' => $tanggal_approve,
+            'kepala_unit' => $kepala_unit,
+            'kepala_seksi' => $kepala_seksi,
+            'pengawas' => $pengawas,
         ]);
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Surat ' . $cuti->jenis_cuti->name . '_' . $cuti->user->name . '.pdf');
     }
@@ -742,6 +768,11 @@ class CutiController extends Controller
         $cuti = Cuti::where('uuid', $uuid)->first();
         if(!$cuti) {
             return back()->withError('Data cuti tidak ditemukan');
+        }
+
+        if($cuti->status_cuti_id == 2) //Diterima
+        {
+            return back()->withError('Data cuti tidak bisa dihapus karena sudah berstatus <b>"Diterima"</b>!');
         }
 
         if($cuti->lampiran != null)

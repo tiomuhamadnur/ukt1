@@ -194,6 +194,10 @@
                 <div class="modal-body p-2">
                     <div class="p-2 text-center">
                         <div class="mt-2 fw-bolder">Apakah anda yakin?</div>
+                        <div class="mt-2">
+                            <img style="height: 100px;" src="https://cdn-icons-png.flaticon.com/256/337/337946.png"
+                                alt="PDF">
+                        </div>
                         <div class="text-slate-500 mt-2">
                             <p>
                                 Data ini akan di-generate dalam format PDF!

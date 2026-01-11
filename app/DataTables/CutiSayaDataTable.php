@@ -42,7 +42,7 @@ class CutiSayaDataTable extends DataTable
             ->addColumn('aksi', function ($item) {
                 $printURL = route('cuti.export.pdf', $item->uuid);
                 $printButton = "<a href='javascript:;' class='btn btn-outline-warning'
-                                    title='Print' title='Download PDF' data-toggle='modal'
+                                    title='Print Surat Izin' title='Download PDF' data-toggle='modal'
                                     data-target='#modalDownloadPDF'
                                     data-href='{$printURL}'>
                                     <i class='fa fa-print'></i>
@@ -70,7 +70,7 @@ class CutiSayaDataTable extends DataTable
                         data-jenis_cuti='{$item->jenis_cuti->name} ({$item->jumlah} hari)'
                         data-koordinator='{$item->diketahui_oleh->name}'
                         data-periode='{$item->tanggal_awal} s/d {$item->tanggal_akhir}'
-                        data-tim='Pulau {$item->user->pulau->name})'
+                        data-tim='{$item->user->formasi_tim->tim->name}'
                         data-catatan='{$item->catatan}'
                         data-status=\"{$statusAttr}\">
                         <i class='fa fa-eye'></i>
