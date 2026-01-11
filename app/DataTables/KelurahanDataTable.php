@@ -56,7 +56,7 @@ class KelurahanDataTable extends DataTable
         return $this->builder()
                     ->setTableId('kelurahan-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'asc'])

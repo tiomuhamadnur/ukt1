@@ -95,7 +95,7 @@ class KonfigurasiAbsensiDataTable extends DataTable
         return $this->builder()
                     ->setTableId('konfigurasiabsensi-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([8, 'asc'])

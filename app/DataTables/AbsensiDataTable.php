@@ -183,7 +183,7 @@ class AbsensiDataTable extends DataTable
         return $this->builder()
                     ->setTableId('absensi-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'desc'])
