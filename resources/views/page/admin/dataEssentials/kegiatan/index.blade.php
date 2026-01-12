@@ -154,7 +154,7 @@
                 document.getElementById("editForm").action = url;
                 $('#name_edit').val(name);
                 $('#code_edit').val(code);
-                $('#seksi_id_edit').val(seksi_id);
+                $('#tim_id_edit').val(tim_id);
             });
         });
     </script>

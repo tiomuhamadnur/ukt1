@@ -16,7 +16,7 @@ class KonfigurasiAbsensiController extends Controller
     public function index(KonfigurasiAbsensiDataTable $dataTable)
     {
         $jenis_absensi = JenisAbsensi::all();
-        $tim = Tim::all();
+        $tim = Tim::orderBy('name', 'ASC')->get();
 
         return $dataTable->render('page.admin.konfigurasi_absensi.index', compact([
             'jenis_absensi',

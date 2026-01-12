@@ -82,7 +82,7 @@
                             <select name="koordinator_id" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih Pengawas --</option>
                                 @foreach ($pengawas as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->name }} (Seksi: {{ $item->seksi->name ?? '#' }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -157,7 +157,7 @@
                             <select name="koordinator_id" id="koordinator_id_edit" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih Pengawas --</option>
                                 @foreach ($pengawas as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->name }} (Seksi: {{ $item->seksi->name ?? '#' }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -186,7 +186,7 @@
                         </div>
                         <div class="divider"></div>
                         <div class="right-side">
-                            <button type="submit" class="btn btn-link success">Buat Data</button>
+                            <button type="submit" class="btn btn-link success">Simpan Perubahan</button>
                         </div>
                     </div>
                 </form>
