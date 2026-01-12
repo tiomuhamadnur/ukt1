@@ -526,9 +526,21 @@ class AbsensiController extends Controller
         $user = Auth::user();
         $tanggal = Carbon::now()->isoFormat('dddd, D MMMM Y');
         $tim_id = $user->formasi_tim->tim_id;
+
+        // cek hari ini
+        if (Carbon::now()->isWeekend()) {
+            // Sabtu/Minggu → hanya jenis_absensi_id 4
+            $jenisIds = [4];
+        } else {
+            // Senin-Jumat → jenis_absensi_id 1,2,3
+            $jenisIds = [1, 2, 3];
+        }
+
         $jenis_absensi = KonfigurasiAbsensi::whereHas('tims', function ($q) use ($tim_id) {
-                    $q->where('tim_id', $tim_id);
-                })->get();
+                            $q->where('tim_id', $tim_id);
+                        })
+                        ->whereIn('jenis_absensi_id', $jenisIds)
+                        ->get();
 
         $periode = date('Y');
         $formasi_tim = FormasiTim::where('periode', $periode)
