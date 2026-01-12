@@ -31,7 +31,7 @@
                         </div>
                         <h4 class="text-center"><u>Form Absensi</u></h4>
                         <div class="form-group">
-                            <label>Data Lengkap:</label>
+                            <label>Data User:</label>
                             <table>
                                 <tr>
                                     <td style="width: 90px">Nama</td>
@@ -46,17 +46,7 @@
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>Petugas {{ $user->jabatan->name ?? 'N/A' }} Seksi {{ $formasi_tim->tim->seksi->name ?? 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Pengawas</td>
-                                    <td>:</td>
-                                    <td>{{ $formasi_tim->koordinator->name ?? '#' }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Rumpun</td>
-                                    <td>:</td>
-                                    <td>{{ $formasi_tim->tim->name ?? '-' }}</td>
+                                    <td>Petugas {{ $user->jabatan->name ?? 'N/A' }} {{ $formasi_tim->tim->name ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Seksi</td>
@@ -67,6 +57,11 @@
                                     <td>Lokasi</td>
                                     <td>:</td>
                                     <td>{{ $formasi_tim->pulau->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Pengawas</td>
+                                    <td>:</td>
+                                    <td>{{ $formasi_tim->koordinator->name ?? '#' }}</td>
                                 </tr>
                             </table>
                         </div>

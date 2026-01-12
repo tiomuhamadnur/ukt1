@@ -31,7 +31,7 @@
                         </div>
                         <h4 class="text-center">Form Input Kinerja</h4>
                         <div class="form-group">
-                            <label class="required">Data Lengkap:</label>
+                            <label>Data User:</label>
                             <table>
                                 <tr>
                                     <td style="width: 90px">Nama</td>
@@ -46,17 +46,7 @@
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>Petugas {{ $user->jabatan->name ?? 'N/A' }} Seksi {{ $formasi_tim->tim->seksi->name ?? 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Pengawas</td>
-                                    <td>:</td>
-                                    <td>{{ $formasi_tim->koordinator->name ?? '#' }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Rumpun</td>
-                                    <td>:</td>
-                                    <td>{{ $formasi_tim->tim->name ?? '-' }}</td>
+                                    <td>Petugas {{ $user->jabatan->name ?? 'N/A' }} {{ $formasi_tim->tim->name ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Seksi</td>
@@ -68,6 +58,11 @@
                                     <td>:</td>
                                     <td>{{ $formasi_tim->pulau->name }}</td>
                                 </tr>
+                                <tr>
+                                    <td>Pengawas</td>
+                                    <td>:</td>
+                                    <td>{{ $formasi_tim->koordinator->name ?? '#' }}</td>
+                                </tr>
                             </table>
                         </div>
                         <hr>
@@ -78,7 +73,7 @@
                                 <option value="">Lainnya</option>
                                 @foreach ($kegiatan as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->name }} - Rumpun {{ $item->tim->name ?? 'N/A' }}
+                                        {{ $item->name }}
                                     </option>
                                 @endforeach
                             </select>

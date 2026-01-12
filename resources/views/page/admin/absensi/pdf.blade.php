@@ -72,6 +72,11 @@
                 padding: 4px;
             }
 
+            .py-1 {
+                padding-top: 1px !important;
+                padding-bottom: 1px !important;
+            }
+
             .table-borderless td {
                 border: none;
             }
@@ -336,14 +341,19 @@
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
                 <tr>
-                    <td class="text-center">Pengawas</td>
-                    <td style="width: 5cm;"></td>
-                    <td class="text-center">Petugas PJLP</td>
+                    <td style="width: 7cm;" class="text-center py-1">Pengawas Seksi {{ $user->tim->seksi->name ?? '-' }}</td>
+                    <td style="width: auto;" class=" py-1"></td>
+                    <td style="width: 7cm;" class="text-center py-1">Petugas PJLP</td>
                 </tr>
                 <tr>
-                    <td class="text-center">Seksi {{ $user->tim->seksi->name ?? '-' }}</td>
-                    <td></td>
-                    <td class="text-center">Seksi {{ $user->tim->seksi->name ?? '-' }}</td>
+                    <td class="text-center py-1">{{ $user->tim->seksi->unit_kerja->name ?? '-' }}</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">{{ $user->tim->name ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="text-center py-1">Kabupaten Adm. Kep. Seribu</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1"></td>
                 </tr>
                 <tr>
                     <td style="height: 27mm;"></td>
@@ -351,30 +361,35 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                    <td class="text-center font-weight-bold py-1" style="border-bottom:1pt solid black;">
                         {{ $pengawas->name ?? 'N/A' }}</td>
-                    <td></td>
-                    <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                    <td class="py-1"></td>
+                    <td class="text-center font-weight-bold py-1" style="border-bottom:1pt solid black;">
                         {{ $user->user->name ?? 'N/A' }}</td>
                 </tr>
                 <tr>
-                    <td class="text-center">NIP. {{ $pengawas->nip ?? 'N/A' }}</td>
-                    <td></td>
-                    <td class="text-center">ID PJLP. {{ $user->user->nip ?? 'N/A' }}</td>
+                    <td class="text-center py-1">NIP. {{ $pengawas->nip ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">ID PJLP. {{ $user->user->nip ?? 'N/A' }}</td>
                 </tr>
             </table>
         </div>
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
                 <tr>
-                    <td style="width: 6cm;"></td>
-                    <td class="text-center">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi</td>
-                    <td style="width: 6cm;"></td>
+                    <td style="width: 6cm;" class="py-1"></td>
+                    <td class="text-center py-1">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi {{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
+                    <td style="width: 6cm;" class="py-1"></td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td class="text-center">Seksi {{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
-                    <td></td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">{{ $kepala_seksi?->seksi?->unit_kerja?->name ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
+                </tr>
+                <tr>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">Kabupaten Adm. Kep. Seribu</td>
+                    <td class="py-1"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -382,15 +397,15 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                    <td class="py-1"></td>
+                    <td class="text-center font-weight-bold py-1" style="border-bottom:1pt solid black;">
                         {{ $kepala_seksi->name ?? 'N/A' }}</td>
-                    <td></td>
+                    <td class="py-1"></td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td class="text-center">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
-                    <td></td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
                 </tr>
             </table>
         </div>

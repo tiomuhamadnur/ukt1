@@ -94,6 +94,11 @@
                 page-break-inside: avoid;
             }
 
+            .py-1 {
+                padding-top: 0px !important;
+                padding-bottom: 0px !important;
+            }
+
             .page-break {
                 page-break-after: always;
             }
@@ -157,7 +162,7 @@
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>Petugas {{ $cuti->user->jabatan->name ?? '-' }} {{ $cuti->user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                                    <td>Petugas {{ $cuti->user->jabatan->name ?? '-' }} {{ $cuti->user->formasi_tim->tim->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>seksi</td>
@@ -216,31 +221,37 @@
                 <table style="width: 100%;">
                     <tbody>
                         <tr>
-                            <td style="text-align: center;"></td>
-                            <td style="width: 5cm;"></td>
-                            <td style="text-align: center;">
+                            <td style="text-align: center;" class="py-1"></td>
+                            <td style="width: 5cm;" class="py-1"></td>
+                            <td style="text-align: center;" class="py-1">
                                 <p>{{ $tanggal_approve ?? '-' }}</p>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;">
+                            <td style="text-align: center;" class="py-1">
                                 @if ($cuti->disetujui_oleh->is_plt == true)
                                     Plt.
                                 @endif
                                 Kepala {{ $cuti->disetujui_oleh->unit_kerja->name ?? '-' }}
                             </td>
-                            <td></td>
-                            <td style="text-align: center;">
+                            <td class="py-1"></td>
+                            <td style="text-align: center;" class="py-1">
                                 @if ($cuti->diketahui_oleh->is_plt == true)
                                     Plt.
                                 @endif
                                 Kepala Seksi {{ $cuti->diketahui_oleh->seksi->name ?? '-' }}
                             </td>
                         </tr>
-                        {{-- <tr>
-                            <td></td>
-                            <td style="text-align: center;">Sekretariat Kabupaten Adm. Kep. Seribu</td>
-                        </tr> --}}
+                        <tr>
+                            <td style="text-align: center;" class="py-1">Kabupaten Adm. Kep. Seribu</td>
+                            <td class="py-1"></td>
+                            <td style="text-align: center;" class="py-1">{{ $cuti->diketahui_oleh->seksi->unit_kerja->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;" class="py-1"></td>
+                            <td class="py-1"></td>
+                            <td style="text-align: center;" class="py-1">Kabupaten Adm. Kep. Seribu</td>
+                        </tr>
                         <tr>
                             <td class="signature-space" style="text-align: center;">
                                 {{-- <img style="height: 35mm" src="{{ public_path('storage/' . $cuti->disetujui_oleh->ttd) }}" alt="TTD"> --}}
@@ -251,18 +262,18 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="border-bottom: 1pt solid black; text-align: center;">
+                            <td style="border-bottom: 1pt solid black; text-align: center;" class="py-1">
                                 <strong>{{ $cuti->disetujui_oleh->name ?? '-' }}</strong>
                             </td>
-                            <td></td>
-                            <td style="border-bottom: 1pt solid black; text-align: center;">
+                            <td class="py-1"></td>
+                            <td style="border-bottom: 1pt solid black; text-align: center;" class="py-1">
                                 <strong>{{ $cuti->diketahui_oleh->name ?? '-' }}</strong>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;">NIP. {{ $cuti->disetujui_oleh->nip ?? '-' }}</td>
-                            <td></td>
-                            <td style="text-align: center;">NIP. {{ $cuti->diketahui_oleh->nip ?? '-' }}</td>
+                            <td style="text-align: center;" class="py-1">NIP. {{ $cuti->disetujui_oleh->nip ?? '-' }}</td>
+                            <td class="py-1"></td>
+                            <td style="text-align: center;" class="py-1">NIP. {{ $cuti->diketahui_oleh->nip ?? '-' }}</td>
                         </tr>
                     </tbody>
                 </table>

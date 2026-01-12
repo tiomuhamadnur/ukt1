@@ -66,13 +66,16 @@ class CutiDataTable extends DataTable
                                     <i class='fa fa-undo'></i>
                                 </a>";
 
-                if (!Auth::user()->hasRole('superadmin')) {
+                if (!Auth::user()->hasPermissionTo('admin')) {
                     $revokeButton = null;
                 }
 
-                // if (Carbon::parse($item->tanggal_awal) < Carbon::now()) {
-                //     $revokeButton = null;
-                // }
+                $now   = Carbon::today();
+                $start = Carbon::parse($item->tanggal_awal)->startOfDay();
+
+                if ($now->gt($start)) {
+                    $revokeButton = null;
+                }
 
                 if($item->lampiran == null) {
                     $lampiranButton = null;

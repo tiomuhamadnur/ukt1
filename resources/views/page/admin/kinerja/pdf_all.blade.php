@@ -98,6 +98,11 @@
                 white-space: normal;
             }
 
+            .py-1 {
+                padding-top: 1px !important;
+                padding-bottom: 1px !important;
+            }
+
             .img-thumbnail {
                 border: 1px solid #ddd;
                 border-radius: 4px;

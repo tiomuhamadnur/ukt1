@@ -325,7 +325,7 @@
 
     {{-- BEGIN: Konfirmasi PDF --}}
     <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
                     <form id="formPDF" action="{{ route('absensi.export.pdf') }}" method="GET">
