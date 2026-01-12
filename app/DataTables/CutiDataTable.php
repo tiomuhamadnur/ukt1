@@ -70,6 +70,10 @@ class CutiDataTable extends DataTable
                     $revokeButton = null;
                 }
 
+                if (Carbon::parse($item->tanggal_awal) < Carbon::now()) {
+                    $revokeButton = null;
+                }
+
                 if ($item->status_cuti_id == 2) {
                     return $printButton . ' ' . $lampiranButton . ' ' . $revokeButton;
                 }
