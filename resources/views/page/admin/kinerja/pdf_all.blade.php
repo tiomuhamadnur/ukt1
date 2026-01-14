@@ -178,7 +178,9 @@
                                 <td colspan="5" class="mb-0">
                                     @if ($item->kinerja_photos)
                                         @foreach ($item->kinerja_photos as $i)
-                                            <img class="img-thumbnail" src="{{ asset('storage/' . rawurlencode($i->photo)) }}" alt="Foto Kegiatan">
+                                            <img class="img-thumbnail"
+                                                src="{{ 'file:///' . public_path('storage/' . $i->photo) }}"
+                                                alt="Foto Kegiatan">
                                         @endforeach
                                     @endif
                                     <p class="mb-0 mt-0">
