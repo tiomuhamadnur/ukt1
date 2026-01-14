@@ -180,7 +180,7 @@
                                         @php
                                             $path = public_path('storage/' . $i->photo);
                                             $imgSrc = file_exists($path)
-                                                ? 'file:///' . str_replace('%2F','/', rawurlencode('storage/' . $i->photo))
+                                                ? public_path('storage/' . $i->photo)
                                                 : public_path('assets/img/no-image.png'); // fallback image
                                         @endphp
                                         <img class="img-thumbnail" src="{{ $imgSrc }}" alt="Foto Kegiatan">
