@@ -35,7 +35,7 @@ return [
 
     'pdf' => [
         'enabled' => true,
-        'binary'  => env('WKHTML_PDF_BINARY', '/usr/bin/wkhtmltopdf'),
+        'binary'  => env('WKHTML_PDF_BINARY', '/usr/local/bin/wkhtmltopdf'),
         'timeout' => false,
         'options' => [
             'enable-local-file-access' => true,
@@ -43,7 +43,7 @@ return [
             'page-size' => 'A4',
             'orientation' => 'portrait',
             'lowquality' => false,
-            'footer-right' => 'SIGMA UKT 1 - Dibuat ' . \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') . ' | Halaman [page] / [topage]',
+            'footer-right' => 'SIGMA UKT 1 - Digenerate ' . \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') . ' | Halaman [page] / [topage]',
             'footer-font-size' => 7,
             'footer-spacing' => 2,
         ],
