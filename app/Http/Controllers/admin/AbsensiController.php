@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\Snappy\Facades\SnappyPdf as SnappyPDF;
 
 class AbsensiController extends Controller
 {
@@ -339,7 +340,7 @@ class AbsensiController extends Controller
             ? round(($total_menit_telat / $total_menit_kerja) * 100)
             : 0;
 
-        $pdf = Pdf::loadView('page.admin.absensi.pdf', [
+        $pdf = SnappyPDF::loadView('page.admin.absensi.pdf', [
             'user' => $formasi_tim,
             'pengawas' => $pengawas,
             'kepala_seksi' => $kepala_seksi,

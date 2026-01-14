@@ -88,16 +88,29 @@
             }
 
             .header {
-                position: fixed;
-                top: -65px;
-                left: 20px;
-                right: 20px;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .header img {
                 height: 60px;
+            }
+
+            .header .left {
+                float: left;
+            }
+
+            .header .right {
+                float: right;
+            }
+
+            .clearfix {
+                clear: both;
             }
 
             .footer {
                 position: fixed;
-                bottom: -60px;
+                bottom: -330px;
                 left: 0;
                 right: 0;
                 text-align: right;
@@ -145,21 +158,19 @@
 
     <body>
         <div class="header">
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td align="left">
-                        <img src="{{ public_path('assets/img/ukt1logo.png') }}" style="height:60px;">
-                    </td>
-                    <td align="right">
-                        <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}" style="height:60px;">
-                    </td>
-                </tr>
-            </table>
+            <div class="left">
+                <img src="{{ public_path('assets/img/ukt1logo.png') }}">
+            </div>
+            <div class="right">
+                <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
+            </div>
+            <div class="clearfix"></div>
         </div>
 
-        <div class="footer">
-            <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
-        </div>
+        {{-- <div class="footer-last">
+            SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+            <span class="page-number">Page [page] / [topage]</span>
+        </div> --}}
 
         <div>
             <div class="text-center">
@@ -356,7 +367,7 @@
                     <td class="text-center py-1"></td>
                 </tr>
                 <tr>
-                    <td style="height: 27mm;"></td>
+                    <td style="height: 33mm;"></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -393,7 +404,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="height: 27mm;"></td>
+                    <td style="height: 33mm;"></td>
                     <td></td>
                 </tr>
                 <tr>

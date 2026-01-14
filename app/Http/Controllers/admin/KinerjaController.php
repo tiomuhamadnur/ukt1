@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\Snappy\Facades\SnappyPdf as SnappyPDF;
 
 class KinerjaController extends Controller
 {
@@ -181,13 +182,13 @@ class KinerjaController extends Controller
 
         $kinerja = $query->orderBy('tanggal', 'ASC')->get();
 
-        $pdf = Pdf::loadView('page.admin.kinerja.pdf_all', [
+        $pdf = SnappyPDF::loadView('page.admin.kinerja.pdf_all', [
             'kinerja' => $kinerja,
             'start_date' => $start_date->isoFormat('D MMMM Y'),
             'end_date' => $end_date->isoFormat('D MMMM Y'),
         ]);
 
-        return $pdf->setPaper('A4', 'potrait')->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
+        return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
     }
 
     public function export_pdf_personel(Request $request)
