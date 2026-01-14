@@ -46,7 +46,7 @@ return [
             'footer-right' => 'SIGMA UKT 1 - Digenerate ' . \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') . ' | Halaman [page] / [topage]',
             'footer-font-size' => 8,
             'footer-spacing' => 2,
-            'quiet' => false,
+            'quiet' => true,
             'load-error-handling' => 'ignore',
             'load-media-error-handling' => 'ignore',
         ],
