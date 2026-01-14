@@ -43,7 +43,7 @@ return [
             'page-size' => 'A4',
             'orientation' => 'portrait',
             'lowquality' => false,
-            'footer-right' => 'SIGMA UKT 1 - Digenerate ' . \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') . ' | Halaman [page] / [topage]',
+            'footer-right' => 'SIGMA UKT 1 - Dibuat pada ' . \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') . ' | Halaman [page] / [topage]',
             'footer-font-size' => 8,
             'footer-spacing' => 2,
             'quiet' => true,
