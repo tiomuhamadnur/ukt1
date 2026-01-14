@@ -176,13 +176,15 @@
                             </tr>
                             <tr>
                                 <td colspan="5" class="mb-0">
-                                    @if ($item->kinerja_photos)
-                                        @foreach ($item->kinerja_photos as $i)
-                                            <img class="img-thumbnail"
-                                                src="{{ 'file:///' . public_path('storage/' . $i->photo) }}"
-                                                alt="Foto Kegiatan">
-                                        @endforeach
-                                    @endif
+                                    @foreach ($item->kinerja_photos as $i)
+                                        @php
+                                            $path = public_path('storage/' . $i->photo);
+                                            $imgSrc = file_exists($path)
+                                                ? 'file:///' . str_replace('%2F','/', rawurlencode('storage/' . $i->photo))
+                                                : public_path('assets/img/no-image.png'); // fallback image
+                                        @endphp
+                                        <img class="img-thumbnail" src="{{ $imgSrc }}" alt="Foto Kegiatan">
+                                    @endforeach
                                     <p class="mb-0 mt-0">
                                         Waktu: {{ $item->waktu_mulai ?? '-' }} s/d {{ $item->waktu_selesai ?? '-' }} <br>
                                         Catatan: {{ $item->deskripsi ?? '-' }}
