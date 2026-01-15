@@ -239,7 +239,7 @@ class KinerjaController extends Controller
 
         $kinerja = $query->orderBy('tanggal', 'ASC')->get();
 
-        $pdf = Pdf::loadView('page.admin.kinerja.pdf', [
+        $pdf = SnappyPDF::loadView('page.admin.kinerja.pdf', [
             'user' => $user,
             'kepala_unit' => $kepala_unit,
             'kepala_seksi' => $kepala_seksi,
@@ -249,7 +249,7 @@ class KinerjaController extends Controller
             'end_date' => $end_date->isoFormat('D MMMM Y'),
         ]);
 
-        return $pdf->setPaper('A4', 'potrait')->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
+        return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
     }
 
 

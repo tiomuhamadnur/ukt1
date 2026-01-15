@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\Snappy\Facades\SnappyPdf as SnappyPDF;
 
 class CutiController extends Controller
 {
@@ -265,7 +266,7 @@ class CutiController extends Controller
         $tanggal = ($cuti->tanggal_awal == $cuti->tanggal_akhir) ? Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') : Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') . ' s/d ' . Carbon::parse($cuti->tanggal_akhir)->isoFormat('D MMMM Y');
         $tahun = Carbon::parse($cuti->tanggal_awal)->isoFormat('Y');
         $tanggal_approve = 'Jakarta, ' . Carbon::parse($cuti->disetujui_at)->isoFormat('D MMMM Y');
-        $pdf = Pdf::loadView('page.admin.cuti.pdf', [
+        $pdf = SnappyPDF::loadView('page.admin.cuti.pdf', [
             'cuti' => $cuti,
             'tanggal' => $tanggal,
             'tahun' => $tahun,

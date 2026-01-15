@@ -20,11 +20,24 @@
             }
 
             .header {
-                position: fixed;
-                top: -65px;
-                left: 20px;
-                right: 20px;
-                height: 70px;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .header img {
+                height: 60px;
+            }
+
+            .header .left {
+                float: left;
+            }
+
+            .header .right {
+                float: right;
+            }
+
+            .clearfix {
+                clear: both;
             }
 
             .footer {
@@ -109,16 +122,13 @@
 
         <!-- Header -->
         <div class="header">
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td align="left">
-                        <img src="{{ public_path('assets/img/ukt1logo.png') }}" style="height:70px;">
-                    </td>
-                    <td align="right">
-                        <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}" style="height:70px;">
-                    </td>
-                </tr>
-            </table>
+            <div class="left">
+                <img src="{{ public_path('assets/img/ukt1logo.png') }}">
+            </div>
+            <div class="right">
+                <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
+            </div>
+            <div class="clearfix"></div>
         </div>
 
         <!-- Konten utama -->
