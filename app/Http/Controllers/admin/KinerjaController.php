@@ -190,7 +190,7 @@ class KinerjaController extends Controller
 
         $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
 
-        return $pdf->download(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
+        return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
     }
 
     public function export_pdf_personel(Request $request)
