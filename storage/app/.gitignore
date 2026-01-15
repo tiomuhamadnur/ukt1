@@ -6,6 +6,8 @@
 !public/
 !pdf/
 
+# Track semua file & subfolder di pdf
+!pdf/**
+
 # Jangan ignore .gitignore itu sendiri
 !.gitignore
-
