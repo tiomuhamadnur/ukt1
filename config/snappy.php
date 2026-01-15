@@ -42,7 +42,7 @@ return [
             'encoding' => 'UTF-8',
             'page-size' => 'A4',
             'orientation' => 'portrait',
-            'lowquality' => false,
+            'lowquality' => true,
             'margin-top' => 20,
             'margin-bottom' => 10,
             'footer-left' => 'SIGMA UKT 1 - Dibuat pada ' . \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') . ' [time]',
