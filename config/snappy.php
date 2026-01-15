@@ -52,7 +52,7 @@ return [
             'quiet' => true,
             'load-error-handling' => 'ignore',
             'load-media-error-handling' => 'ignore',
-            'dpi' => 30,
+            'dpi' => 45,
         ],
         'env'     => [],
     ],
