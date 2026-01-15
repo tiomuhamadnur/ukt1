@@ -1,5 +1,11 @@
+# Ignore semua file/folder
 *
+
+# Track folder tertentu
 !private/
 !public/
+!pdf/
+
+# Jangan ignore .gitignore itu sendiri
 !.gitignore
-!.pdf/
+
