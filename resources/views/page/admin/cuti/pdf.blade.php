@@ -15,7 +15,7 @@
 
             body {
                 font-family: 'DejaVu Sans', Arial, sans-serif;
-                font-size: 12px;
+                font-size: 16px;
                 color: #000;
             }
 
@@ -66,13 +66,13 @@
             .subtitle {
                 text-align: center;
                 margin-top: 4px;
-                font-size: 13px;
+                font-size: 15px;
             }
 
             .table-detail {
                 margin-left: 5mm;
                 margin-top: 3mm;
-                font-size: 13px;
+                font-size: 16px;
                 border-collapse: collapse;
             }
 
@@ -86,7 +86,7 @@
             }
 
             .signature-space {
-                height: 30mm;
+                height: 40mm;
             }
 
             .img-lampiran {
@@ -119,18 +119,6 @@
     </head>
 
     <body>
-
-        <!-- Header -->
-        <div class="header">
-            <div class="left">
-                <img src="{{ public_path('assets/img/ukt1logo.png') }}">
-            </div>
-            <div class="right">
-                <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
-            </div>
-            <div class="clearfix"></div>
-        </div>
-
         <!-- Konten utama -->
         <div class="content">
 
@@ -231,9 +219,9 @@
                 <table style="width: 100%;">
                     <tbody>
                         <tr>
-                            <td style="text-align: center;" class="py-1"></td>
-                            <td style="width: 5cm;" class="py-1"></td>
-                            <td style="text-align: center;" class="py-1">
+                            <td style="text-align: center; width: 80mm;" class="py-1"></td>
+                            <td style="width: auto;" class="py-1"></td>
+                            <td style="text-align: center; width: 7cm;" class="py-1">
                                 <p>{{ $tanggal_approve ?? '-' }}</p>
                             </td>
                         </tr>

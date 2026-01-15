@@ -188,6 +188,8 @@ class KinerjaController extends Controller
             'end_date' => $end_date->isoFormat('D MMMM Y'),
         ]);
 
+        $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
+
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
     }
 
@@ -248,6 +250,8 @@ class KinerjaController extends Controller
             'start_date' => $start_date->isoFormat('D MMMM Y'),
             'end_date' => $end_date->isoFormat('D MMMM Y'),
         ]);
+
+        $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
 
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Kinerja.pdf');
     }

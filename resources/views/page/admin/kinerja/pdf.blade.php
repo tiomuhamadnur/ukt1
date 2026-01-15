@@ -7,9 +7,9 @@
         <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
         <title>Laporan Kinerja - {{ $user->name ?? '-' }}</title>
         <style>
-            @page {
+            /* @page {
                 margin: 20mm 5mm 20mm 5mm;
-            }
+            } */
 
             body {
                 font-family: Arial, Helvetica, sans-serif;
@@ -139,7 +139,7 @@
     </head>
 
     <body>
-        <div class="header">
+        {{-- <div class="header">
             <div class="left">
                 <img src="{{ public_path('assets/img/ukt1logo.png') }}">
             </div>
@@ -147,7 +147,7 @@
                 <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
             </div>
             <div class="clearfix"></div>
-        </div>
+        </div> --}}
 
         {{-- <div class="footer">
             <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
@@ -155,9 +155,9 @@
 
         <div>
             <div class="text-center" style="margin-top: 0">
-                <h2 class="mb-0 text-uppercase font-weight-bold">
+                <h1 class="mb-0 text-uppercase font-weight-bold">
                     <u>LAPORAN KINERJA</u>
-                </h2>
+                </h1>
             </div>
 
             <div class="mt-2">
@@ -193,6 +193,12 @@
                         <td>{{ $start_date }} s/d {{ $end_date }}</td>
                     </tr>
                 </table>
+            </div>
+
+            <div class="text-center" style="margin-top: 0">
+                <h2 class="mb-0 text-uppercase font-weight-bold">
+                    <u>DETAIL KEGIATAN</u>
+                </h2>
             </div>
 
             <div class="mt-3">
@@ -232,8 +238,23 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @if ($kinerja->count() == 0)
+                            <tr>
+                                <td class="text-center" colspan="6">
+                                    <p>Tidak ada data kinerja.</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
+            </div>
+
+            <div class="page-break"></div>
+
+            <div class="text-center" style="margin-top: 0">
+                <h2 class="mb-0 text-uppercase font-weight-bold">
+                    <u>PERSETUJUAN</u>
+                </h2>
             </div>
 
             <div class="mt-5 text-center" style="font-size: 14px;">
@@ -254,7 +275,7 @@
                         <td class="text-center py-1"></td>
                     </tr>
                     <tr>
-                        <td style="height: 27mm;"></td>
+                        <td style="height: 40mm;"></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -291,7 +312,7 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td style="height: 27mm;"></td>
+                        <td style="height: 40mm;"></td>
                         <td></td>
                     </tr>
                     <tr>

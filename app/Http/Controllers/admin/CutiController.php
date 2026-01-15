@@ -275,6 +275,9 @@ class CutiController extends Controller
             'kepala_seksi' => $kepala_seksi,
             'pengawas' => $pengawas,
         ]);
+
+        $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
+
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Surat ' . $cuti->jenis_cuti->name . '_' . $cuti->user->name . '.pdf');
     }
 

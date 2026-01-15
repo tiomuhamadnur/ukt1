@@ -368,6 +368,8 @@ class AbsensiController extends Controller
             'end_date' => $end_date->isoFormat('D MMMM Y'),
         ]);
 
+        $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
+
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Absensi_' . $formasi_tim->user->name . '_' . $formasi_tim->user->nip . '_Seksi ' . $formasi_tim->tim->seksi->name . '_Pulau ' . $formasi_tim->pulau->name . '.pdf');
     }
 

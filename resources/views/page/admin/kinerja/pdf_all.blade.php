@@ -7,12 +7,12 @@
         <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
         <title>Laporan Kinerja</title>
         <style>
-            @page {
+            /* @page {
                 margin: 20mm 5mm 20mm 5mm;
-            }
+            } */
 
             body {
-                font-family: Arial, sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
                 font-size: 14px;
             }
 
@@ -131,7 +131,7 @@
     </head>
 
     <body>
-        <div class="header">
+        {{-- <div class="header">
             <div class="left">
                 <img src="{{ public_path('assets/img/ukt1logo.png') }}">
             </div>
@@ -139,7 +139,7 @@
                 <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
             </div>
             <div class="clearfix"></div>
-        </div>
+        </div> --}}
 
         {{-- <div class="footer">
             <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
@@ -192,6 +192,13 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @if ($kinerja->count() == 0)
+                            <tr>
+                                <td class="text-center" colspan="6">
+                                    <p>Tidak ada data kinerja.</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

@@ -7,12 +7,12 @@
         <title>Laporan Absensi - {{ $user->user->name }}</title>
 
         <style>
-            @page {
+            /* @page {
                 margin: 20mm 5mm 20mm 5mm;
-            }
+            } */
 
             body {
-                font-family: Arial, sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
                 font-size: 14px;
             }
 
@@ -84,7 +84,7 @@
             .img-thumbnail {
                 border: 1px solid #ddd;
                 padding: 2px;
-                border-radius: 4px;
+                border-radius: 5px;
             }
 
             .header {
@@ -157,7 +157,7 @@
     </head>
 
     <body>
-        <div class="header">
+        {{-- <div class="header">
             <div class="left">
                 <img src="{{ public_path('assets/img/ukt1logo.png') }}">
             </div>
@@ -165,7 +165,7 @@
                 <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
             </div>
             <div class="clearfix"></div>
-        </div>
+        </div> --}}
 
         {{-- <div class="footer-last">
             SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
@@ -367,7 +367,7 @@
                     <td class="text-center py-1"></td>
                 </tr>
                 <tr>
-                    <td style="height: 33mm;"></td>
+                    <td style="height: 40mm;"></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -388,9 +388,9 @@
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
                 <tr>
-                    <td style="width: 6cm;" class="py-1"></td>
+                    <td style="width: 7cm;" class="py-1"></td>
                     <td class="text-center py-1">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi {{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
-                    <td style="width: 6cm;" class="py-1"></td>
+                    <td style="width: 7cm;" class="py-1"></td>
                 </tr>
                 <tr>
                     <td class="py-1"></td>
@@ -404,7 +404,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="height: 33mm;"></td>
+                    <td style="height: 40mm;"></td>
                     <td></td>
                 </tr>
                 <tr>
