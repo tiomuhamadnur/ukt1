@@ -153,7 +153,7 @@ class KinerjaDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::computed('tanggal_kinerja')->title('Tanggal')->sortable(true),
+            Column::computed('tanggal_kinerja')->title('Tanggal')->sortable(true)->addClass('text-nowrap'),
             Column::computed('waktu')->title('Waktu')->sortable(false)->addClass('text-center text-nowrap'),
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
             Column::make('pulau.name')->title('Pulau')->sortable(false)->addClass('text-nowrap'),
