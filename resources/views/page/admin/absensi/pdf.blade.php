@@ -340,14 +340,14 @@
             </table>
         </div>
 
-        <div class="ml-4" style="font-size:12px;">
+        {{-- <div class="ml-4" style="font-size:12px;">
             <p><u>Catatan:</u></p>
             <p>Total Waktu Telat (Menit):
                 {{ $total_menit_telat ?? '0' }} menit dari
                 {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
                 menit jam kerja</p>
             <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
-        </div>
+        </div> --}}
 
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
