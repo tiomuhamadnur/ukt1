@@ -536,7 +536,7 @@ class AbsensiController extends Controller
             $jenisIds = [4];
         } else {
             // Senin-Jumat → jenis_absensi_id 1,2,3 (contoh buat dev ditambah id 4)
-            $jenisIds = [1, 2, 3, 4];
+            $jenisIds = [1, 2, 3];
         }
 
         $jenis_absensi = KonfigurasiAbsensi::whereHas('tims', function ($q) use ($tim_id) {
