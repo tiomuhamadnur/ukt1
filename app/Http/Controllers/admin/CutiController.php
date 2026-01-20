@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\Snappy\Facades\SnappyPdf as SnappyPDF;
 
 class CutiController extends Controller
 {
@@ -238,15 +240,44 @@ class CutiController extends Controller
             return back()->withError('Data cuti tidak ditemukan');
         }
 
+        $user_id = $cuti->user_id;
+        $formasi_tim = FormasiTim::where('user_id', $user_id)
+                        ->orderBy('periode', 'DESC')
+                        ->first();
+
+        $kepala_unit = User::where('jabatan_id', 2) //Kepala Unit
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $kepala_seksi = User::where('jabatan_id', 3) //Kepala Seksi
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        $pengawas = User::where('jabatan_id', 4) //Pengawas
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+
         $tanggal = ($cuti->tanggal_awal == $cuti->tanggal_akhir) ? Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') : Carbon::parse($cuti->tanggal_awal)->isoFormat('D MMMM Y') . ' s/d ' . Carbon::parse($cuti->tanggal_akhir)->isoFormat('D MMMM Y');
         $tahun = Carbon::parse($cuti->tanggal_awal)->isoFormat('Y');
         $tanggal_approve = 'Jakarta, ' . Carbon::parse($cuti->disetujui_at)->isoFormat('D MMMM Y');
-        $pdf = Pdf::loadView('page.admin.cuti.pdf', [
+        $pdf = SnappyPDF::loadView('page.admin.cuti.pdf', [
             'cuti' => $cuti,
             'tanggal' => $tanggal,
             'tahun' => $tahun,
             'tanggal_approve' => $tanggal_approve,
+            'kepala_unit' => $kepala_unit,
+            'kepala_seksi' => $kepala_seksi,
+            'pengawas' => $pengawas,
         ]);
+
+        $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
+
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Surat ' . $cuti->jenis_cuti->name . '_' . $cuti->user->name . '.pdf');
     }
 
@@ -520,7 +551,7 @@ class CutiController extends Controller
             'jenis_cuti_id' => 'required|exists:jenis_cuti,id',
             'tanggal_awal' => 'required|date|after_or_equal:today',
             'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
-            'lampiran' => 'nullable|file|image',
+            'lampiran' => 'nullable|file|image|required_if:jenis_cuti_id,2',
             'catatan' => 'required|string|max:254'
         ], [
             'tanggal_awal.after_or_equal' => 'Tanggal mulai cuti tidak boleh sebelum hari ini (' . now()->format('d-m-Y') . ').',
@@ -545,7 +576,7 @@ class CutiController extends Controller
 
         if(!$formasi_tim) {
             return redirect()
-                    ->route('dashboard.index')
+                    ->back()
                     ->withError('Anda belum memiliki formasi tim di tahun ' . $tahun . ', silahkan hubungi admin.');
         }
 
@@ -586,7 +617,7 @@ class CutiController extends Controller
 
             if(!$konfigurasi_cuti) {
                 return redirect()
-                        ->route('dashboard.index')
+                        ->back()
                         ->withError('Anda belum memiliki konfigurasi cuti di tahun ' . $tahun . ', silahkan hubungi admin.');
             }
 
@@ -594,7 +625,7 @@ class CutiController extends Controller
 
             if ($jumlahHariCuti > $jumlahSisaCuti){
                 return redirect()
-                        ->route('dashboard.index')
+                        ->back()
                         ->withError('Di tahun ' . $tahun . ', Jumlah hari cuti yang anda ajukan (' . $jumlahHariCuti . ' hari) melebihi sisa cuti yang anda miliki (' . $jumlahSisaCuti .' hari).');
             }
         }
@@ -606,8 +637,8 @@ class CutiController extends Controller
 
         if($check_cuti) {
             return redirect()
-                    ->route('dashboard.index')
-                    ->withError('Pengajuan cuti anda sebelumnya <strong>(' . $check_cuti->tanggal_awal ?? 'N/A' . ')</strong> masih diproses, silahkan hubungi Atasan anda!');
+                    ->back()
+                    ->withError("Pengajuan cuti anda sebelumnya <strong>({$check_cuti->formatted_tanggal_awal})</strong> masih diproses, silahkan hubungi Atasan anda!");
         }
 
         $data = [
@@ -681,10 +712,71 @@ class CutiController extends Controller
         return "Email notifikasi berhasil dikirim ke Atasan anda";
     }
 
+    public function revoke(string $uuid)
+    {
+        DB::transaction(function () use ($uuid, &$cuti, &$jumlahAkhir) {
+
+            $cuti = Cuti::with('user')
+                ->where('uuid', $uuid)
+                ->firstOrFail();
+
+            $tahun = Carbon::parse($cuti->tanggal_awal)->year;
+
+            $konfigurasiCuti = KonfigurasiCuti::where([
+                    'periode'        => $tahun,
+                    'user_id'        => $cuti->user_id,
+                    'jenis_cuti_id'  => $cuti->jenis_cuti_id,
+                ])->lockForUpdate()->first();
+
+            if (!$konfigurasiCuti) {
+                throw new \Exception(
+                    "Data konfigurasi cuti {$cuti->user->name} tahun {$tahun} tidak ditemukan"
+                );
+            }
+
+            // Hitung & update sisa cuti (atomic)
+            $jumlahAkhir = $konfigurasiCuti->jumlah_akhir + $cuti->jumlah;
+
+            $konfigurasiCuti->update([
+                'jumlah_akhir' => $jumlahAkhir,
+            ]);
+
+            // Hapus file jika ada
+            if (!empty($cuti->lampiran)) {
+                Storage::delete($cuti->lampiran);
+            }
+
+            // Hapus data absensi yang sudah auto isi karena cuti
+            Absensi::withTrashed()
+                ->where('user_id', $cuti->user_id)
+                ->whereBetween('tanggal', [
+                    $cuti->tanggal_awal,
+                    $cuti->tanggal_akhir
+                ])
+                ->forceDelete();
+
+            // Hard delete
+            $cuti->forceDelete();
+        });
+
+        $tahun = Carbon::parse($cuti->tanggal_awal)->year;
+
+        return redirect()
+            ->route('cuti.index')
+            ->withNotify(
+                "Data cuti <b>{$cuti->user->name}</b> berhasil dibatalkan dan sisa cuti menjadi <b>{$jumlahAkhir} hari</b> di tahun <b>{$tahun}</b>!"
+            );
+    }
+
     public function pjlp_destroy($uuid) {
         $cuti = Cuti::where('uuid', $uuid)->first();
         if(!$cuti) {
             return back()->withError('Data cuti tidak ditemukan');
+        }
+
+        if($cuti->status_cuti_id == 2) //Diterima
+        {
+            return back()->withError('Data cuti tidak bisa dihapus karena sudah berstatus <b>"Diterima"</b>!');
         }
 
         if($cuti->lampiran != null)

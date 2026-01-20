@@ -83,7 +83,7 @@ class FormasiTimDataTable extends DataTable
         return $this->builder()
                     ->setTableId('formasitim-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'desc'])
@@ -105,8 +105,8 @@ class FormasiTimDataTable extends DataTable
         return [
             Column::make('periode')->title('Periode'),
             Column::make('user.name')->title('Personel'),
-            // Column::make('koordinator.name')->title('Koordinator'),
-            Column::make('tim.name')->title('Tim'),
+            Column::make('koordinator.name')->title(value: 'Pengawas'),
+            Column::make('tim.name')->title('Rumpun'),
             Column::make('tim.seksi.name')->title('Seksi'),
             Column::make('pulau.name')->title('Pulau'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),

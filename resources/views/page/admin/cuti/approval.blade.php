@@ -120,8 +120,8 @@
                                 Status pengajuan izin ini akan diubah jadi <b>"Diterima"</b>!
                             </p>
                         </div>
-                        <p class="my-3 text-center">Nomor Surat dapat diakses&nbsp;<a href="https://s.id/cutipjlp"
-                                target="_blank" style="text-decoration: underline; color:#a28a03">Di sini</a></p>
+                        {{-- <p class="my-3 text-center">Nomor Surat dapat diakses&nbsp;<a href="https://s.id/cutipjlp"
+                                target="_blank" style="text-decoration: underline; color:#a28a03">Di sini</a></p> --}}
                         <form id="approveForm" class="form mt-2" action="{{ route('approval-cuti.approve') }}"
                             method="POST">
                             @csrf

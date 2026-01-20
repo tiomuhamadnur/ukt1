@@ -56,7 +56,7 @@ class KecamatanDataTable extends DataTable
         return $this->builder()
                     ->setTableId('kecamatan-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'asc'])

@@ -56,7 +56,7 @@ class TimDataTable extends DataTable
         return $this->builder()
                     ->setTableId('tim-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'asc'])
@@ -76,8 +76,8 @@ class TimDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('name')->title('Nama Tim'),
-            Column::make('code')->title('Kode Tim'),
+            Column::make('name')->title('Nama Rumpun'),
+            Column::make('code')->title('Kode Rumpun'),
             Column::make('seksi.name')->title('Seksi'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),
         ];

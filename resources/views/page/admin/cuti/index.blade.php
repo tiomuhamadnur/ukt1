@@ -249,6 +249,36 @@
         </div>
     </div>
     {{-- END: Konfirmasi Excel --}}
+
+    {{-- BEGIN: Konfirmasi Revoke --}}
+    <div id="modalRevoke" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-2">
+                    <div class="p-2 text-center">
+                        <div class="mt-2 fw-bolder">
+                            <h3>Apakah anda yakin?</h3>
+                        </div>
+                        <form id="revokeForm" action="#" method="POST">
+                            @csrf
+                            @method('POST')
+                        </form>
+                        <div class="text-slate-500 mt-3">
+                            <p>
+                                Data cuti ini akan <b>dibatalkan persetujuannya</b>, jumlah cuti akan dikembalikan, PJLP harus melakukan absensi kembali dan data tersebut akan dihapus secara permanen dari sistem.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-8 text-center mt-3">
+                        <button type="submit" form="revokeForm"
+                            class="btn btn-primary w-24 mr-1 me-2">Submit</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-dark w-24 mr-1 me-2">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: Konfirmasi Revoke --}}
 @endsection
 
 @push('scripts')
@@ -266,6 +296,11 @@
             $('#modalDownloadPDF').on('show.bs.modal', function(e) {
                 var href = $(e.relatedTarget).data('href');
                 document.getElementById("downloadPDF").href = href;
+            });
+
+            $('#modalRevoke').on('show.bs.modal', function(e) {
+                var href = $(e.relatedTarget).data('href');
+                document.getElementById("revokeForm").action = href;
             });
         });
     </script>

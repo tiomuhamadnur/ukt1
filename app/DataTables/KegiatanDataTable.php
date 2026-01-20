@@ -26,6 +26,7 @@ class KegiatanDataTable extends DataTable
                             data-name='{$item->name}'
                             data-code='{$item->code}'
                             data-seksi_id='{$item->seksi_id}'
+                            data-tim_id='{$item->tim_id}'
                             >
                         <i class='fa fa-edit'></i>
                     </button>";
@@ -45,7 +46,7 @@ class KegiatanDataTable extends DataTable
     public function query(Kegiatan $model): QueryBuilder
     {
         $query = $model->select('kegiatan.*')->with([
-            'seksi',
+            'tim.seksi',
         ])->newQuery();
 
         return $query;
@@ -56,7 +57,7 @@ class KegiatanDataTable extends DataTable
         return $this->builder()
                     ->setTableId('kegiatan-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'asc'])
@@ -78,7 +79,8 @@ class KegiatanDataTable extends DataTable
         return [
             Column::make('name')->title('Nama Kegiatan'),
             Column::make('code')->title('Kode Kegiatan'),
-            Column::make('seksi.name')->title('Seksi'),
+            Column::make('tim.name')->title('Rumpun'),
+            Column::make('tim.seksi.name')->title('Seksi'),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),
         ];
     }

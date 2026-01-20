@@ -38,6 +38,27 @@
                                     title="Reset Filter">
                                     <i class="fa fa-refresh"></i>
                                 </a>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary mr-2 mb-2 mb-sm-0 text-white" id="exportDropdown"
+                                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        title="Export">
+                                        <i class="fa fa-paper-plane"></i> Export
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                        <li>
+                                            <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                                data-target="#modalDownloadExcel" title="Export Excel">
+                                                <i class="fa fa-file-excel text-primary"></i> Export Excel
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                                data-target="#modalDownloadPDF" title="Export PDF">
+                                                <i class="fa fa-file-pdf text-danger"></i> Export PDF
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -136,6 +157,77 @@
         </div>
     </div>
     {{-- END: MODAL DOKUMENTASI --}}
+
+    {{-- BEGIN: Konfirmasi Excel --}}
+    <div id="modalDownloadExcel" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-2">
+                    <div class="p-2 text-center">
+                        <div class="mt-2 fw-bolder">Apakah anda yakin?</div>
+                        <div class="mt-2">
+                            <img style="height: 100px;"
+                                src="https://i.pinimg.com/originals/1b/db/8a/1bdb8ac897512116cbac58ffe7560d82.png"
+                                alt="PDF">
+                        </div>
+                        <div class="text-slate-500 mt-2">
+                            <p>
+                                Data ini akan di-generate dalam format Excel!
+                            </p>
+                        </div>
+                        <form id="exportExcel" action="{{ route('absensi.export.excel') }}" method="GET"
+                            hidden>
+                            @csrf
+                            @method('GET')
+                            {{-- <input type="hidden" name="seksi_id" value="{{ $seksi_id ?? '' }}"> --}}
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                            {{-- <input type="hidden" name="pulau_id" value="{{ $pulau_id ?? '' }}"> --}}
+                            <input type="hidden" name="start_date" value="{{ $start_date ?? '' }}">
+                            <input type="hidden" name="end_date" value="{{ $end_date ?? '' }}">
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" form="exportExcel" formtarget="_blank" class="btn btn-primary">Unduh</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: Konfirmasi Excel --}}
+
+    {{-- BEGIN: Konfirmasi PDF --}}
+    <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="formPDF" action="{{ route('absensi.export.pdf') }}" method="GET">
+                        @csrf
+                        @method('GET')
+                        <div class="form-row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label class="required">Personel</label>
+                                    <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                                    <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Periode</label>
+                                    <input type="month" class="form-control" name="periode"
+                                        value="{{ $periode }}">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" form="formPDF" formtarget="_blank" class="btn btn-primary">Generate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END: Konfirmasi PDF --}}
 @endsection
 
 @push('scripts')

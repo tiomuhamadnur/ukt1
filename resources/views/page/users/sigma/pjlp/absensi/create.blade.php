@@ -31,53 +31,58 @@
                         </div>
                         <h4 class="text-center"><u>Form Absensi</u></h4>
                         <div class="form-group">
-                            <label class="required">Data Lengkap:</label>
+                            <label>Data User:</label>
                             <table>
                                 <tr>
                                     <td style="width: 90px">Nama</td>
                                     <td style="width: 15px">:</td>
-                                    <td class="font-weight-bolder">{{ $user->name }}</td>
+                                    <td class="font-weight-bolder">{{ $user->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>ID PJLP</td>
                                     <td>:</td>
-                                    <td>{{ $user->nip }}</td>
+                                    <td>{{ $user->nip ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>{{ $user->jabatan->name ?? '-' }}</td>
+                                    <td>Petugas {{ $user->jabatan->name ?? 'N/A' }} {{ $formasi_tim->tim->name ?? 'N/A' }}</td>
                                 </tr>
-                                {{-- <tr>
-                                    <td>Koordinator</td>
-                                    <td>:</td>
-                                    <td>#</td>
-                                </tr> --}}
                                 <tr>
                                     <td>Seksi</td>
                                     <td>:</td>
-                                    <td>{{ $user->formasi_tim->tim->seksi->name ?? '-' }}</td>
+                                    <td>{{ $formasi_tim->tim->seksi->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Pulau</td>
+                                    <td>Lokasi</td>
                                     <td>:</td>
-                                    <td>{{ $user->formasi_tim->pulau->name ?? '-' }}</td>
+                                    <td>{{ $formasi_tim->pulau->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Pengawas</td>
+                                    <td>:</td>
+                                    <td>{{ $formasi_tim->koordinator->name ?? '#' }}</td>
                                 </tr>
                             </table>
                         </div>
                         <div class="form-group">
-                            <label for="" class="required">Jenis Absensi:</label>
-                            <input type="text" class="form-control" value="{{ $jenis_absensi->name ?? '-' }}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="" class="required">Tanggal:</label>
+                            <label for="">Tanggal:</label>
                             <input type="text" class="form-control" value="{{ $tanggal }}" autocomplete="off"
                                 disabled>
                         </div>
                         <div class="form-group">
-                            <label for="" class="required">Jam:</label>
+                            <label for="">Jam:</label>
                             <input type="text" id="jam" class="form-control" value="__:__ WIB" autocomplete="off"
                                 disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="required">Jenis Absensi:</label>
+                            <select name="jenis_absensi_id" id="jenis_absensi_id" class="form-control" required>
+                                <option value="" selected disabled>- pilih jenis absensi -</option>
+                                @foreach ($jenis_absensi as $item)
+                                    <option value="{{ $item->jenis_absensi_id }}">{{ $item->jenis_absensi->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="" class="required">Photo:</label>

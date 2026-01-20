@@ -26,7 +26,9 @@ class Absensi extends Model
 
     public function getFormattedTanggalAttribute()
     {
-        return Carbon::parse($this->tanggal)->format('d-m-Y');
+        return Carbon::parse($this->tanggal)
+                ->locale('id')
+                ->translatedFormat('d F Y');
     }
 
     public function user()

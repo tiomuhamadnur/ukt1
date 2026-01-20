@@ -7,25 +7,42 @@
         <link rel="shortcut icon" href="{{ asset('assets/img/ukt1logo.png') }}" />
         <title>Laporan Kinerja</title>
         <style>
-            @page {
+            /* @page {
                 margin: 20mm 5mm 20mm 5mm;
-            }
+            } */
 
             body {
                 font-family: Arial, Helvetica, sans-serif;
-                font-size: 10px;
-                margin: 0;
-                padding: 0;
+                font-size: 14px;
             }
 
             .header {
-                position: fixed;
-                top: -65px;
-                left: 20px;
-                right: 0;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .header img {
                 height: 60px;
-                text-align: left;
-                line-height: 35px;
+            }
+
+            .header .left {
+                float: left;
+            }
+
+            .header .right {
+                float: right;
+            }
+
+            .clearfix {
+                clear: both;
+            }
+
+            /* ==== OVERRIDE HEADER ==== */
+            .header table,
+            .header th,
+            .header td {
+                border: none !important;
+                padding: 0 !important;
             }
 
             .footer {
@@ -92,6 +109,11 @@
                 white-space: normal;
             }
 
+            .py-1 {
+                padding-top: 1px !important;
+                padding-bottom: 1px !important;
+            }
+
             .img-thumbnail {
                 border: 1px solid #ddd;
                 border-radius: 4px;
@@ -109,13 +131,19 @@
     </head>
 
     <body>
-        <div class="header">
-            <img style="height: 60px" src="{{ public_path('assets/img/ukt1logo.png') }}" alt="logo-ukt1">
-        </div>
+        {{-- <div class="header">
+            <div class="left">
+                <img src="{{ public_path('assets/img/ukt1logo.png') }}">
+            </div>
+            <div class="right">
+                <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
+            </div>
+            <div class="clearfix"></div>
+        </div> --}}
 
-        <div class="footer">
-            <i>SIGMA © {{ \Carbon\Carbon::now()->translatedFormat('Y') }}</i>
-        </div>
+        {{-- <div class="footer">
+            <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
+        </div> --}}
 
         <div>
             <div class="text-center" style="margin-top: 0">
@@ -148,16 +176,29 @@
                             </tr>
                             <tr>
                                 <td colspan="5" class="mb-0">
-                                    @if ($item->kinerja_photos)
-                                        @foreach ($item->kinerja_photos as $i)
-                                            <img class="img-thumbnail" src="{{ public_path('storage/' . $i->photo) }}"
-                                                alt="Foto Kegiatan">
-                                        @endforeach
-                                    @endif
-                                    <p class="mb-0">Catatan: {{ $item->deskripsi ?? '-' }}</p>
+                                    @foreach ($item->kinerja_photos as $i)
+                                        @php
+                                            $path = public_path('storage/' . $i->photo);
+                                            $imgSrc = file_exists($path)
+                                                ? public_path('storage/' . $i->photo)
+                                                : public_path('assets/img/no-image.png'); // fallback image
+                                        @endphp
+                                        <img class="img-thumbnail" src="{{ $imgSrc }}" alt="Foto Kegiatan">
+                                    @endforeach
+                                    <p class="mb-0 mt-0">
+                                        Waktu: {{ $item->waktu_mulai ?? '-' }} s/d {{ $item->waktu_selesai ?? '-' }} <br>
+                                        Catatan: {{ $item->deskripsi ?? '-' }}
+                                    </p>
                                 </td>
                             </tr>
                         @endforeach
+                        @if ($kinerja->count() == 0)
+                            <tr>
+                                <td class="text-center" colspan="6">
+                                    <p>Tidak ada data kinerja.</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

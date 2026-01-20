@@ -1,4 +1,11 @@
 <x-pulse>
+    <div class="my-0">
+        <a href="{{ route('dashboard.index') }}"
+        class="inline-block bg-blue-600 text-white rounded hover:bg-blue-700">
+            ← Back
+        </a>
+    </div>
+
     <livewire:pulse.servers cols="full" />
 
     <livewire:pulse.usage cols="4" rows="2" />

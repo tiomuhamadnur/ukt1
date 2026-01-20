@@ -7,12 +7,12 @@
         <title>Laporan Absensi - {{ $user->user->name }}</title>
 
         <style>
-            @page {
+            /* @page {
                 margin: 20mm 5mm 20mm 5mm;
-            }
+            } */
 
             body {
-                font-family: Arial, sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
                 font-size: 14px;
             }
 
@@ -72,6 +72,11 @@
                 padding: 4px;
             }
 
+            .py-1 {
+                padding-top: 1px !important;
+                padding-bottom: 1px !important;
+            }
+
             .table-borderless td {
                 border: none;
             }
@@ -79,22 +84,33 @@
             .img-thumbnail {
                 border: 1px solid #ddd;
                 padding: 2px;
-                border-radius: 4px;
+                border-radius: 5px;
             }
 
             .header {
-                position: fixed;
-                top: -65px;
-                left: 20px;
-                right: 0px;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .header img {
                 height: 60px;
-                text-align: left;
-                line-height: 35px;
+            }
+
+            .header .left {
+                float: left;
+            }
+
+            .header .right {
+                float: right;
+            }
+
+            .clearfix {
+                clear: both;
             }
 
             .footer {
                 position: fixed;
-                bottom: -60px;
+                bottom: -330px;
                 left: 0;
                 right: 0;
                 text-align: right;
@@ -141,13 +157,20 @@
     </head>
 
     <body>
-        <div class="header">
-            <img style="height: 60px" src="{{ public_path('assets/img/ukt1logo.png') }}" alt="logo-ukt1">
-        </div>
+        {{-- <div class="header">
+            <div class="left">
+                <img src="{{ public_path('assets/img/ukt1logo.png') }}">
+            </div>
+            <div class="right">
+                <img src="{{ public_path('assets/img/logo-dki-jakarta.png') }}">
+            </div>
+            <div class="clearfix"></div>
+        </div> --}}
 
-        <div class="footer">
-            <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
-        </div>
+        {{-- <div class="footer-last">
+            SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+            <span class="page-number">Page [page] / [topage]</span>
+        </div> --}}
 
         <div>
             <div class="text-center">
@@ -169,7 +192,7 @@
                     <tr>
                         <td>Jabatan</td>
                         <td>:</td>
-                        <td>{{ $user->user->jabatan->name ?? '-' }}</td>
+                        <td>Petugas {{ $user->user->jabatan->name ?? '-' }} {{ $user->tim->seksi->name ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td>Seksi</td>
@@ -177,7 +200,7 @@
                         <td>{{ $user->tim->seksi->name ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td>Pulau</td>
+                        <td>Lokasi</td>
                         <td>:</td>
                         <td>{{ $user->pulau->name ?? '-' }}</td>
                     </tr>
@@ -189,7 +212,7 @@
                 </table>
             </div>
 
-            <p class="text-center mt-3 text-uppercase font-weight-bold"><u>SUMMARY PRESENSI</u></p>
+            {{-- <p class="text-center mt-3 text-uppercase font-weight-bold"><u>SUMMARY PRESENSI</u></p>
 
             <p class="ml-4"><u>Total Hari Kerja : {{ $jumlah_hari_kerja ?? 'N/A' }} Hari</u></p>
 
@@ -256,7 +279,7 @@
                         : number_format($ketertiban, 1, ',', '.');
                 @endphp
 
-                {{-- <div
+                <div
                     style="display:inline-block; background:{{ getColor($persentase_menit_telat ?? null) }}; color:#000; padding:18px; width:20%; text-align:center; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); margin-right:2%;">
                     <div style="font-size:50px; font-weight:bold;">
                         {{ $ketertiban }}%
@@ -265,25 +288,16 @@
                         Ketertiban Absensi <br>
                         <p style="font-size:10px">{{ $total_menit_telat }} Menit Waktu Telat</p>
                     </div>
-                </div> --}}
+                </div>
 
-            </div>
+            </div> --}}
 
-            <div class="ml-4" style="font-size:12px;">
-                <p><u>Catatan:</u></p>
-                <p>Total Waktu Telat (Menit):
-                    {{ $total_menit_telat ?? '0' }} menit dari
-                    {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
-                    menit jam kerja</p>
-                <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
-            </div>
-
-            <div class="footer">
+            {{-- <div class="footer">
                 <i>SIGMA UKT 1 - Dibuat {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</i>
-            </div>
+            </div> --}}
         </div>
 
-        <div class="page-break"></div>
+        {{-- <div class="page-break"></div> --}}
 
         <div class="text-center">
             <p class="mt-3 mb-1 text-uppercase font-weight-bold"><u>DETAIL PRESENSI</u></p>
@@ -308,7 +322,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-left">{{ $item['hari'] }}</td>
-                            <td>{{ $item['tanggal']->format('d-m-Y') }}</td>
+                            <td>{{ $item['tanggal']->locale('id')->translatedFormat('d F Y') }}</td>
                             <td>{{ $item['jam_masuk'] }}<br><span>{{ $item['status_masuk'] }}</span></td>
                             <td>{{ $item['jam_pulang'] }}<br><span>{{ $item['status_pulang'] }}</span></td>
                             <td class="photo-cell">
@@ -326,34 +340,83 @@
             </table>
         </div>
 
+        {{-- <div class="ml-4" style="font-size:12px;">
+            <p><u>Catatan:</u></p>
+            <p>Total Waktu Telat (Menit):
+                {{ $total_menit_telat ?? '0' }} menit dari
+                {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
+                menit jam kerja</p>
+            <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
+        </div> --}}
+
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
                 <tr>
-                    <td class="text-center">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi</td>
-                    <td style="width: 4cm;"></td>
-                    <td class="text-center">@if(optional($kepala_unit)->is_plt == true)Plt.@endif Kepala Unit</td>
+                    <td style="width: 7cm;" class="text-center py-1">Pengawas Seksi {{ $user->tim->seksi->name ?? '-' }}</td>
+                    <td style="width: auto;" class=" py-1"></td>
+                    <td style="width: 7cm;" class="text-center py-1">Petugas PJLP</td>
                 </tr>
                 <tr>
-                    <td class="text-center">{{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
-                    <td></td>
-                    <td class="text-center">{{ $kepala_unit?->unit_kerja?->name ?? 'N/A' }}</td>
+                    <td class="text-center py-1">{{ $user->tim->seksi->unit_kerja->name ?? '-' }}</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">{{ $user->tim->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td style="height: 27mm;"></td>
+                    <td class="text-center py-1">Kabupaten Adm. Kep. Seribu</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1"></td>
+                </tr>
+                <tr>
+                    <td style="height: 40mm;"></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
+                    <td class="text-center font-weight-bold py-1" style="border-bottom:1pt solid black;">
+                        {{ $pengawas->name ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
+                    <td class="text-center font-weight-bold py-1" style="border-bottom:1pt solid black;">
+                        {{ $user->user->name ?? 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td class="text-center py-1">NIP. {{ $pengawas->nip ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">ID PJLP. {{ $user->user->nip ?? 'N/A' }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="mt-5 text-center" style="font-size: 14px;">
+            <table class="table table-borderless">
+                <tr>
+                    <td style="width: 7cm;" class="py-1"></td>
+                    <td class="text-center py-1">@if(optional($kepala_seksi)->is_plt == true)Plt.@endif Kepala Seksi {{ $kepala_seksi?->seksi?->name ?? 'N/A' }}</td>
+                    <td style="width: 7cm;" class="py-1"></td>
+                </tr>
+                <tr>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">{{ $kepala_seksi?->seksi?->unit_kerja?->name ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
+                </tr>
+                <tr>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">Kabupaten Adm. Kep. Seribu</td>
+                    <td class="py-1"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="height: 40mm;"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="py-1"></td>
+                    <td class="text-center font-weight-bold py-1" style="border-bottom:1pt solid black;">
                         {{ $kepala_seksi->name ?? 'N/A' }}</td>
-                    <td></td>
-                    <td class="text-center font-weight-bold" style="border-bottom:1pt solid black;">
-                        {{ $kepala_unit->name ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
                 </tr>
                 <tr>
-                    <td class="text-center">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
-                    <td></td>
-                    <td class="text-center">NIP. {{ $kepala_unit->nip ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
+                    <td class="text-center py-1">NIP. {{ $kepala_seksi->nip ?? 'N/A' }}</td>
+                    <td class="py-1"></td>
                 </tr>
             </table>
         </div>

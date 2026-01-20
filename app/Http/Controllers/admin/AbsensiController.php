@@ -10,6 +10,7 @@ use App\Models\Absensi;
 use App\Models\FormasiTim;
 use App\Models\JenisAbsensi;
 use App\Models\KonfigurasiAbsensi;
+use App\Models\KonfigurasiAbsensiTim;
 use App\Models\Pulau;
 use App\Models\Seksi;
 use App\Models\User;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\Snappy\Facades\SnappyPdf as SnappyPDF;
 
 class AbsensiController extends Controller
 {
@@ -208,6 +210,12 @@ class AbsensiController extends Controller
                         ->orderBy('updated_at', 'DESC')
                         ->first();
 
+        $pengawas = User::where('jabatan_id', 4) //Pengawas
+                        ->where('unit_kerja_id', $formasi_tim->tim->seksi->unit_kerja_id)
+                        ->where('seksi_id', $formasi_tim->tim->seksi_id)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
         $absensi = Absensi::where('user_id', $user_id)
                         ->whereBetween('tanggal', [$start_date, $end_date])
                         ->get()
@@ -332,8 +340,9 @@ class AbsensiController extends Controller
             ? round(($total_menit_telat / $total_menit_kerja) * 100)
             : 0;
 
-        $pdf = Pdf::loadView('page.admin.absensi.pdf', [
+        $pdf = SnappyPDF::loadView('page.admin.absensi.pdf', [
             'user' => $formasi_tim,
+            'pengawas' => $pengawas,
             'kepala_seksi' => $kepala_seksi,
             'kepala_unit' => $kepala_unit,
             'jumlah_hari_kerja' => $jumlah_hari_kerja,
@@ -358,6 +367,8 @@ class AbsensiController extends Controller
             'start_date' => $start_date->isoFormat('D MMMM Y'),
             'end_date' => $end_date->isoFormat('D MMMM Y'),
         ]);
+
+        $pdf->setOption('header-html', storage_path('app/pdf/header.html'));
 
         return $pdf->stream(Carbon::now()->format('Ymd_') . 'Data Absensi_' . $formasi_tim->user->name . '_' . $formasi_tim->user->nip . '_Seksi ' . $formasi_tim->tim->seksi->name . '_Pulau ' . $formasi_tim->pulau->name . '.pdf');
     }
@@ -509,6 +520,7 @@ class AbsensiController extends Controller
         ])->render('page.users.sigma.pjlp.absensi.index', compact([
             'start_date',
             'end_date',
+            'periode',
         ]));
     }
 
@@ -516,12 +528,33 @@ class AbsensiController extends Controller
     {
         $user = Auth::user();
         $tanggal = Carbon::now()->isoFormat('dddd, D MMMM Y');
-        $jenis_absensi = JenisAbsensi::findOrFail(1); //Jenis absensi biasa
+        $tim_id = $user->formasi_tim->tim_id;
+
+        // cek hari ini
+        if (Carbon::now()->isWeekend()) {
+            // Sabtu/Minggu → hanya jenis_absensi_id 4
+            $jenisIds = [4];
+        } else {
+            // Senin-Jumat → jenis_absensi_id 1,2,3 (contoh buat dev ditambah id 4)
+            $jenisIds = [1, 2, 3];
+        }
+
+        $jenis_absensi = KonfigurasiAbsensi::whereHas('tims', function ($q) use ($tim_id) {
+                            $q->where('tim_id', $tim_id);
+                        })
+                        ->whereIn('jenis_absensi_id', $jenisIds)
+                        ->get();
+
+        $periode = date('Y');
+        $formasi_tim = FormasiTim::where('periode', $periode)
+                    ->where('user_id', $user->id)
+                    ->first();
 
         return view('page.users.sigma.pjlp.absensi.create', compact([
             'user',
             'tanggal',
             'jenis_absensi',
+            'formasi_tim',
         ]));
     }
 
@@ -529,6 +562,7 @@ class AbsensiController extends Controller
     {
         $request->validate([
             'photo' => 'required',
+            'jenis_absensi_id' => 'required|exists:jenis_absensi,id',
             'dokumentasi' => 'required|file|image',
             'latitude' => 'required|string',
             'longitude' => 'required|string',
@@ -536,6 +570,7 @@ class AbsensiController extends Controller
         ]);
 
         $img = $request->photo;
+        $jenis_absensi_id = $request->jenis_absensi_id;
         $catatan = $request->catatan;
         $latitude = $request->latitude ?? null;
         $longitude = $request->longitude ?? null;
@@ -543,10 +578,10 @@ class AbsensiController extends Controller
         $now = Carbon::now();
         $tanggal = Carbon::parse($now)->format('Y-m-d');
         $waktu = Carbon::parse($now);
-        $konfigurasi_absensi = KonfigurasiAbsensi::where('jenis_absensi_id', 1)->first();
+        $konfigurasi_absensi = KonfigurasiAbsensi::where('jenis_absensi_id', $jenis_absensi_id)->first();
 
         if(!$konfigurasi_absensi) {
-            return back()->withError('Konfigurasi Absensi belum diatur, silahkan hubungi admin.');
+            return back()->withError('Konfigurasi Jenis Absensi yang dipilih belum diatur, silahkan hubungi admin.');
         }
 
         $toleransi_masuk = $konfigurasi_absensi->toleransi_masuk;

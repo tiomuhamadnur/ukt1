@@ -21,7 +21,15 @@ class FormasiTimController extends Controller
         $periode = $request->periode ?? date('Y');
         $tim = Tim::orderBy('name')->get();
         $pulau = Pulau::orderBy('name')->get();
-        $user = User::where('jabatan_id', 5)->notBanned()->orderBy('name')->get();
+        $user = User::where('jabatan_id', 5) //PJLP
+                    ->notBanned()
+                    ->orderBy('name')
+                    ->get();
+
+        $pengawas = User::where('jabatan_id', 4) //Pengawas
+                    ->notBanned()
+                    ->orderBy('name')
+                    ->get();
 
         $tahun_ini = date('Y');
         $tahun = [$tahun_ini, $tahun_ini + 1, $tahun_ini + 2];
@@ -31,6 +39,7 @@ class FormasiTimController extends Controller
             'tim',
             'pulau',
             'user',
+            'pengawas',
             'periode',
             'tahun_ini',
             'tahun',
@@ -43,7 +52,7 @@ class FormasiTimController extends Controller
             'tim_id' => 'required|exists:tim,id',
             'pulau_id' => 'required|exists:pulau,id',
             'user_id' => 'required|exists:users,id',
-            // 'koordinator_id' => 'nullable|exists:users,id',
+            'koordinator_id' => 'required|exists:users,id',
             'periode' => 'required|digits:4|integer',
         ]);
 
@@ -77,7 +86,7 @@ class FormasiTimController extends Controller
             'tim_id' => 'required|exists:tim,id',
             'pulau_id' => 'required|exists:pulau,id',
             'user_id' => 'required|exists:users,id',
-            // 'koordinator_id' => 'nullable|exists:users,id',
+            'koordinator_id' => 'required|exists:users,id',
             'periode' => 'required|digits:4|integer',
         ]);
 

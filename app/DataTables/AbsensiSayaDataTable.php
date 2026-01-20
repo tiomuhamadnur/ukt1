@@ -53,6 +53,12 @@ class AbsensiSayaDataTable extends DataTable
 
                 return $actionButton;
             })
+            ->addColumn('tanggal_absensi', function ($item) {
+                return $item->formatted_tanggal;
+            })
+            ->orderColumn('tanggal_absensi', function ($query, $order) {
+                $query->orderBy('tanggal', $order);
+            })
             ->addColumn('status', function ($item) {
                 $badgeClass = $item->status_absensi_id === 3
                     ? 'badge badge-pill badge-danger'
@@ -97,7 +103,7 @@ class AbsensiSayaDataTable extends DataTable
         return $this->builder()
                     ->setTableId('absensisaya-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'desc'])
@@ -117,7 +123,7 @@ class AbsensiSayaDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('tanggal')->title('Tanggal')->sortable(true),
+            Column::computed('tanggal_absensi')->title('Tanggal')->sortable(true),
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold')->sortable(true),
             Column::make('user.jabatan.name')->title('Jabatan')->sortable(false),
             Column::make('user.formasi_tim.pulau.name')->title('Pulau')->sortable(false),

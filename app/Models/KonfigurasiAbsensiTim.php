@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class KonfigurasiAbsensi extends Model
+class KonfigurasiAbsensiTim extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'konfigurasi_absensi';
+    protected $table = 'konfigurasi_absensi_tim';
 
     protected $guarded = [];
 
@@ -28,13 +28,13 @@ class KonfigurasiAbsensi extends Model
         return 'uuid';
     }
 
-    public function jenis_absensi()
+    public function konfigurasi_absensi()
     {
-        return $this->belongsTo(JenisAbsensi::class);
+        return $this->belongsTo(KonfigurasiAbsensi::class, 'konfigurasi_absensi_id');
     }
 
-    public function tims()
+    public function tim()
     {
-        return $this->hasMany(KonfigurasiAbsensiTim::class, 'konfigurasi_absensi_id');
+        return $this->belongsTo(Tim::class, 'tim_id');
     }
 }

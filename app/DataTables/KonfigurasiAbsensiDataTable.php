@@ -19,6 +19,8 @@ class KonfigurasiAbsensiDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addColumn('aksi', function ($item) {
                 $editRoute = route('konfigurasi-absensi.update', $item->uuid);
+                $tim_ids = $item->tims->pluck('tim_id')->toArray();
+                $timsIdsJson = htmlspecialchars(json_encode($tim_ids), ENT_QUOTES, 'UTF-8');
                 $editButton = "
                     <button class='btn btn-outline-primary' data-toggle='modal'
                             data-target='#editModal'
@@ -32,6 +34,7 @@ class KonfigurasiAbsensiDataTable extends DataTable
                             data-selesai_absen_pulang='{$item->selesai_absen_pulang}'
                             data-toleransi_masuk='{$item->toleransi_masuk}'
                             data-toleransi_pulang='{$item->toleransi_pulang}'
+                            data-tim_ids='{$timsIdsJson}'
                             >
                         <i class='fa fa-edit'></i>
                     </button>";
@@ -60,7 +63,22 @@ class KonfigurasiAbsensiDataTable extends DataTable
             ->addColumn('toleransi_pulang', function ($item) {
                 return $item->toleransi_pulang . ' Menit';
             })
-            ->rawColumns(['aksi']);
+            ->addColumn('tim', function ($item) {
+                if ($item->tims->isEmpty()) {
+                    return "<em class='text-muted'>Tidak ada</em>";
+                }
+
+                $html = "<ul style='padding-left:18px; margin:0; list-style-type: disc !important;'>";
+
+                foreach ($item->tims as $item) {
+                    $html .= "<li>{$item->tim->name}</li>";
+                }
+
+                $html .= "</ul>";
+
+                return $html;
+            })
+            ->rawColumns(['tim', 'aksi']);
     }
 
     public function query(KonfigurasiAbsensi $model): QueryBuilder
@@ -77,10 +95,10 @@ class KonfigurasiAbsensiDataTable extends DataTable
         return $this->builder()
                     ->setTableId('konfigurasiabsensi-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
-                    ->orderBy([7, 'asc'])
+                    ->orderBy([8, 'asc'])
                     ->selectStyleSingle()
                     ->buttons([
                         [
@@ -97,12 +115,13 @@ class KonfigurasiAbsensiDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('jenis_absensi.name')->title('Jenis Absensi')->sortable(false),
-            Column::make('jam_kerja')->title('Jam Kerja')->sortable(false),
-            Column::make('range_absen_masuk')->title('Waktu Absen Masuk')->sortable(false),
-            Column::make('range_absen_pulang')->title('Waktu Absen Pulang')->sortable(false),
-            Column::make('toleransi_masuk')->title('Toleransi Masuk')->sortable(false),
-            Column::make('toleransi_pulang')->title('Toleransi Pulang')->sortable(false),
+            Column::make('jenis_absensi.name')->title('Jenis Absensi')->addClass('text-nowrap')->sortable(false),
+            Column::make('jam_kerja')->title('Jam Kerja')->addClass('text-nowrap')->sortable(false),
+            Column::make('range_absen_masuk')->title('Waktu Absen Masuk')->addClass('text-nowrap')->sortable(false),
+            Column::make('range_absen_pulang')->title('Waktu Absen Pulang')->addClass('text-nowrap')->sortable(false),
+            Column::make('toleransi_masuk')->title('Toleransi Masuk')->addClass('text-nowrap')->sortable(false),
+            Column::make('toleransi_pulang')->title('Toleransi Pulang')->addClass('text-nowrap')->sortable(false),
+            Column::computed('tim')->title('Rumpun')->addClass('text-nowrap')->sortable(false),
             Column::computed('aksi')->addClass('text-center text-nowrap')->sortable(false),
         ];
     }

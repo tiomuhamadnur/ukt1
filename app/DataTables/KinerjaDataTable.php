@@ -71,7 +71,13 @@ class KinerjaDataTable extends DataTable
                 // );
             })
             ->addColumn('kegiatan', function ($item) {
-                return $item->kegiatan->name ?? $item->kegiatan_lainnya;
+                return $item->kegiatan->name ?? 'Lainnya - ' . $item->kegiatan_lainnya;
+            })
+            ->addColumn('tanggal_kinerja', function ($item) {
+                return $item->formatted_tanggal;
+            })
+            ->orderColumn('tanggal_kinerja', function ($query, $order) {
+                $query->orderBy('tanggal', $order);
             })
             ->rawColumns(['waktu', 'kegiatan', 'aksi']);
     }
@@ -127,7 +133,7 @@ class KinerjaDataTable extends DataTable
         return $this->builder()
                     ->setTableId('kinerja-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->ajax('')
                     ->pageLength(50)
                     ->lengthMenu([10, 50, 100, 250, 500, 1000])
                     ->orderBy([0, 'desc'])
@@ -147,7 +153,7 @@ class KinerjaDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('tanggal')->title('Tanggal')->sortable(true),
+            Column::computed('tanggal_kinerja')->title('Tanggal')->sortable(true)->addClass('text-nowrap'),
             Column::computed('waktu')->title('Waktu')->sortable(false)->addClass('text-center text-nowrap'),
             Column::make('user.name')->title('Nama')->addClass('font-weight-bold text-nowrap')->sortable(true),
             Column::make('pulau.name')->title('Pulau')->sortable(false)->addClass('text-nowrap'),

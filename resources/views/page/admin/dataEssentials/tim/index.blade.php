@@ -1,7 +1,7 @@
 @extends('layout.base')
 
 @section('title-head')
-    <title>Masterdata | Daftar Tim</title>
+    <title>Masterdata | Daftar Rumpun</title>
 @endsection
 
 @section('path')
@@ -9,7 +9,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">Masterdata</li>
             <li class="breadcrumb-item">Data Essentials</li>
-            <li class="breadcrumb-item active">Daftar Tim</li>
+            <li class="breadcrumb-item active">Daftar Rumpun</li>
         </ol>
     </div>
 @endsection
@@ -39,23 +39,23 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Tim -->
+    <!-- Modal Tambah Rumpun -->
     <div class="modal fade" id="tambahData" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Tim</h5>
+                    <h5 class="modal-title">Tambah Data Rumpun</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <form action="{{ route('tim.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Nama Tim:</label>
+                            <label class="required">Nama Rumpun:</label>
                             <input type="text" class="form-control" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label class="required">Kode Tim:</label>
+                            <label class="required">Kode Rumpun:</label>
                             <input type="text" class="form-control" name="code" required>
                         </div>
                         <div class="form-group">
@@ -83,14 +83,14 @@
             </div>
         </div>
     </div>
-    <!-- End Modal Tambah Tim -->
+    <!-- End Modal Tambah Rumpun -->
 
-    <!-- Modal Edit Tim -->
+    <!-- Modal Edit Rumpun -->
     <div class="modal fade" id="editModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Data Tim</h5>
+                    <h5 class="modal-title">Edit Data Rumpun</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <form id="editForm" action="#" method="POST">
@@ -98,11 +98,11 @@
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="required">Nama Tim:</label>
+                            <label class="required">Nama Rumpun:</label>
                             <input type="text" class="form-control" name="name" id="name_edit" required>
                         </div>
                         <div class="form-group">
-                            <label class="required">Kode Tim:</label>
+                            <label class="required">Kode Rumpun:</label>
                             <input type="text" class="form-control" name="code" id="code_edit" required>
                         </div>
                         <div class="form-group">
@@ -130,7 +130,7 @@
             </div>
         </div>
     </div>
-    <!-- End Modal Edit Tim -->
+    <!-- End Modal Edit Rumpun -->
 @endsection
 
 @push('scripts')
