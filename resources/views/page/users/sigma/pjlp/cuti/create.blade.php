@@ -52,8 +52,8 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
                                             <label for="jenis_pengajuan" class="required">Tanggal Akhir:</label>
-                                            <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir"
-                                                placeholder="Tanggal Akhir" required>
+                                            <input type="date" class="form-control" id="tanggal_akhir"
+                                                name="tanggal_akhir" placeholder="Tanggal Akhir" required>
                                         </div>
                                         @error('tanggal_akhir')
                                             <div class="container">
@@ -77,8 +77,8 @@
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12" id="total_cuti_tahunan">
                                 <div class="form-group">
                                     <label for="nama">Cuti Tahunan Tersedia</label>
-                                    <input type="text" class="form-control"
-                                        value="{{ $sisa_cuti ?? '0' }} hari" disabled>
+                                    <input type="text" class="form-control" value="{{ $sisa_cuti ?? '0' }} hari"
+                                        disabled>
                                 </div>
                             </div>
                         </div>
@@ -90,9 +90,11 @@
                         </div>
                         <div class="row" id="lampiran_wrapper" style="display: none">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
-                                <label for="catatan" id="label_lampiran" class="">Lampiran Surat Keterangan Dokter:</label>
+                                <label for="catatan" id="label_lampiran" class="">Lampiran Surat Keterangan
+                                    Dokter:</label>
                                 <div class="">
-                                    <input type="file" id="lampiran" class="form-control" name="lampiran" accept="image/*">
+                                    <input type="file" id="lampiran" class="form-control" name="lampiran"
+                                        accept="image/*">
                                 </div>
                                 @error('lampiran')
                                     <div class="container">
@@ -120,6 +122,7 @@
 
 @section('javascript')
     <script>
+        // ================= HITUNG JUMLAH HARI CUTI =================
         var tanggalAkhir = document.getElementById('tanggal_akhir');
         tanggalAkhir.addEventListener('change', hitungJumlahHariCuti);
 
@@ -127,8 +130,9 @@
             var tanggalMulai = document.getElementById('tanggal_awal').value;
             var tanggalSelesai = document.getElementById('tanggal_akhir').value;
 
-            var jumlahHariCuti = hitungJumlahHari(tanggalMulai, tanggalSelesai);
+            if (!tanggalMulai || !tanggalSelesai) return;
 
+            var jumlahHariCuti = hitungJumlahHari(tanggalMulai, tanggalSelesai);
             document.getElementById('total_hari').value = jumlahHariCuti + ' hari';
         }
 
@@ -137,23 +141,23 @@
             var tanggalMulaiObj = new Date(tanggalMulai);
             var tanggalSelesaiObj = new Date(tanggalSelesai);
 
-            var selisihHari = Math.abs((tanggalSelesaiObj - tanggalMulaiObj) / satuHari) +
-                1;
-
-            var totalHari = selisihHari;
-
-            // for (var i = 0; i < selisihHari; i++) {
-            //     var currentDay = new Date(tanggalMulaiObj.getTime() + (i * satuHari)).getDay();
-
-            //     if (currentDay === 6 || currentDay === 0) {
-            //         totalHari--;
-            //     }
-            // }
-
-            return totalHari;
+            var selisihHari = Math.abs((tanggalSelesaiObj - tanggalMulaiObj) / satuHari) + 1;
+            return selisihHari;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        // ================= TAMBAH HARI (UNTUK CUTI MELAHIRKAN) =================
+        function tambahHari(tanggal, jumlahHari) {
+            var date = new Date(tanggal);
+            date.setDate(date.getDate() + jumlahHari);
+
+            var yyyy = date.getFullYear();
+            var mm = String(date.getMonth() + 1).padStart(2, '0');
+            var dd = String(date.getDate()).padStart(2, '0');
+
+            return yyyy + '-' + mm + '-' + dd;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
             const jenisCuti = document.getElementById('jenis_cuti_id');
             const totalCutiTahunan = document.getElementById('total_cuti_tahunan');
             const alert = document.getElementById('alert');
@@ -162,23 +166,53 @@
             const lampiran = document.getElementById('lampiran');
             const labelLampiran = document.getElementById('label_lampiran');
 
-            jenisCuti.addEventListener('change', function () {
-                if (this.value === '2') {
-                    // IZIN SAKIT
+            const tanggalAwal = document.getElementById('tanggal_awal');
+            const tanggalAkhir = document.getElementById('tanggal_akhir');
+            const totalHari = document.getElementById('total_hari');
+
+            // ================= JENIS CUTI CHANGE =================
+            jenisCuti.addEventListener('change', function() {
+                const jenis = this.value;
+
+                // RESET DEFAULT
+                alert.style.display = 'none';
+                totalCutiTahunan.style.display = 'block';
+                lampiranWrapper.style.display = 'none';
+                lampiran.required = false;
+                lampiran.value = '';
+                labelLampiran.classList.remove('required');
+
+                tanggalAkhir.disabled = false;
+                tanggalAkhir.value = '';
+                totalHari.value = '';
+
+                if (jenis === '2') {
+                    // ============ IZIN SAKIT ============
                     alert.style.display = 'block';
                     totalCutiTahunan.style.display = 'none';
 
                     lampiranWrapper.style.display = 'block';
                     lampiran.required = true;
                     labelLampiran.classList.add('required');
-                } else {
-                    alert.style.display = 'none';
-                    totalCutiTahunan.style.display = 'block';
 
-                    lampiranWrapper.style.display = 'none';
-                    lampiran.required = false;
-                    lampiran.value = ''; // reset file
-                    labelLampiran.classList.remove('required');
+                } else if (jenis === '3') {
+                    // ============ CUTI MELAHIRKAN ============
+                    totalCutiTahunan.style.display = 'none';
+
+                    if (tanggalAwal.value) {
+                        tanggalAkhir.value = tambahHari(tanggalAwal.value, 59);
+                        totalHari.value = '60 hari';
+                    }
+
+                    tanggalAkhir.disabled = true;
+                }
+            });
+
+            // ================= TANGGAL MULAI CHANGE (KHUSUS MELAHIRKAN) =================
+            tanggalAwal.addEventListener('change', function() {
+                if (jenisCuti.value === '3') {
+                    tanggalAkhir.value = tambahHari(this.value, 59);
+                    totalHari.value = '60 hari';
                 }
             });
         });

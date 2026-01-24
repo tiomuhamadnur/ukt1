@@ -88,6 +88,7 @@ class AbsensiDataTable extends DataTable
                     3        => 'badge badge-pill badge-danger', //tidak absen datang
                     4        => 'badge badge-pill badge-dark', //cuti tahunan
                     5        => 'badge badge-pill badge-dark', //izin sakit
+                    6        => 'badge badge-pill badge-dark', //cuti melahirkan
                     default  => 'badge badge-pill badge-primary',
                 };
 

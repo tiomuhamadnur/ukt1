@@ -182,6 +182,10 @@ class KinerjaController extends Controller
 
         $kinerja = $query->orderBy('tanggal', 'ASC')->get();
 
+        if($kinerja->count() > 200) {
+            return back()->withError("Data kinerja yang di-export menjadi PDF lebih dari 200. <br> Silahkan export secara parsial untuk menjaga performance server tetap optimal");
+        }
+
         $pdf = SnappyPDF::loadView('page.admin.kinerja.pdf_all', [
             'kinerja' => $kinerja,
             'start_date' => $start_date->isoFormat('D MMMM Y'),

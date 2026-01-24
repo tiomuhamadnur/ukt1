@@ -60,9 +60,14 @@ class AbsensiSayaDataTable extends DataTable
                 $query->orderBy('tanggal', $order);
             })
             ->addColumn('status', function ($item) {
-                $badgeClass = $item->status_absensi_id === 3
-                    ? 'badge badge-pill badge-danger'
-                    : 'badge badge-pill badge-primary';
+                $badgeClass = match ($item->status_absensi_id) {
+                    1        => 'badge badge-pill badge-info', //absensi datang
+                    3        => 'badge badge-pill badge-danger', //tidak absen datang
+                    4        => 'badge badge-pill badge-dark', //cuti tahunan
+                    5        => 'badge badge-pill badge-dark', //izin sakit
+                    6        => 'badge badge-pill badge-dark', //cuti melahirkan
+                    default  => 'badge badge-pill badge-primary',
+                };
 
                 return "
                     <div class='{$badgeClass}'>

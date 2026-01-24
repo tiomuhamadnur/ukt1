@@ -144,7 +144,7 @@ class CutiController extends Controller
 
         $status_absensi_id = 5; //Ijin sakit
 
-        // Validasi sisa cuti
+        // Validasi sisa cuti tahunan
         if ($cuti->jenis_cuti_id === 1) {
             if ($konfigurasi_cuti->jumlah_akhir < $cuti->jumlah) {
                 return back()->withError(
@@ -154,6 +154,11 @@ class CutiController extends Controller
 
             $konfigurasi_cuti->decrement('jumlah_akhir', $cuti->jumlah);
             $status_absensi_id = 4; //Cuti tahunan
+        }
+
+        // Validasi cuti melahirkan
+        if ($cuti->jenis_cuti_id === 3) {
+            $status_absensi_id = 6; //Cuti melahirkan
         }
 
         // Update status cuti
@@ -166,7 +171,14 @@ class CutiController extends Controller
 
         // Generate absensi otomatis
         $konfigurasi_absensi = KonfigurasiAbsensi::where('jenis_absensi_id', 1)->first();
-        for ($date = Carbon::parse($cuti->tanggal_awal); $date->lte(Carbon::parse($cuti->tanggal_akhir)); $date->addDay()) {
+        for ($date = Carbon::parse($cuti->tanggal_awal);
+            $date->lte(Carbon::parse($cuti->tanggal_akhir));
+            $date->addDay()) {
+
+            // SKIP SABTU & MINGGU
+            if ($date->isWeekend()) {
+                continue;
+            }
 
             // Hindari absensi double
             $exists = Absensi::where('user_id', $cuti->user_id)
@@ -175,16 +187,16 @@ class CutiController extends Controller
 
             if (!$exists) {
                 Absensi::create([
-                    'user_id'          => $cuti->user_id,
-                    'jenis_absensi_id' => 1,
-                    'tanggal'          => $date->copy(),
-                    'jam_masuk'        => $konfigurasi_absensi->jam_masuk,
-                    'status_masuk'     => 'Datang tepat waktu',
-                    'telat_masuk'      => 0,
-                    'jam_pulang'       => $konfigurasi_absensi->jam_pulang,
-                    'status_pulang'    => 'Pulang tepat waktu',
-                    'telat_pulang'     => 0,
-                    'status_absensi_id'=> $status_absensi_id,
+                    'user_id'           => $cuti->user_id,
+                    'jenis_absensi_id'  => 1,
+                    'tanggal'           => $date->copy(),
+                    'jam_masuk'         => $konfigurasi_absensi->jam_masuk,
+                    'status_masuk'      => 'Datang tepat waktu',
+                    'telat_masuk'       => 0,
+                    'jam_pulang'        => $konfigurasi_absensi->jam_pulang,
+                    'status_pulang'     => 'Pulang tepat waktu',
+                    'telat_pulang'      => 0,
+                    'status_absensi_id' => $status_absensi_id,
                 ]);
             }
         }
@@ -520,7 +532,9 @@ class CutiController extends Controller
 
     public function pjlp_create()
     {
-        $jenis_cuti = JenisCuti::all();
+        $jenis_cuti = Auth::user()->gender_id == 2
+            ? JenisCuti::all()
+            : JenisCuti::whereIn('id', [1, 2])->get();
         $user_id = Auth::user()->id;
         $periode = date('Y');
 
@@ -547,17 +561,45 @@ class CutiController extends Controller
 
     public function pjlp_store(Request $request, ImageUploadService $imageService)
     {
+        // VALIDASI JIKA CUTI MELAHIRKAN
+        if ($request->jenis_cuti_id == 3) {
+            if (Auth::user()->gender_id == 1) {
+                return back()->withError("Cuti melahirkan hanya untuk PJLP dengan Gender Perempuan (P).");
+            }
+
+            $tanggalAwal = Carbon::parse($request->tanggal_awal);
+            $request->merge([
+                'tanggal_akhir' => $tanggalAwal->copy()->addDays(59)->toDateString()
+            ]);
+        }
+
         $request->validate([
             'jenis_cuti_id' => 'required|exists:jenis_cuti,id',
             'tanggal_awal' => 'required|date|after_or_equal:today',
-            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
-            'lampiran' => 'nullable|file|image|required_if:jenis_cuti_id,2',
+
+            'tanggal_akhir' => $request->jenis_cuti_id == 3
+                ? 'required|date'
+                : 'required|date|after_or_equal:tanggal_awal',
+
+            'lampiran' => $request->jenis_cuti_id == 2
+                ? 'required|file|image'
+                : 'nullable|file|image',
+
             'catatan' => 'required|string|max:254'
         ], [
-            'tanggal_awal.after_or_equal' => 'Tanggal mulai cuti tidak boleh sebelum hari ini (' . now()->format('d-m-Y') . ').',
-            'tanggal_akhir.after_or_equal' => 'Tanggal akhir tidak boleh kurang dari tanggal awal.',
-            'lampiran.image' => 'Lampiran harus dalam format image.',
+            'tanggal_awal.after_or_equal' =>
+                'Tanggal mulai cuti tidak boleh sebelum hari ini (' . now()->format('d-m-Y') . ').',
+
+            'tanggal_akhir.after_or_equal' =>
+                'Tanggal akhir tidak boleh kurang dari tanggal awal.',
+
+            'lampiran.required' =>
+                'Izin sakit wajib menyertakan surat keterangan dokter.',
+
+            'lampiran.image' =>
+                'Lampiran harus dalam format image.',
         ]);
+
 
         $user = Auth::user();
         $tahun = Carbon::now()->format('Y');
@@ -568,7 +610,7 @@ class CutiController extends Controller
         $tanggal_akhir = $request->tanggal_akhir ?? null;
         $catatan = $request->catatan ?? null;
         $lampiran = $request->lampiran;
-        $status_cuti_id = 1;
+        $status_cuti_id = 1; //Default awal
 
         $formasi_tim = FormasiTim::where('periode', $tahun)
                     ->where('user_id', $user_id)
@@ -680,7 +722,7 @@ class CutiController extends Controller
             $message = $this->send_email($nama, $jabatan, $pulau, $jumlahHariCuti, $tanggal, $catatan, $route, $lampiran);
         }
 
-        return redirect()->route('pjlp-cuti.index')->withNotify("Data pengajuan cuti berhasil ditambahkan & {$message}.");
+        return redirect()->route('pjlp-cuti.index')->withNotify("Data pengajuan cuti berhasil ditambahkan {$message}.");
     }
 
     public function send_email($nama, $jabatan, $lokasi_pulau, $jumlah_hari, $tanggal, $alasan, $url, $lampiran)
@@ -714,39 +756,56 @@ class CutiController extends Controller
 
     public function revoke(string $uuid)
     {
-        DB::transaction(function () use ($uuid, &$cuti, &$jumlahAkhir) {
+        DB::transaction(function () use ($uuid, &$message) {
 
             $cuti = Cuti::with('user')
                 ->where('uuid', $uuid)
+                ->lockForUpdate()
                 ->firstOrFail();
 
             $tahun = Carbon::parse($cuti->tanggal_awal)->year;
 
-            $konfigurasiCuti = KonfigurasiCuti::where([
-                    'periode'        => $tahun,
-                    'user_id'        => $cuti->user_id,
-                    'jenis_cuti_id'  => $cuti->jenis_cuti_id,
+            // ================= CUTI TAHUNAN =================
+            if ($cuti->jenis_cuti_id == 1) {
+
+                $konfigurasiCuti = KonfigurasiCuti::where([
+                    'periode'       => $tahun,
+                    'user_id'       => $cuti->user_id,
+                    'jenis_cuti_id' => 1,
                 ])->lockForUpdate()->first();
 
-            if (!$konfigurasiCuti) {
-                throw new \Exception(
-                    "Data konfigurasi cuti {$cuti->user->name} tahun {$tahun} tidak ditemukan"
-                );
+                if (!$konfigurasiCuti) {
+                    throw new \Exception(
+                        "Data konfigurasi cuti {$cuti->user->name} tahun {$tahun} tidak ditemukan"
+                    );
+                }
+
+                $jumlahAkhir = $konfigurasiCuti->jumlah_akhir + $cuti->jumlah;
+
+                $konfigurasiCuti->update([
+                    'jumlah_akhir' => $jumlahAkhir,
+                ]);
+
+                $message = "Data cuti tahunan <b>{$cuti->user->name}</b> berhasil dibatalkan.
+                            Sisa cuti menjadi <b>{$jumlahAkhir} hari</b> di tahun <b>{$tahun}</b>.";
             }
 
-            // Hitung & update sisa cuti (atomic)
-            $jumlahAkhir = $konfigurasiCuti->jumlah_akhir + $cuti->jumlah;
+            // ================= IZIN SAKIT =================
+            if ($cuti->jenis_cuti_id == 2) {
+                $message = "Data cuti <b>izin sakit</b> atas nama <b>{$cuti->user->name}</b> berhasil dibatalkan.";
+            }
 
-            $konfigurasiCuti->update([
-                'jumlah_akhir' => $jumlahAkhir,
-            ]);
+            // ================= CUTI MELAHIRKAN =================
+            if ($cuti->jenis_cuti_id == 3) {
+                $message = "Data <b>cuti melahirkan</b> atas nama <b>{$cuti->user->name}</b> berhasil dibatalkan.";
+            }
 
-            // Hapus file jika ada
+            // ================= HAPUS LAMPIRAN =================
             if (!empty($cuti->lampiran)) {
                 Storage::delete($cuti->lampiran);
             }
 
-            // Hapus data absensi yang sudah auto isi karena cuti
+            // ================= HAPUS ABSENSI CUTI SAJA =================
             Absensi::withTrashed()
                 ->where('user_id', $cuti->user_id)
                 ->whereBetween('tanggal', [
@@ -755,17 +814,13 @@ class CutiController extends Controller
                 ])
                 ->forceDelete();
 
-            // Hard delete
+            // ================= HAPUS CUTI =================
             $cuti->forceDelete();
         });
 
-        $tahun = Carbon::parse($cuti->tanggal_awal)->year;
-
         return redirect()
             ->route('cuti.index')
-            ->withNotify(
-                "Data cuti <b>{$cuti->user->name}</b> berhasil dibatalkan dan sisa cuti menjadi <b>{$jumlahAkhir} hari</b> di tahun <b>{$tahun}</b>!"
-            );
+            ->withNotify($message);
     }
 
     public function pjlp_destroy($uuid) {

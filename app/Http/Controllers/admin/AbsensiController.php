@@ -254,7 +254,20 @@ class AbsensiController extends Controller
             ];
         }
 
-        $jumlah_hari_kerja = $start_date->diffInDays($end_date) + 1;
+        // total hari kalender (basis awal kamu)
+        $total_hari = $start_date->diffInDays($end_date) + 1;
+
+        // hitung weekend
+        $jumlah_weekend = 0;
+
+        for ($date = $start_date->copy(); $date->lte($end_date); $date->addDay()) {
+            if ($date->isWeekend()) {
+                $jumlah_weekend++;
+            }
+        }
+
+        $jumlah_hari_kerja = $total_hari - $jumlah_weekend;
+
         $jumlah_hari_masuk = Absensi::where('user_id', $user_id)
                             ->whereBetween('tanggal', [$start_date, $end_date])
                             ->where(function ($q) {
@@ -279,14 +292,21 @@ class AbsensiController extends Controller
                             ->whereNotNull('jam_masuk')
                             ->whereNotNull('jam_pulang')
                             ->count();
-        $jumlah_hari_tidak_lengkap = $jumlah_hari_kerja - $jumlah_hari_lengkap;
+        $jumlah_hari_tidak_lengkap = Absensi::where('user_id', $user_id)
+                            ->whereBetween('tanggal', [$start_date, $end_date])
+                            ->whereRaw('DAYOFWEEK(tanggal) NOT IN (1, 7)')
+                            ->where(function ($q) {
+                                $q->whereNull('jam_masuk')
+                                ->orWhereNull('jam_pulang');
+                            })
+                            ->count();
         $persentase_ketertiban = $jumlah_hari_kerja > 0
                                 ? round(($jumlah_hari_ok / $jumlah_hari_kerja) * 100)
                                 : 0;
 
         $cuti = Absensi::where('user_id', $user_id)
                             ->whereBetween('tanggal', [$start_date, $end_date])
-                            ->where('status_absensi_id', 4)
+                            ->whereIn('status_absensi_id', [4, 6]) //Cuti tahunan atau melahirkan
                             ->count();
 
         $sakit = Absensi::where('user_id', $user_id)
@@ -294,10 +314,11 @@ class AbsensiController extends Controller
                             ->where('status_absensi_id', 5)
                             ->count();
 
-        $konfigurasi = KonfigurasiAbsensi::latest()->first();
+        $konfigurasi = KonfigurasiAbsensi::first();
         $jamStandarMasuk  = Carbon::parse($konfigurasi->jam_masuk);   // 07:30
         $jamStandarPulang = Carbon::parse($konfigurasi->jam_pulang);  // 16:00
-        $jamKerjaHarian   = $jamStandarMasuk->floatDiffInHours($jamStandarPulang);
+        // $jamKerjaHarian   = $jamStandarMasuk->floatDiffInHours($jamStandarPulang);
+        $jamKerjaHarian   = 8; //default 8 jam kerja
 
         // total jam kerja standar (efektif)
         $total_jam_kerja = $jamKerjaHarian * $jumlah_hari_kerja;

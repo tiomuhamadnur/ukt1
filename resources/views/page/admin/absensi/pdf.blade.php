@@ -340,14 +340,16 @@
             </table>
         </div>
 
-        {{-- <div class="ml-4" style="font-size:12px;">
-            <p><u>Catatan:</u></p>
-            <p>Total Waktu Telat (Menit):
-                {{ $total_menit_telat ?? '0' }} menit dari
-                {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }}
-                menit jam kerja</p>
-            <p>Total Waktu Telat (%): {{ $persentase_menit_telat ?? '0' }}% dari 100% jam kerja</p>
-        </div> --}}
+        <div class="ml-4" style="font-size:12px;">
+            <p><b><u>Catatan:</u></b></p>
+            <p><b>Total Waktu Telat:</b>
+                {{ number_format($total_menit_telat ?? 0, 0, ',', '.') }} menit dari
+                {{ number_format($total_menit_kerja ?? 0, 0, ',', '.') }} menit jam kerja
+            </p>
+            <p><b>Presensi Tidak Tertib:</b>
+                {{ $jumlah_hari_tidak_lengkap ?? '0' }} hari dari {{ $jumlah_hari_kerja ?? '0' }} hari kerja
+            </p>
+        </div>
 
         <div class="mt-5 text-center" style="font-size: 14px;">
             <table class="table table-borderless">
