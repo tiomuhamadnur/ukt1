@@ -325,8 +325,11 @@
 
     {{-- BEGIN: Konfirmasi PDF --}}
     <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Export PDF Laporan Absensi</h5>
+                </div>
                 <div class="modal-body">
                     <form id="formPDF" action="{{ route('absensi.export.pdf') }}" method="GET">
                         @csrf
@@ -344,10 +347,24 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label class="required">Periode</label>
                                     <input type="month" class="form-control" name="periode"
                                         value="{{ $periode }}">
+                                </div> --}}
+                                <label for="periode" class="required">Periode</label>
+                                <div class="form-row gutters">
+                                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" value="" name="start_date"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" value="" name="end_date" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

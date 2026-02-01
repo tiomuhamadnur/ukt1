@@ -201,14 +201,24 @@ class KinerjaController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'periode' => 'required',
+
+            // salah satu harus ada
+            'periode'     => 'required_without:start_date|date_format:Y-m',
+            'start_date'  => 'required_without:periode|date',
+            'end_date'    => 'nullable|date|after_or_equal:start_date',
         ]);
 
         $user_id = $request->user_id;
-        $periode = $request->periode ?? Carbon::now()->format('Y-m');
 
-        $start_date = Carbon::createFromFormat('Y-m', $periode)->startOfMonth();
-        $end_date   = Carbon::createFromFormat('Y-m', $periode)->endOfMonth();
+        if ($request->filled('periode')) {
+            // Jika pakai periode (Y-m)
+            $start_date = Carbon::createFromFormat('Y-m', $request->periode)->startOfMonth();
+            $end_date   = Carbon::createFromFormat('Y-m', $request->periode)->endOfMonth();
+        } else {
+            // Jika pakai start & end date
+            $start_date = Carbon::parse($request->start_date);
+            $end_date   = Carbon::parse($request->end_date ?? $request->start_date);
+        }
 
         $user = User::find($user_id);
 

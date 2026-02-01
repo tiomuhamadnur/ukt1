@@ -183,14 +183,24 @@ class AbsensiController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'periode' => 'required|string',
+
+            // salah satu harus ada
+            'periode'     => 'required_without:start_date|date_format:Y-m',
+            'start_date'  => 'required_without:periode|date',
+            'end_date'    => 'nullable|date|after_or_equal:start_date',
         ]);
 
         $user_id = $request->user_id;
-        $periode = $request->periode;
 
-        $start_date = Carbon::createFromFormat('Y-m', $periode)->startOfMonth()->toDateString();
-        $end_date   = Carbon::createFromFormat('Y-m', $periode)->endOfMonth()->toDateString();
+        if ($request->filled('periode')) {
+            // Jika pakai periode (Y-m)
+            $start_date = Carbon::createFromFormat('Y-m', $request->periode)->startOfMonth();
+            $end_date   = Carbon::createFromFormat('Y-m', $request->periode)->endOfMonth();
+        } else {
+            // Jika pakai start & end date
+            $start_date = Carbon::parse($request->start_date);
+            $end_date   = Carbon::parse($request->end_date ?? $request->start_date);
+        }
 
         $start_date = Carbon::parse($start_date);
         $end_date = Carbon::parse($end_date) ?? $start_date;
@@ -256,6 +266,10 @@ class AbsensiController extends Controller
 
         // total hari kalender (basis awal kamu)
         $total_hari = $start_date->diffInDays($end_date) + 1;
+
+        if ($total_hari > 31) {
+            return back()->withErrors('Data absensi yang bisa di-export PDF maksimal hanya 31 hari.');
+        }
 
         // hitung weekend
         $jumlah_weekend = 0;

@@ -103,7 +103,7 @@
                                                 <li>
                                                     <a class="dropdown-item" href="javascript:;" data-toggle="modal"
                                                         data-target="#modalDownloadPDFAbsensi">
-                                                        <i class="fa fa-file-pdf text-danger"></i> Export PDF
+                                                        <i class="fa fa-file-pdf text-danger"></i> PDF per Personil
                                                     </a>
                                                 </li>
                                             </ul>
@@ -185,7 +185,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="resetPasswordModalLabel">Export Laporan Absensi</h5>
+                    <h5 class="modal-title">Export PDF Laporan Absensi</h5>
                 </div>
                 <div class="modal-body">
                     <form id="formPDFAbsensi" action="{{ route('absensi.export.pdf') }}" method="GET">
@@ -204,9 +204,23 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label class="required">Periode</label>
                                     <input type="month" class="form-control" name="periode" value="" required>
+                                </div> --}}
+                                <label for="periode" class="required">Periode</label>
+                                <div class="form-row gutters">
+                                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" value="" name="start_date"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" value="" name="end_date" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -215,7 +229,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
                     <button type="submit" form="formPDFAbsensi" formtarget="_blank"
-                        class="btn btn-primary">Buat</button>
+                        class="btn btn-primary">Generate</button>
                 </div>
             </div>
         </div>
@@ -230,10 +244,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="resetPasswordModalLabel">Export Laporan Kinerja</h5>
+                    <h5 class="modal-title" id="resetPasswordModalLabel">Export PDF Laporan Kinerja</h5>
                 </div>
                 <div class="modal-body">
-                    <form id="formPDFKegiatanPersonel" action="{{ route('kinerja.export.pdf') }}" method="GET">
+                    <form id="formPDFKegiatanPersonel" action="{{ route('kinerja.personel.export.pdf') }}" method="GET">
                         @csrf
                         @method('GET')
                         <div class="form-row gutters">
@@ -270,7 +284,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
                     <button type="submit" form="formPDFKegiatanPersonel" formtarget="_blank"
-                        class="btn btn-primary">Buat</button>
+                        class="btn btn-primary">Generate</button>
                 </div>
             </div>
         </div>

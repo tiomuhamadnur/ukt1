@@ -63,6 +63,11 @@
                 @method('DELETE')
 
                 <div class="modal-body text-center">
+                    <div class="d-inline-flex align-items-center justify-content-center
+                                rounded-circle border border-danger mb-3"
+                        style="width: 120px; height: 120px;">
+                        <i class="fa fa-trash text-danger" style="font-size: 80px;"></i>
+                    </div>
                     <p>Apakah Anda yakin ingin menghapus data ini?</p>
                 </div>
 
@@ -101,6 +106,11 @@
                 @method('POST')
 
                 <div class="modal-body text-center">
+                    <div class="d-inline-flex align-items-center justify-content-center
+                                rounded-circle border border-danger mb-3"
+                        style="width: 120px; height: 120px;">
+                        <i class="fa fa-sign-out-alt text-danger" style="font-size: 80px;"></i>
+                    </div>
                     <p>Apakah Anda yakin ingin <strong>Keluar</strong> dari sistem ini?</p>
                 </div>
 

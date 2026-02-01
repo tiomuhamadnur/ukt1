@@ -161,8 +161,11 @@
 
     {{-- BEGIN: Konfirmasi PDF --}}
     <div id="modalDownloadPDF" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Export PDF Kinerja</h5>
+                </div>
                 <div class="modal-body">
                     <form id="formPDF" action="{{ route('kinerja.personel.export.pdf') }}" method="GET">
                         @csrf
@@ -176,12 +179,26 @@
                                 </div>
                             </div>
                         </div>
-                        <label for="periode" class="required">Periode</label>
+                        {{-- <label for="periode" class="required">Periode</label>
                         <div class="form-row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <input type="month" class="form-control" value="{{ $periode ?? '' }}"
                                         name="periode" required>
+                                </div>
+                            </div>
+                        </div> --}}
+                        <label for="periode" class="required">Periode</label>
+                        <div class="form-row gutters">
+                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" value="" name="start_date"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" value="" name="end_date" required>
                                 </div>
                             </div>
                         </div>
