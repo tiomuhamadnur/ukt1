@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -31,7 +32,7 @@ class ImageUploadService
         if (!$file) return null;
 
         // Unique filename
-        $fileName = time() . '-' . $file->getClientOriginalName();
+        $fileName = time() . '-' . Str::random(15) . '.' . $file->getClientOriginalExtension();
         $storagePath = public_path("storage/" . $path);
 
         // Buat folder jika belum ada

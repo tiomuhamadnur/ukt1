@@ -533,8 +533,10 @@ class CutiController extends Controller
     public function pjlp_create()
     {
         $jenis_cuti = Auth::user()->gender_id == 2
-            ? JenisCuti::all()
-            : JenisCuti::whereIn('id', [1, 2])->get();
+            // ? JenisCuti::all()
+            // : JenisCuti::whereIn('id', [1, 2])->get();
+            ? JenisCuti::whereNotIn('id', [2])->get()
+            : JenisCuti::whereIn('id', [1])->get();
         $user_id = Auth::user()->id;
         $periode = date('Y');
 
